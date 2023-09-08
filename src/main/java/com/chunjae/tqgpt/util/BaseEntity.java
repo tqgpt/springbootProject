@@ -1,4 +1,4 @@
-package com.chunjae.tqgpt.entity.base;
+package com.chunjae.tqgpt.util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
