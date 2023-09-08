@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/layout}">
+<main layout:fragment="content">
+    <section class="container pt-4">
+        <h1>학교 검색</h1>
+    </section>
+    <section class="container my-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="javascript:void(0)" onclick="toggleTab('고등')">고등</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="toggleTab('중등')">중등</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)" onclick="toggleTab('초등')">초등</a>
+            </li>
+        </ul>
+        <div class="p-5 bg-body-tertiary rounded-bottom-3">
+            <div class="row">
+                <div class="col-md-4 py-2">
+                    <h4>지역</h4>
+                    <label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="">전체</option>
+                            <option value="">서울</option>
+                            <option value="">경기도</option>
+                            <option value="">부산광역시</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="">구/군</option>
+                            <option value="">강남구</option>
+                            <option value="">서초구</option>
+                            <option value="">금천구</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-md-4 py-2">
+                    <h4>시도 교육청</h4>
+                    <label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="">전체</option>
+                            <option value="">서울특별시교육청</option>
+                            <option value="">경기도교육청</option>
+                            <option value="">강원특별자치도</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-md-4 py-2">
+                    <h4>학교 코드</h4>
+                    <label class="d-block">
+                        <input type="text" class="form-control">
+                    </label>
+                </div>
+            </div>
+            <div class="row py-3">
+                <div class="col-md-12">
+                    <h4>학교명</h4>
+                    <label class="d-block">
+                        <input type="text" class="form-control">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container my-4 py-5">
+        <div class="py-2">
+            <button type="button" class="btn btn-bd-primary" data-bs-toggle="popover" data-bs-title="서비스 미지원" data-bs-content="나중에 추가될 서비스입니다. 다음 업데이트를 기다려주세요">
+                ? 도움말
+            </button>
+
+            <button type="button" class="btn btn-success float-end" id="liveToastBtn">Excel 다운로드 <i class="bi bi-download"></i></button>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <img src="" class="rounded me-2" alt="...">
+                        <strong class="me-auto">Toast Title</strong>
+                        <small>1 mins ago</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="tb" class="table table-hover table-striped border rounded-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">학교명</th>
+                    <th scope="col">지역</th>
+                    <th scope="col">시도 교육청</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <th scope="row">1</th>
+                    <td>서울고등학교</td>
+                    <td>서울시</td>
+                    <td>서울특별시교육청</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>효원고등학교</td>
+                    <td>경기도수원시</td>
+                    <td>경기도교육청</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>민족사관고등학교</td>
+                    <td>강원특별자치도교육청</td>
+                    <td>강원특별자치도</td>
+                </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td>서울고등학교</td>
+                    <td>서울시</td>
+                    <td>서울특별시교육청</td>
+                </tr>
+                <tr>
+                    <th scope="row">5</th>
+                    <td>효원고등학교</td>
+                    <td>경기도수원시</td>
+                    <td>경기도교육청</td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td>민족사관고등학교</td>
+                    <td>강원특별자치도교육청</td>
+                    <td>강원특별자치도</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <script>
+        const toggleTab = (tabName) => {
+            const tabs = document.querySelectorAll('.nav-tabs .nav-link');
+            tabs.forEach(tab => {
+                if (tab.textContent === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+        const toastTrigger = document.getElementById('liveToastBtn')
+        const toastLiveExample = document.getElementById('liveToast')
+
+        if (toastTrigger) {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastTrigger.addEventListener('click', () => {
+                toastBootstrap.show()
+            })
+        }
+
+        $('#tb').DataTable({
+            lengthChange: false,
+            searching: false,
+            info: false,
+            paging: false,
+        });
+
+    </script>
+</main>
+</html>
