@@ -35,10 +35,11 @@ public class School extends BaseEntity {
     @Column(name = "schul_nm")
     private String schulNm;
 
+    //시도교육청명
     @Column(name = "atpt_ofcdc_sc_nm")
     private String atptOfcdcScNm;
 
-    //시도교육청명
+    //지역교육청명
     @Column(name = "ju_org_nm")
     private String juOrgNm;
 

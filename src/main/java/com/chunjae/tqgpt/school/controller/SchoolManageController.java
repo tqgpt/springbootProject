@@ -17,6 +17,7 @@ import java.util.List;
 public class SchoolManageController {
     @Autowired
     private SchoolService schoolService;
+
     @GetMapping("/search")
     public String showSchoolManagePage(Model model) {
         List<School> schoolList = schoolService.getTop10Schools();

@@ -1,5 +1,6 @@
 package com.chunjae.tqgpt.school.entity;
 
+import com.chunjae.tqgpt.user.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.*;
@@ -53,10 +54,11 @@ public class SchoolDetail {
     private String orgFaxNo;
 
     //남녀공학 구분
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "coedu_sc_nm")
-    private String coEduScNm;
+    private SchoolGender coEduScNm;
 
-    public SchoolDetail(School school, String sdSchulCode, String fondScNm, String dghtScNm, String orgRdnma, String orgRdnzc, String orgTelNo, String hmpgAdres, String orgFaxNo, String coEduScNm) {
+    public SchoolDetail(School school, String sdSchulCode, String fondScNm, String dghtScNm, String orgRdnma, String orgRdnzc, String orgTelNo, String hmpgAdres, String orgFaxNo, SchoolGender coEduScNm) {
         this.school = school;
         this.sdSchulCode = sdSchulCode;
         this.fondScNm = fondScNm;
