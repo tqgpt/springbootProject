@@ -16,11 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -82,20 +79,20 @@ public class SchoolDataAutoCompileService {
                     for (JsonElement rowElement : rowArray) {
                         JsonObject row = rowElement.getAsJsonObject();
 
-                        String lctnScNm = row.get("LCTN_SC_NM").getAsString();
-                        String orgRdnda = row.get("ORG_RDNMA").getAsString();
-                        String schulKndScNm = row.get("SCHUL_KND_SC_NM").getAsString();
-                        String schoolName = row.get("SCHUL_NM").getAsString();
-                        String atptOfcdcScNm = row.get("ATPT_OFCDC_SC_NM").getAsString();
-                        String sdSchulCode = row.get("SD_SCHUL_CODE").getAsString();
-                        String fondScNm = row.get("FOND_SC_NM").getAsString();
-                        String dghtScNm = row.get("DGHT_SC_NM").getAsString();
-                        String orgRdnma = row.get("ORG_RDNMA").getAsString();
-                        String orgRdnzc = row.get("ORG_RDNZC").getAsString();
-                        String orgTelNo = row.get("ORG_TELNO").getAsString();
-                        String hmpgAdres = row.get("HMPG_ADRES").isJsonNull() ? "" : row.get("HMPG_ADRES").getAsString();
-                        String orgFaxNo = row.get("ORG_FAXNO").isJsonNull() ? "" : row.get("ORG_FAXNO").getAsString();
-                        String coEduScNm = row.get("COEDU_SC_NM").getAsString();
+                        String lctnScNm = row.get("LCTN_SC_NM").getAsString();              //시도명(소재지명)
+                        String orgRdnda = row.get("ORG_RDNMA").getAsString();               //시군구명(도로명주소)
+                        String schulKndScNm = row.get("SCHUL_KND_SC_NM").getAsString();     //학교급(학교종류명)
+                        String schoolName = row.get("SCHUL_NM").getAsString();              //학교명
+                        String atptOfcdcScNm = row.get("ATPT_OFCDC_SC_NM").getAsString();   //시도교육청명
+                        String sdSchulCode = row.get("SD_SCHUL_CODE").getAsString();        //표준학교코드
+                        String fondScNm = row.get("FOND_SC_NM").getAsString();              //설립명
+                        String dghtScNm = row.get("DGHT_SC_NM").getAsString();              //주야구분
+                        String orgRdnma = row.get("ORG_RDNMA").getAsString();               //도로명주소
+                        String orgRdnzc = row.get("ORG_RDNZC").getAsString();               //우편번호
+                        String orgTelNo = row.get("ORG_TELNO").getAsString();               //전화번호
+                        String coEduScNm = row.get("COEDU_SC_NM").getAsString();            //남녀공학 구분
+                        String hmpgAdres = row.get("HMPG_ADRES").isJsonNull() ? "" : row.get("HMPG_ADRES").getAsString();   //홈페이지 주소
+                        String orgFaxNo = row.get("ORG_FAXNO").isJsonNull() ? "" : row.get("ORG_FAXNO").getAsString();      //팩스 번호
 
                         School school = new School(lctnScNm, orgRdnda, schulKndScNm, schoolName, atptOfcdcScNm, user);
                         SchoolDetail schoolDetail = new SchoolDetail(school, sdSchulCode, fondScNm, dghtScNm, orgRdnma, orgRdnzc, orgTelNo, hmpgAdres, orgFaxNo, coEduScNm);
