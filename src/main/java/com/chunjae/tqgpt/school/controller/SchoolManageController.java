@@ -3,6 +3,7 @@ package com.chunjae.tqgpt.school.controller;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +13,11 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/high/search")
+@RequestMapping("/high")
 public class SchoolManageController {
+    @Autowired
     private SchoolService schoolService;
-    @GetMapping("")
+    @GetMapping("/search")
     public String showSchoolManagePage(Model model) {
         List<School> schoolList = schoolService.getTop10Schools();
         for(School school : schoolList) {
@@ -23,5 +25,10 @@ public class SchoolManageController {
         }
         model.addAttribute("schoolList", schoolList);
         return "views/schoolManage/searchSchool";
+    }
+
+    @GetMapping("/info")
+    public String showSchoolManagePage() {
+        return "views/schoolManage/infoSchool";
     }
 }
