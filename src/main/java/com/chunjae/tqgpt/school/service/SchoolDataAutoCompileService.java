@@ -2,6 +2,7 @@ package com.chunjae.tqgpt.school.service;
 
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
+import com.chunjae.tqgpt.school.entity.SchoolGender;
 import com.chunjae.tqgpt.school.repository.SchoolDetailRepository;
 import com.chunjae.tqgpt.school.repository.SchoolRepository;
 import com.chunjae.tqgpt.user.entity.User;
@@ -90,7 +91,7 @@ public class SchoolDataAutoCompileService {
                         String orgRdnma = row.get("ORG_RDNMA").getAsString();               //도로명주소
                         String orgRdnzc = row.get("ORG_RDNZC").getAsString();               //우편번호
                         String orgTelNo = row.get("ORG_TELNO").getAsString();               //전화번호
-                        String coEduScNm = row.get("COEDU_SC_NM").getAsString();            //남녀공학 구분
+                        SchoolGender coEduScNm = SchoolGender.valueOf(row.get("COEDU_SC_NM").getAsString());            //남녀공학 구분
                         String hmpgAdres = row.get("HMPG_ADRES").isJsonNull() ? "" : row.get("HMPG_ADRES").getAsString();   //홈페이지 주소
                         String orgFaxNo = row.get("ORG_FAXNO").isJsonNull() ? "" : row.get("ORG_FAXNO").getAsString();      //팩스 번호
 

@@ -1,6 +1,7 @@
 package com.chunjae.tqgpt.school.dto;
 
 import com.chunjae.tqgpt.school.entity.School;
+import com.chunjae.tqgpt.school.entity.SchoolGender;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
 
@@ -48,7 +49,7 @@ public class SchoolInfoDTO {
         //팩스번호
         private String orgFaxNo;
         //남녀공학구분
-        private String coEduScNm;
+        private SchoolGender coEduScNm;
         //지도 위도
         private double latitude;
         //지도 경도

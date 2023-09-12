@@ -3,61 +3,54 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
-#infoTable{
+.infoTable{
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
     border-collapse: collapse;
     width: 100%;
     padding: 25px;
     margin: 25px;
-    justify-content: flex-end;
 }
 
-#infoTable thead th {
-    align-content: center;
-    border: 3px solid #ccc;
-    background-color: #777777;
-    margin: 5px;
-    padding: 10px;
-    text-align: left;
-    border-radius: 10px;
-    width: 150px;
-}
-
-#infoTable tbody td {
-    align-content: center;
+.infoTable thead th {
     border: 3px solid #ccc;
     background-color: #999999;
     margin: 5px;
     padding: 10px;
     text-align: left;
     border-radius: 10px;
-    width: 450px;
+    width: 12rem;
 }
 
-#infoTable tbody {
+.infoTable tbody td {
+    border: 3px solid #ccc;
+    background-color: #888888;
+    margin: 5px;
+    padding: 10px;
+    text-align: left;
+    border-radius: 10px;
+    width: 36rem;
+}
+
+.infoTable tbody {
     display:flex;
 }
 
-#infoTable th,
-#infoTable td{
+.infoTable th,
+.infoTable td{
     display: flex;
     padding: 10px;
 }
 
-#apiDiv {
+.apiDiv {
     margin-left: 50px;
     margin-right: 50px;
 }
 
-#flexContainer table{
-    display: inline-flex;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    overflow-x: auto;
-    overflow-y: hidden;
-    border: 1px solid black;
+@media (max-width: 600px) {
+    .flex-container {
+        flex-direction: column;
+    }
 }
