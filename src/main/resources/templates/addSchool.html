@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/layout}">
+<main layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/addSchool.css}">
+    <!--<section class="container pt-4">
+        <h2>학교 추가</h2>
+    </section>-->
+    <section class="container my-4">
+        <div class="container w-75 acenter">
+
+            <h2 class="aleft">학교 추가</h2>
+
+            <form action="/school/add" method="post">
+                <div class="row" id="sc-info">
+
+                    <div class="col-md-3">
+                        <div class="input-group-text">학교코드</div>
+                        <div class="input-group-text">시도교육청</div>
+                        <div class="input-group-text">설립구분</div>
+                        <!--<div class="input-group-text">설립유형(x 단설병설)</div>-->
+                        <div class="input-group-text">학교급</div>
+                        <div class="input-group-text">시도명</div>
+                        <div class="input-group-text">도로명 주소
+                            <span class="aright">
+                                <button id="apiButton" class="btn btn-primary text-right">검색</button>
+                            </span>
+                        </div>
+                        <div class="input-group-text">전화번호</div>
+                        <div class="input-group-text">팩스번호</div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="sdSchulCode">
+                        <input type="text" class="form-control" name="atptOfcdcScNm">
+                        <input type="text" class="form-control" name="fondScNm">
+                        <input type="text" class="form-control" name="schulKndScNm">
+                        <!--<input type="text" class="form-control" name="">-->
+                        <input type="text" class="form-control" name="lctnScNm">
+                        <input type="text" class="form-control" name="orgRdnma">
+                        <input type="text" class="form-control" name="orgTelNo">
+                        <input type="text" class="form-control" name="orgFaxNo">
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="input-group-text">학교명</div>
+                        <div class="input-group-text">지역교육청</div>
+                        <!--<div class="input-group-text">분교여분(x)</div>-->
+                        <div class="input-group-text">주야구분</div>
+                        <div class="input-group-text">시군구명</div>
+                        <div class="input-group-text">우편번호</div>
+                        <div class="input-group-text">홈페이지주소</div>
+                        <div class="input-group-text">남여공학 구분</div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="schulNm">
+                        <input type="text" class="form-control" name="juOrgNm">
+                        <!--<input type="text" class="form-control" name="">-->
+                        <input type="text" class="form-control" name="dghtScNm">
+                        <input type="text" class="form-control" name="orgRdnda">
+                        <input type="text" class="form-control" name="orgRdnzc">
+                        <input type="text" class="form-control" name="hmpgAdres">
+                        <input type="text" class="form-control" name="coeduScNm">
+                    </div>
+                </div>
+
+                <div class="aright">
+                    <button type="submit" class="btn btn-success">추가하기</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
 </html>
