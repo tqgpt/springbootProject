@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface SchoolServiceImpl {
     List<School> getTop10Schools();
+
+    int getAllSchoolsCnt();
 }

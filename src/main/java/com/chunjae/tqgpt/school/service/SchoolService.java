@@ -21,4 +21,9 @@ public class SchoolService implements SchoolServiceImpl {
         Pageable pageable = PageRequest.of(0, 10);
         return schoolRepository.findAll(pageable).getContent();
     }
+
+    @Override
+    public int getAllSchoolsCnt() {
+        return (int) schoolRepository.count();
+    }
 }

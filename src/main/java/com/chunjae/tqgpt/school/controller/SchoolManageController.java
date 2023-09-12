@@ -15,15 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/high")
 public class SchoolManageController {
-    @Autowired
+
     private SchoolService schoolService;
+
     @GetMapping("/search")
     public String showSchoolManagePage(Model model) {
-        List<School> schoolList = schoolService.getTop10Schools();
-        for(School school : schoolList) {
-            System.out.println(school.toString());
-        }
-        model.addAttribute("schoolList", schoolList);
+        model.addAttribute("schoolList", schoolService.getTop10Schools());
+        model.addAttribute("count", schoolService.getAllSchoolsCnt());
         return "views/schoolManage/searchSchool";
     }
 

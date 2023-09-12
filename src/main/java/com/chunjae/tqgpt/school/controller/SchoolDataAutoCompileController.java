@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SchoolDataAutoCompileController {
 
-    @Autowired
     private final SchoolDataAutoCompileService schoolDataAutoCompileService;
 
     @PostMapping("/schoolDataCompile")
