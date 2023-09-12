@@ -2,6 +2,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/searchSchool.css}">
     <section class="container pt-4">
         <h1>학교 관리</h1>
         <p>학교현황을 확인할 수 있습니다.</p>
@@ -18,43 +19,45 @@
                 <a class="nav-link" href="javascript:void(0)" onclick="toggleTab('초등')">초등</a>
             </li>
         </ul>
-        <form class="p-5 bg-body-tertiary rounded-bottom-3 border-start border-end border-end border-bottom border-1">
+        <div class="p-5 bg-body-tertiary rounded-bottom-3 border-start border-end border-end border-bottom border-1">
             <div class="row">
-                <div class="col-md-5 py-2">
+                <div class="col-md-6 py-2">
                     <h4>지역</h4>
                     <label>
-                        <select name="city" id="city" class="form-select" aria-label="Default select example"></select>
+                        <select name="city" id="city" class="form-select" aria-label="Default select example">
+                            <option value="">전체</option>
+                        </select>
                     </label>
                     <label>
-                        <select name="gugun" id="gugun" class="form-select" aria-label="Default select example">
-                            <option>구/군</option>
+                        <select name="district" id="district" class="form-select" aria-label="Default select example">
+                            <option value="">구/군</option>
                         </select>
                     </label>
                 </div>
-                <div class="col-md-7 py-2">
+                <div class="col-md-6 py-2">
                     <h4>검색</h4>
                     <label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="전체">전체</option>
-                            <option value="전체">학교명</option>
-                            <option value="전체">학교주소</option>
-                            <option value="전체">등록자</option>
+                        <select id="searchOption" class="form-select" aria-label="Default select example">
+                            <option value="all">전체</option>
+                            <option value="schoolName">학교명</option>
+                            <option value="schoolAddress">학교주소</option>
+                            <option value="user">등록자</option>
                         </select>
                     </label>
-                    <label>
-                        <input type="text" class="form-control">
+                    <label class="w-50">
+                        <input type="text" id="searchValue" class="form-control">
                     </label>
                 </div>
             </div>
             <div class="row">
                 <div class="d-flex justify-content-end">
                     <label>
-                        <button type="reset" class="btn btn-secondary">초기화</button>
-                        <button onclick="searchHandler()" type="button" class="btn btn-secondary">검색</button>
+                        <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
+                        <button type="button" class="btn btn-secondary" id="searchBtn">검색</button>
                     </label>
                 </div>
             </div>
-        </form>
+        </div>
     </section>
 
     <section class="container my-4 py-5">
@@ -62,7 +65,7 @@
             <span class="d-flex align-items-center">총 00개</span>
             <label>
                 <button type="button" class="btn btn-success" id="liveToastBtn">Excel 다운로드 <i class="bi bi-download"></i></button>
-                <button type="button" class="btn btn-secondary">학교등록</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/high/info'">학교등록</button>
             </label>
             <div class="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -93,62 +96,55 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider" id="tableBody">
-                <tr>
-                    <th scope="row">1</th>
-                    <td>서울특별시</td>
-                    <td>서초구</td>
-                    <td>고등</td>
-                    <td>서울고등학교</td>
-                    <td>서울특별시교육청</td>
-                    <td>서울시교육청</td>
-                    <td>홍길동</td>
-                    <td>2023-09-11</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>강원특별자치도</td>
-                    <td>횡성군</td>
-                    <td>고등</td>
-                    <td>민족사관고등학교</td>
-                    <td>강원특별자치도교육청</td>
-                    <td>강원특별자치도</td>
-                    <td>홍길동</td>
-                    <td>2023-09-11</td>
+                <tr th:each="school : ${schoolList}">
+                    <td th:text="${school.idx}">NO</td>
+                    <td th:text="${school.lctnScNm}">시도명</td>
+                    <td th:text="${school.orgRdnda}">시군구명</td>
+                    <td th:text="${school.schulKndScNm}">학교급</td>
+                    <td th:text="${school.atptOfcdcScNm}">시도교육청</td>
+                    <td th:text="${school.juOrgNm}">지역교육청</td>
+                    <td th:text="${school.user != null ? school.user.userName : '-'}">등록자</td>
+                    <td th:text="${school.createdAt}">등록일</td>
                 </tr>
             </tbody>
+
         </table>
         <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                     <th:block th:each="pageNumber : ${#numbers.sequence(1, 10)}">
-                        <li class="page-item"><a class="page-link" href="#" th:href="'#' + ${pageNumber}" th:text="${pageNumber}"></a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" th:data-page="${pageNumber}" th:text="${pageNumber}"></a>
+                        </li>
                     </th:block>
                     <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                 </ul>
             </nav>
         </div>
     </section>
-    <script>
-        const searchHandler = () => {
-            // 검색 조건
-            const city = document.getElementById('city').value;
-            const gugun = document.getElementById('gugun').value;
-            const searchOption = document.querySelector('select.form-select').value;
-            const searchValue = document.querySelector('input.form-control').value;
 
-            fetch(`/high/search/school?city=${city}&gugun=${gugun}&option=${searchOption}&value=${searchValue}`)
+    <script>
+        let ex_city;
+        let ex_district;
+        let ex_search_option;
+        let ex_search_option_value;
+
+        //학교 데이터 출력
+        const searchSchool = (pageNumber) => {
+            const tableBody = document.getElementById('tableBody');
+            const url = getSearchURL(pageNumber);
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const tableBody = document.getElementById('tableBody');
                     tableBody.innerHTML = '';
-
                     data.forEach((school) => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <th>${school.index}</th>
+                            <th>${school.idx}</th>
                             <td>${school.city}</td>
-                            <td>${school.gugun}</td>
+                            <td>${school.district}</td>
                             <td>${school.class}</td>
                             <td>${school.name}</td>
                             <td>${school.educationOffice}</td>
@@ -166,6 +162,73 @@
                 });
         }
 
+        // 검색 조건
+        const getSearchURL = (pageNumber) => {
+            const city = ex_city || document.getElementById('city').value;
+            const district = ex_district || document.getElementById('district').value;
+            const searchOption = ex_search_option || document.querySelector('#searchOption').value;
+            const searchValue = ex_search_option_value || document.querySelector('#searchValue').value;
+
+            let url = '/high/search/school';
+            const params = [];
+
+            if (city !== "")
+                params.push(`city=${city}`);
+
+            if (district !== "")
+                params.push(`district=${district}`);
+
+            if (searchValue !== "")
+                params.push(`option=${searchOption}&value=${searchValue}`);
+
+            if (pageNumber)
+                params.push(`page=${pageNumber}`);
+
+            if (params.length > 0)
+                url += '?' + params.join('&');
+
+            return url;
+        }
+
+        //페이징
+        const pageLinks = document.querySelectorAll('.page-link');
+        pageLinks.forEach(pageLink => {
+            pageLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                const pageNumber = pageLink.getAttribute('data-page');
+                if (pageNumber) {
+                    document.querySelectorAll('.page-item').forEach(pageItem => {
+                        pageItem.classList.remove('active');
+                    });
+                    pageLink.closest('.page-item').classList.add('active');
+
+                    // 검색 함수 호출
+                    searchSchool(pageNumber);
+                }
+            });
+        });
+
+        // 검색 버튼 클릭 시
+        document.getElementById('searchBtn').addEventListener('click', function (event) {
+            event.preventDefault(); // 버튼의 기본 동작 막기
+
+            // 검색 조건 업데이트
+            ex_city = document.getElementById('city').value;
+            ex_district = document.getElementById('district').value;
+            ex_search_option = document.querySelector('#searchOption').value;
+            ex_search_option_value = document.querySelector('#searchValue').value;
+
+            // 검색 함수 호출
+            searchSchool(1);
+
+            // 페이지 번호 업데이트: 1페이지로 이동
+            document.querySelectorAll('.page-item').forEach(pageItem => {
+                pageItem.classList.remove('active');
+            });
+            document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
+        });
+
+
         const toggleTab = (tabName) => {
             const tabs = document.querySelectorAll('.nav-tabs .nav-link');
             tabs.forEach(tab => {
@@ -177,19 +240,36 @@
             });
         }
 
+        // 데이터 테이블 라이브러리
         $('#tb').DataTable({
             lengthChange: false,
             searching: false,
             info: false,
             paging: false,
+            language: {
+                emptyTable: "학교를 찾을 수 없어요"
+            },
+            columns: [
+                { data: 'idx', defaultContent: '-' },
+                { data: 'lctnScNm', defaultContent: '-' },
+                { data: 'orgRdnda', defaultContent: '-' },
+                { data: 'schulKndScNm', defaultContent: '-' },
+                { data: 'atptOfcdcScNm', defaultContent: '-' },
+                { data: 'juOrgNm', defaultContent: '-' },
+                {
+                    data: 'user',
+                    render: (data) => {
+                        return data != null ? data.user.userName : '-';
+                    },
+                    defaultContent: '-'
+                },
+                { data: 'createdAt', defaultContent: '-' }
+            ]
         });
 
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-
+        //toast UI
         const toastTrigger = document.getElementById('liveToastBtn')
         const toastLiveExample = document.getElementById('liveToast')
-
         if (toastTrigger) {
             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
             toastTrigger.addEventListener('click', () => {
@@ -197,65 +277,51 @@
             })
         }
 
-        const city = ["전체","서울특별시","인천광역시","대전광역시","광주광역시","대구광역시","울산광역시","부산광역시","경기도","강원특별자치도","충청북도","충청남도","전라북도","전라남도","경상북도","경상남도","제주도"];
-        const cities = [
-            [],
-            ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"],
-            ["계양구","남구","남동구","동구","부평구","서구","연수구","중구","강화군","옹진군"],
-            ["대덕구","동구","서구","유성구","중구"],
-            ["광산구","남구","동구","북구","서구"],
-            ["남구","달서구","동구","북구","서구","수성구","중구","달성군"],
-            ["남구","동구","북구","중구","울주군"],
-            ["강서구","금정구","남구","동구","동래구","부산진구","북구","사상구","사하구","서구","수영구","연제구","영도구","중구","해운대구","기장군"],
-            ["고양시","과천시","광명시","광주시","구리시","군포시","김포시","남양주시","동두천시","부천시","성남시","수원시","시흥시","안산시","안성시","안양시","양주시","오산시","용인시","의왕시","의정부시","이천시","파주시","평택시","포천시","하남시","화성시","가평군","양평군","여주군","연천군"],
-            ["강릉시","동해시","삼척시","속초시","원주시","춘천시","태백시","고성군","양구군","양양군","영월군","인제군","정선군","철원군","평창군","홍천군","화천군","횡성군"],
-            ["제천시","청주시","충주시","괴산군","단양군","보은군","영동군","옥천군","음성군","증평군","진천군","청원군"],
-            ["계룡시","공주시","논산시","보령시","서산시","아산시","천안시","금산군","당진군","부여군","서천군","연기군","예산군","청양군","태안군","홍성군"],
-            ["군산시","김제시","남원시","익산시","전주시","정읍시","고창군","무주군","부안군","순창군","완주군","임실군","장수군","진안군"],
-            ["광양시","나주시","목포시","순천시","여수시","강진군","고흥군","곡성군","구례군","담양군","무안군","보성군","신안군","영광군","영암군","완도군","장성군","장흥군","진도군","함평군","해남군","화순군"],
-            ["경산시","경주시","구미시","김천시","문경시","상주시","안동시","영주시","영천시","포항시","고령군","군위군","봉화군","성주군","영덕군","영양군","예천군","울릉군","울진군","의성군","청도군","청송군","칠곡군"],
-            ["거제시","김해시","마산시","밀양시","사천시","양산시","진주시","진해시","창원시","통영시","거창군","고성군","남해군","산청군","의령군","창녕군","하동군","함안군","함양군","합천군"],
-            ["서귀포시","제주시","남제주군","북제주군"]
-        ];
+        // 지역 선택란
+        document.addEventListener("DOMContentLoaded", () => {
+            const area = $("select[name^=city]");
+            const district = $("select[name^=district]");
 
-        cities[8] = [
-            "가평군", "고양시 덕양구", "고양시 일산동구", "고양시 일산서구", "과천시", "광명시", "광주시",
-            "구리시", "군포시", "김포시", "남양주시", "동두천시", "부천시 소사구", "부천시 오정구", "부천시 원미구",
-            "성남시 분당구", "성남시 수정구", "성남시 중원구", "수원시 권선구", "수원시 영통구", "수원시 장안구",
-            "수원시 팔달구", "시흥시", "안산시 단원구", "안산시 상록구", "안성시", "안양시 동안구", "안양시 만안구",
-            "양주시", "오산시", "용인시 기흥구", "용인시 수지구", "용인시 처인구", "의왕시", "의정부시", "이천시",
-            "파주시", "평택시", "포천시", "하남시", "화성시"
-        ];
-        cities[10] = ["괴산군", "단양군", "보은군", "영동군", "옥천군", "음성군", "증평군", "진천군", "청원군"];
-        cities[9] = ["강릉시","동해시","삼척시","속초시","원주시","춘천시","태백시","고성군","양구군","양양군","영월군","인제군","정선군","철원군","평창군","홍천군","화천군","횡성군"];
-        cities[11] = ["제천시","청주시","충주시","괴산군","단양군","보은군","영동군","옥천군","음성군","증평군","진천군","청원군"];
-        cities[12] = ["계룡시","공주시","논산시","보령시","서산시","아산시","천안시","금산군","당진군","부여군","서천군","연기군","예산군","청양군","태안군","홍성군"];
-        cities[13] = ["군산시","김제시","남원시","익산시","전주시","정읍시","고창군","무주군","부안군","순창군","완주군","임실군","장수군","진안군"];
-        cities[14] = ["광양시","나주시","목포시","순천시","여수시","강진군","고흥군","곡성군","구례군","담양군","무안군","보성군","신안군","영광군","영암군","완도군","장성군","장흥군","진도군","함평군","해남군","화순군"];
-        cities[15] = ["경산시","경주시","구미시","김천시","문경시","상주시","안동시","영주시","영천시","포항시","고령군","군위군","봉화군","성주군","영덕군","영양군","예천군","울릉군","울진군","의성군","청도군","청송군","칠곡군"];
-        cities[16] = ["거제시","김해시","마산시","밀양시","사천시","양산시","진주시","진해시","창원시","통영시","거창군","고성군","남해군","산청군","의령군","창녕군","하동군","함안군","함양군","합천군"];
+            $.getJSON("/json/city.json", (data) => {
+                const cityData = data.area;
+                const citiesData = data;
 
-        $(document).ready(() => {
-            // 시/도 선택 박스 초기화
-            $("select[name^=city]").each(function () {
-                const selectCity = $(this);
-                city.forEach((item) => {
-                    selectCity.append(`<option value='${item}'>${item}</option>`);
+                cityData.forEach((item) => {
+                    area.append(`<option value="${item.name}">${item.name}</option>`);
                 });
-                selectCity.next().append("<option value=''>구/군 선택</option>");
+
+                area.change(function () {
+                    const selectedCity = $(this).val();
+                    const selectedArea = citiesData.area.find((item) => item.name === selectedCity); // 시/도
+
+                    district.find("option").remove();
+                    if (selectedCity !== "") {
+                        const cities = selectedArea.cities; // 구/군
+                        cities.forEach((item) => {
+                            district.append(`<option value="${item}">${item}</option>`);
+                        });
+                    } else {
+                        district.append('<option value="">구/군</option>');
+                    }
+                });
             });
 
-            // 시/도 선택시 구/군 설정
-            $("select[name^=city]").change(function () {
-                const cityIndex = $("option", $(this)).index($("option:selected", $(this)));
-                const gugun = $("select[name^=gugun]");
-                $("option", gugun).remove();
-                cities[cityIndex].forEach((item) => {
-                    gugun.append(`<option value='${item}'>${item}</option>`);
-                });
+
+            // 초기화 버튼 클릭 시
+            document.getElementById('resetBtn').addEventListener('click', function (event) {
+                event.preventDefault(); // 버튼의 기본 동작 막기
+
+                // 폼 필드 초기화
+                document.getElementById('city').value = "";
+                document.getElementById('district').value = "";
+                document.querySelector('.form-select').value = "all";
+                document.querySelector('.form-control').value = "";
+
+                // 검색 결과 지우기 (원하는 대상에 맞게 수정)
+                const tableBody = document.getElementById('tableBody');
+                searchSchool();
             });
         });
-
     </script>
 </main>
 </html>

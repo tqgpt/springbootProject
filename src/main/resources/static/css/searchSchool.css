@@ -1,0 +1,5 @@
+.dataTables_empty {
+    height: 100px !important;
+    font-weight: bold;
+    background-color: white;
+}

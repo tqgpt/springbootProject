@@ -2,9 +2,7 @@ package com.chunjae.tqgpt.user.entity;
 
 
 import com.chunjae.tqgpt.util.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +17,12 @@ import java.time.LocalDateTime;
 public class UserAccess {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_access_idx")
+    private Long idx;
+
     @Column(name = "user_id")
-    private Long userId;
+    private String userId;
 
     @Column(name = "access_at")
     private LocalDateTime accessAt;
