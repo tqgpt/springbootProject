@@ -47,4 +47,9 @@ public class SchoolController {
         schoolService.upsertSchoolData();
         return "redirect:/high/school/search";
     }
+
+    @GetMapping("/map")
+    public String showMapPage() {
+        return "views/map/map";
+    }
 }

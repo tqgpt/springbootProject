@@ -1,5 +1,6 @@
 var map = new naver.maps.Map("map", {
     zoom: 15,
+    minZoom: 10,
     mapTypeControl: true,
 });
 
