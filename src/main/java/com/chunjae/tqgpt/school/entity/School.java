@@ -20,40 +20,41 @@ public class School extends BaseEntity {
     private Long idx;
 
     //시도명(소재지명)
-    @Column(name = "lctn_sc_nm")
-    private String lctnScNm;
+    @Column(name = "city_name")
+    private String cityName;
 
-    //시군구명(도로명주소)
-    @Column(name = "org_rdnma")
-    private String orgRdnda;
+    //도로명상세주소
+    @Column(name = "street_detail_addr")
+    private String streetDetailAddr;
 
     //학교급(학교종류명)
-    @Column(name = "schul_knd_sc_nm")
-    private String schulKndScNm;
+    @Column(name = "school_kind")
+    private String schoolKind;
 
     //학교명
-    @Column(name = "schul_nm")
-    private String schulNm;
+    @Column(name = "school_name")
+    private String schoolName;
 
     //시도교육청명
-    @Column(name = "atpt_ofcdc_sc_nm")
-    private String atptOfcdcScNm;
+    @Column(name = "city_edu_org")
+    private String cityEduOrg;
 
     //지역교육청명
-    @Column(name = "ju_org_nm")
-    private String juOrgNm;
+    @Column(name = "local_edu_org")
+    private String localEduOrg;
 
     //회원
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx")
     private User user;
 
-    public School(String lctnScNm, String orgRdnda, String schulKndScNm, String atptOfcdcScNm, String juOrgNm, User user) {
-        this.lctnScNm = lctnScNm;
-        this.orgRdnda = orgRdnda;
-        this.schulKndScNm = schulKndScNm;
-        this.atptOfcdcScNm = atptOfcdcScNm;
-        this.juOrgNm = juOrgNm;
+    public School(String cityName, String streetDetailAddr, String schoolKind, String schoolName, String cityEduOrg, String localEduOrg, User user) {
+        this.cityName = cityName;
+        this.streetDetailAddr = streetDetailAddr;
+        this.schoolKind = schoolKind;
+        this.schoolName = schoolName;
+        this.cityEduOrg = cityEduOrg;
+        this.localEduOrg = localEduOrg;
         this.user = user;
     }
 }

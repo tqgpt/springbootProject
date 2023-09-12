@@ -1,4 +1,4 @@
-package com.chunjae.tqgpt.school.controller;
+package com.chunjae.tqgpt.global.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(){
-        return "redirect:/high/search";
+        return "redirect:/high/school/search";
     }
 
 }
