@@ -8,13 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @EnableJpaAuditing
 @SpringBootApplication
 public class TqgptApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(TqgptApplication.class, args);
-    }
-
-    @GetMapping("/")
-    public String index(){
-        return "index";
     }
 }

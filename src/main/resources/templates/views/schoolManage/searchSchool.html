@@ -96,7 +96,18 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider" id="tableBody">
+                <tr th:each="school : ${schoolList}">
+                    <td th:text="${school.idx}">NO</td>
+                    <td th:text="${school.lctnScNm}">시도명</td>
+                    <td th:text="${school.orgRdnda}">시군구명</td>
+                    <td th:text="${school.schulKndScNm}">학교급</td>
+                    <td th:text="${school.atptOfcdcScNm}">시도교육청</td>
+                    <td th:text="${school.juOrgNm}">지역교육청</td>
+                    <td th:text="${school.user != null ? school.user.userName : '-'}">등록자</td>
+                    <td th:text="${school.createdAt}">등록일</td>
+                </tr>
             </tbody>
+
         </table>
         <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation example">
@@ -131,7 +142,7 @@
                     data.forEach((school) => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <th>${school.index}</th>
+                            <th>${school.idx}</th>
                             <td>${school.city}</td>
                             <td>${school.district}</td>
                             <td>${school.class}</td>
@@ -237,7 +248,23 @@
             paging: false,
             language: {
                 emptyTable: "학교를 찾을 수 없어요"
-            }
+            },
+            columns: [
+                { data: 'idx', defaultContent: '-' },
+                { data: 'lctnScNm', defaultContent: '-' },
+                { data: 'orgRdnda', defaultContent: '-' },
+                { data: 'schulKndScNm', defaultContent: '-' },
+                { data: 'atptOfcdcScNm', defaultContent: '-' },
+                { data: 'juOrgNm', defaultContent: '-' },
+                {
+                    data: 'user',
+                    render: (data) => {
+                        return data != null ? data.user.userName : '-';
+                    },
+                    defaultContent: '-'
+                },
+                { data: 'createdAt', defaultContent: '-' }
+            ]
         });
 
         //toast UI

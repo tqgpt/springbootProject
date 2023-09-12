@@ -4,12 +4,10 @@ package com.chunjae.tqgpt.school.entity;
 import com.chunjae.tqgpt.user.entity.User;
 import com.chunjae.tqgpt.util.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "t_school")
