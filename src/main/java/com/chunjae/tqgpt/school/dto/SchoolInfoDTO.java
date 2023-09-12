@@ -4,10 +4,6 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class SchoolInfoDTO {
 
     @Getter
