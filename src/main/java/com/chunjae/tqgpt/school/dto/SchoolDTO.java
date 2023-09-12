@@ -4,7 +4,7 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
-
+@ToString
 public class SchoolDTO {
 
     @Getter
@@ -59,6 +59,7 @@ public class SchoolDTO {
     @Getter
     @Setter
     @Builder
+    @ToString
     public static class SchoolAddDto {
 
         private String cityName;    //시도명

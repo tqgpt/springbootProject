@@ -1,14 +1,16 @@
 package com.chunjae.tqgpt.school.controller;
 
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
+import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.HttpURLConnection;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +28,26 @@ public class SchoolController {
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         log.info("Controller addSchool start : " + schoolDto.toString());
         schoolService.addSchool(schoolDto);
+
+        return "addSchool";
+    }
+
+    @GetMapping("/modify/{school-idx}")
+    public String modifySchool(@PathVariable("school-idx") String schoolIdx, Model model) {
+        log.info("modifySchool Controller start : " + schoolIdx);
+        if(schoolIdx == null) {
+        }
+        SchoolDetail schoolOne = schoolService.getSchoolOne(1L);
+        log.info("modifySchool Get schoolOne : " + schoolOne.getSchool().getIdx());
+        model.addAttribute("info", schoolOne);
+
+        return "modifySchool";
+    }
+
+    @PostMapping("/modify")
+    public String modifySchool(SchoolDTO.SchoolAddDto modifiedSchoolInfo,@RequestParam Long schoolIdx) {
+        log.info("modifySchool Post modifiedSchool : " +schoolIdx + modifiedSchoolInfo.toString());
+        schoolService.modifySchool(schoolIdx, modifiedSchoolInfo);
 
         return "addSchool";
     }

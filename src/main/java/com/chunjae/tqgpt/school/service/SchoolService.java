@@ -130,6 +130,60 @@ public class SchoolService implements SchoolServiceImpl {
 
     @Override
     public void addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
+        try {
+            User user = userRepository.findByUserId("admin1").get();
+
+            SchoolDetail addSchoolInfo = schoolAddDto.toEntity(user);
+            schoolDetailRepository.save(addSchoolInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("addSchool exception");
+        }
 
     }
+
+    @Override
+    public SchoolDetail getSchoolOne(Long SchoolIdx) {
+        return schoolDetailRepository.findById(SchoolIdx).get();
+    }
+
+    @Override
+    public void modifySchool(Long schoolIdx, SchoolDTO.SchoolAddDto dto) {
+
+        User user = userRepository.findByUserId("admin1").get();
+
+        School modifySchool = new School(
+                schoolIdx
+                ,dto.getCityName()
+                ,dto.getStreetDetailAddr()
+                ,dto.getSchoolKind()
+                ,dto.getSchoolName()
+                ,dto.getCityEduOrg()
+                ,dto.getLocalEduOrg()
+                ,user
+        );
+        SchoolDetail modifySchoolDetail = new SchoolDetail(
+                schoolIdx
+                ,modifySchool
+                ,dto.getSchoolCode()
+                ,dto.getFoundationName()
+                ,dto.getDayNightName()
+                ,dto.getStreetAddr()
+                ,dto.getPostNum()
+                ,dto.getTelNum()
+                ,dto.getHmpgAddr()
+                ,dto.getFaxNum()
+                ,dto.getCoedu()
+        );
+        try {
+            School updateSchool = schoolRepository.save(modifySchool);
+            SchoolDetail updateSchoolDetail = schoolDetailRepository.save(modifySchoolDetail);
+            log.info("modifySchool update 성공");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("modifySchool update error");
+        }
+    }
+
+
 }

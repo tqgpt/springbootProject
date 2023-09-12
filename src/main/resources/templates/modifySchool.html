@@ -8,7 +8,7 @@
 
             <h2 class="aleft">학교 추가</h2>
 
-            <form action="/high/school/add" method="post">
+            <form action="/high/school/modify" method="post">
                 <div class="row" id="sc-info">
 
                     <div class="col-md-3">
@@ -26,14 +26,15 @@
                         <div class="input-group-text">팩스번호</div>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="schoolCode">
-                        <input type="text" class="form-control" name="cityEduOrg">
-                        <input type="text" class="form-control" name="foundationName">
-                        <input type="text" class="form-control" name="schoolKind">
-                        <input type="text" class="form-control" name="cityName">
-                        <input type="text" class="form-control" name="streetAddr">
-                        <input type="text" class="form-control" name="telNum">
-                        <input type="text" class="form-control" name="faxNum">
+                        <input type="hidden" name="schoolIdx" th:value="${info.school.idx}">
+                        <input type="text" class="form-control" name="schoolCode" th:value="${info.schoolCode}">
+                        <input type="text" class="form-control" name="cityEduOrg" th:value="${info.school.cityEduOrg}">
+                        <input type="text" class="form-control" name="foundationName" th:value="${info.foundationName}">
+                        <input type="text" class="form-control" name="schoolKind" th:value="${info.school.schoolKind}">
+                        <input type="text" class="form-control" name="cityName" th:value="${info.school.cityName}">
+                        <input type="text" class="form-control" name="streetAddr" th:value="${info.streetAddr}">
+                        <input type="text" class="form-control" name="telNum" th:value="${info.telNum}">
+                        <input type="text" class="form-control" name="faxNum" th:value="${info.faxNum}">
                     </div>
 
                     <div class="col-md-3">
@@ -46,18 +47,18 @@
                         <div class="input-group-text">남여공학 구분</div>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="schoolName">
-                        <input type="text" class="form-control" name="localEduOrg">
-                        <input type="text" class="form-control" name="dayNightName">
-                        <input type="text" class="form-control" name="streetDetailAddr">
-                        <input type="text" class="form-control" name="postNum">
-                        <input type="text" class="form-control" name="hmpgAddr">
-                        <input type="text" class="form-control" name="coedu">
+                        <input type="text" class="form-control" name="schoolName" th:value="${info.school.schoolName}">
+                        <input type="text" class="form-control" name="localEduOrg" th:value="${info.school.localEduOrg}">
+                        <input type="text" class="form-control" name="dayNightName" th:value="${info.dayNightName}">
+                        <input type="text" class="form-control" name="streetDetailAddr" th:value="${info.school.streetDetailAddr}">
+                        <input type="text" class="form-control" name="postNum" th:value="${info.postNum}">
+                        <input type="text" class="form-control" name="hmpgAddr" th:value="${info.hmpgAddr}">
+                        <input type="text" class="form-control" name="coedu" th:value="${info.coedu}">
                     </div>
                 </div>
 
                 <div class="aright">
-                    <button type="submit" class="btn btn-success">추가하기</button>
+                    <button type="submit" class="btn btn-success">수정하기</button>
                 </div>
             </form>
         </div>
