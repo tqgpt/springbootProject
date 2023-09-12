@@ -28,6 +28,9 @@ public class School extends BaseEntity {
     @Column(name = "schul_knd_sc_nm")
     private String schulKndScNm;
 
+    @Column(name = "schul_nm")
+    private String schulNm;
+
     @Column(name = "atpt_ofcdc_sc_nm")
     private String atptOfcdcScNm;
 
