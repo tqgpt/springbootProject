@@ -64,22 +64,30 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid my-5">
-        <div class="row align-items-md-stretch p-5">
-            <div class="col-md-6">
-                <div class="apiDiv h-100 p-5 bg-body-tertiary border border-dark rounded-3">
+    <section class="container my-3">
+        <div class="row">
+            <div class="col-md-7">
+                <div id="mapArea" class="p-1 bg-body-tertiary border border-dark rounded-3">
+                    <figure id="map" class="w-100 h-100"></figure>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="h-100 p-1 bg-body-tertiary border border-dark rounded-3">
                     <h2> 날씨 앱을 넣을 부분 </h2>
                     <p>기상청 단기예보 날씨 API를 넣을 예정</p>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div  class="apiDiv h-100 p-5 bg-body-tertiary border border-dark rounded-3">
-                    <h2> 지도 앱을 넣을 부분 </h2>
-                    <p>네이버 주소=>좌표 API를 넣을 예정</p>
-                </div>
-            </div>
         </div>
-    </div>
+    </section>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+    <script th:src="@{/js/map.js}"></script>
+    <script>
+        // const schoolName = [[${schoolName}]];
+        // const streetAddress = [[${streetAddress}]];
+        const schoolName = "효원고등학교";
+        const streetAddress = "경기도 수원시 영통구 동수원로 336";
+
+        searchAddressToCoordinate(streetAddress, schoolName);
+    </script>
 </main>
-<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </html>
