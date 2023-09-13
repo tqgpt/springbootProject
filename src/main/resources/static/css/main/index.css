@@ -1,0 +1,15 @@
+#mapContent {
+    height: 100vh;
+}
+
+#sidePanel {
+    transition: left 3s; /* 1초 동안 left 속성을 변경하는 것을 부드럽게 표현 */
+}
+
+#map {
+    margin: 0;
+}
+
+#search_resultArea {
+    min-width: 20rem;
+}
