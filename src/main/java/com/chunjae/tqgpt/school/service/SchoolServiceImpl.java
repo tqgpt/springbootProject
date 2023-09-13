@@ -16,6 +16,6 @@ public interface SchoolServiceImpl {
 
     void modifySchool(Long schoolIdx, SchoolDTO.SchoolAddDto schoolAddDto);
 
-    void upsertSchoolData();
+    void upsertSchoolData(String userName);
 
 }
