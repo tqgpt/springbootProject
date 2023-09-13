@@ -67,4 +67,4 @@ out/
 application-security.properties
 
 ### API script ###
-src/main/resources/template/api/**
+src/main/resources/templates/api/**
