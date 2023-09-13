@@ -1,0 +1,7 @@
+#sc-info > div {
+    padding: 0;
+}
+
+#sc-info * div, #sc-info * input {
+    height: 40px;
+}

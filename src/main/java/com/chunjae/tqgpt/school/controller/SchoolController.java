@@ -33,12 +33,13 @@ public class SchoolController {
     }
 
     @GetMapping("/modify/{school-idx}")
-    public String modifySchool(@PathVariable("school-idx") String schoolIdx, Model model) {
+    public String modifySchool(@PathVariable("school-idx") Long schoolIdx, Model model) {
         log.info("modifySchool Controller start : " + schoolIdx);
         if(schoolIdx == null) {
         }
-        SchoolDetail schoolOne = schoolService.getSchoolOne(1L);
-        log.info("modifySchool Get schoolOne : " + schoolOne.getSchool().getIdx());
+        SchoolDetail schoolOne = schoolService.getSchoolOne(schoolIdx);
+        System.out.println(schoolOne.getClass());
+        //log.info("modifySchool Get schoolOne : " + schoolOne.getSchool().getIdx());
         model.addAttribute("info", schoolOne);
 
         return "modifySchool";
