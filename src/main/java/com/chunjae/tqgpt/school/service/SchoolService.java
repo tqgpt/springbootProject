@@ -5,11 +5,11 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.repository.SchoolDetailRepository;
 import com.chunjae.tqgpt.school.repository.SchoolRepository;
-import com.chunjae.tqgpt.user.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SchoolService implements SchoolServiceImpl {
     private final SchoolRepository schoolRepository;
-    private final UserRepository userRepository;
     private final SchoolDetailRepository schoolDetailRepository;
 
     @Value("${nice-admin-key}")
@@ -51,8 +50,19 @@ public class SchoolService implements SchoolServiceImpl {
     }
 
     @Override
+    public School getSchoolById(Long id) {
+        return schoolRepository.getReferenceById(id);
+    }
+
+    @Override
+    public SchoolDetail getSchoolDetailById(Long id) {
+        return schoolDetailRepository.getReferenceById(id);
+    }
+
+    @Override
+    @Transactional
     public void upsertSchoolData(String userName) {
-        deleteExistingData();
+        deleteExistingData(userName);
 
         int pageIndex = 1;
         while (true) {
@@ -74,9 +84,9 @@ public class SchoolService implements SchoolServiceImpl {
         }
     }
 
-    private void deleteExistingData() {
+    private void deleteExistingData(String userName) {
         schoolDetailRepository.deleteAll();
-        schoolRepository.deleteAll();
+//        schoolRepository.deleteAllByUserName(userName);
     }
 
     private JsonObject fetchSchoolData(int pageIndex) throws IOException {
