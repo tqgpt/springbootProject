@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface SchoolServiceImpl {
     List<School> getTop10Schools();
+
     int getAllSchoolsCnt();
 
     void addSchool(SchoolDTO.SchoolAddDto schoolAddDto);
@@ -21,4 +22,7 @@ public interface SchoolServiceImpl {
 
     void upsertSchoolData(String userName);
 
+    School getSchoolById(Long id);
+
+    SchoolDetail getSchoolDetailById(Long id);
 }

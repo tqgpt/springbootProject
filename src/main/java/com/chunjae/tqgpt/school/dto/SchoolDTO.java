@@ -3,8 +3,10 @@ package com.chunjae.tqgpt.school.dto;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
-import lombok.*;
-@ToString
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 public class SchoolDTO {
 
     @Getter
@@ -15,7 +17,7 @@ public class SchoolDTO {
         private Long idx;
         //시도명
         private String cityName;
-        //도로상세주소
+        //도로명주소
         private String streetAddr;
         //학교급
         private String schoolKind;
@@ -42,7 +44,7 @@ public class SchoolDTO {
         private String foundationName;
         //주야구분
         private String dayNightName;
-        //도로명주소
+        //도로명 상세주소
         private String streetDetailAddr;
         //우편번호
         private String postNum;
@@ -67,11 +69,11 @@ public class SchoolDTO {
         private String schoolKind;//학교급   초등학교,중학교,고등학교
         private String schoolName;     //학교명
         private String cityEduOrg;//시도교육청명
-        private String localEduOrg;     //지역교유청명
+        private String localEduOrg;     //지역교육청명
         private String schoolCode; //표준학교코드
         private String foundationName;    //설립명   공립,사립
         private String dayNightName;    //주야구분
-        private String streetDetailAddr;    //도로명주소
+        private String streetDetailAddr;    //도로명 상세주소
         private String postNum;    //우편번호
         private String telNum;    //전화번호
         private String hmpgAddr;   //홈페이지주소
