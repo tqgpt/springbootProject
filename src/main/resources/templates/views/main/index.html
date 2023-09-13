@@ -21,7 +21,7 @@
   <link rel="stylesheet" th:href="@{/css/main/index.css}">
 
   <!-- Naver Map API -->
-  <th:block th:include="fragments/api/NaverMapAPI"></th:block>
+  <th:block th:include="api/NaverMapAPI"></th:block>
 </head>
 <body>
   <th:block th:include="fragments/theme"></th:block>
@@ -63,19 +63,41 @@
 </body>
 <script th:src="@{/js/main/map_index.js}"></script>
 <script>
+  document.addEventListener("DOMContentLoaded",() => {
+    console.log(getCookie('visit_record'))
+  })
+
   const addressInput = document.getElementById("addressInput");
   const searchButton = document.getElementById("button-addon");
   const searchResultDiv = document.getElementById("search_result");
 
+  const getCookie = (key) => {
+    //쿠키는 한번에 모두 불러와지기 때문에 사용할때 ';'나눠서 선택적으로 가져와야한다.
+    const cookies = document.cookie.split(`; `).map((el) => el.split('='));
+    let getItem = [];
+
+    for (let i = 0; i < cookies.length; i++) {
+      // 해당하는 key를 갖는 쿠키데이터를 찾기위해 반복문을 사용했는데 다른방법도 연구해봐야겠다.
+      if (cookies[i][0] === key) {
+        getItem.push(cookies[i][1]);
+        break;
+      }
+    }
+
+    if (getItem.length > 0) {
+      return JSON.parse(getItem[0]);
+    }
+  };
+
   const recordCookie = (school) => {
     const schoolDataJSON = JSON.stringify(school);
-    const cookieName = 'schoolData';
+    const cookieName = 'visit_record';
 
     // 쿠키 만료일 1일 후로 설정
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 1);
 
-    document.cookie = `${cookieName}=${encodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
+    document.cookie = `${cookieName}=${decodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
   };
 
 
