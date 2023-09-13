@@ -26,6 +26,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -159,9 +160,9 @@ public class SchoolService implements SchoolServiceImpl {
     @Override
     public void addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
         try {
-            User user = userRepository.findByUserId("admin1").get();
+            //User user = userRepository.findByUserId("admin1").get();
 
-            SchoolDetail addSchoolInfo = schoolAddDto.toEntity(user);
+            SchoolDetail addSchoolInfo = schoolAddDto.toEntity("admin1");
             schoolDetailRepository.save(addSchoolInfo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,7 +179,7 @@ public class SchoolService implements SchoolServiceImpl {
     @Override
     public void modifySchool(Long schoolIdx, SchoolDTO.SchoolAddDto dto) {
 
-        User user = userRepository.findByUserId("admin1").get();
+        //User user = userRepository.findByUserId("admin1").get();
 
         School modifySchool = new School(
                 schoolIdx
@@ -188,7 +189,7 @@ public class SchoolService implements SchoolServiceImpl {
                 ,dto.getSchoolName()
                 ,dto.getCityEduOrg()
                 ,dto.getLocalEduOrg()
-                ,user
+                ,""
         );
         SchoolDetail modifySchoolDetail = new SchoolDetail(
                 schoolIdx
@@ -211,6 +212,46 @@ public class SchoolService implements SchoolServiceImpl {
             e.printStackTrace();
             log.info("modifySchool update error");
         }
+    }
+
+    @Override
+    public SchoolDetail modifySchoolOk(SchoolDTO.SchoolModifyDto dto) {
+        /*SchoolDetail modifySchool = schoolModifyDto.toEntity("testName");
+        School modifiedSchool = schoolRepository.save(modifySchool.getSchool());*/
+        SchoolDetail updateSchoolDetail = null;
+                School modifySchool = new School(
+                dto.getSchoolIdx()
+                ,dto.getCityName()
+                ,dto.getStreetDetailAddr()
+                ,dto.getSchoolKind()
+                ,dto.getSchoolName()
+                ,dto.getCityEduOrg()
+                ,dto.getLocalEduOrg()
+                ,""
+        );
+        SchoolDetail modifySchoolDetail = new SchoolDetail(
+                dto.getSchoolIdx()
+                ,modifySchool
+                ,dto.getSchoolCode()
+                ,dto.getFoundationName()
+                ,dto.getDayNightName()
+                ,dto.getStreetAddr()
+                ,dto.getPostNum()
+                ,dto.getTelNum()
+                ,dto.getHmpgAddr()
+                ,dto.getFaxNum()
+                ,dto.getCoedu()
+        );
+        try {
+            School updateSchool = schoolRepository.save(modifySchool);
+            updateSchoolDetail = schoolDetailRepository.save(modifySchoolDetail);
+            log.info("modifySchool update 성공");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("modifySchool update error");
+        }
+
+        return updateSchoolDetail;
     }
 
 

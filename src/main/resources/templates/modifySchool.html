@@ -8,7 +8,7 @@
 
             <h2 class="aleft">학교 추가</h2>
 
-            <form action="/high/school/modify" method="post">
+            <form action="" method="post">
                 <div class="row" id="sc-info">
 
                     <div class="col-md-3">
@@ -32,7 +32,7 @@
                         <input type="text" class="form-control" name="foundationName" th:value="${info.foundationName}">
                         <input type="text" class="form-control" name="schoolKind" th:value="${info.school.schoolKind}">
                         <input type="text" class="form-control" name="cityName" th:value="${info.school.cityName}">
-                        <input type="text" class="form-control" name="streetAddr" th:value="${info.streetAddr}">
+                        <input type="text" class="form-control" name="streetAddr" th:value="${info.school.streetAddr}">
                         <input type="text" class="form-control" name="telNum" th:value="${info.telNum}">
                         <input type="text" class="form-control" name="faxNum" th:value="${info.faxNum}">
                     </div>
@@ -50,7 +50,7 @@
                         <input type="text" class="form-control" name="schoolName" th:value="${info.school.schoolName}">
                         <input type="text" class="form-control" name="localEduOrg" th:value="${info.school.localEduOrg}">
                         <input type="text" class="form-control" name="dayNightName" th:value="${info.dayNightName}">
-                        <input type="text" class="form-control" name="streetDetailAddr" th:value="${info.school.streetDetailAddr}">
+                        <input type="text" class="form-control" name="streetDetailAddr" th:value="${info.streetDetailAddr}">
                         <input type="text" class="form-control" name="postNum" th:value="${info.postNum}">
                         <input type="text" class="form-control" name="hmpgAddr" th:value="${info.hmpgAddr}">
                         <input type="text" class="form-control" name="coedu" th:value="${info.coedu}">
@@ -58,10 +58,53 @@
                 </div>
 
                 <div class="aright">
-                    <button type="submit" class="btn btn-success">수정하기</button>
+                    <button type="button" onclick="modify_ok()" class="btn btn-success">수정하기</button>
                 </div>
             </form>
         </div>
     </section>
+    <script type="text/javascript">
+        function modify_ok() {
+            var data ={};
+            data.schoolCode = $('input[name=schoolCode]').val();
+            data.cityEduOrg = $('input[name=cityEduOrg]').val();
+            data.foundationName = $('input[name=foundationName]').val();
+            data.schoolKind = $('input[name=schoolKind]').val();
+            data.cityName = $('input[name=cityName]').val();
+            data.streetAddr = $('input[name=streetAddr]').val();
+            data.telNum = $('input[name=telNum]').val();
+            data.faxNum = $('input[name=faxNum]').val();
+
+            data.schoolName = $('input[name=schoolName]').val();
+            data.localEduOrg = $('input[name=localEduOrg]').val();
+            data.dayNightName = $('input[name=dayNightName]').val();
+            data.streetDetailAddr = $('input[name=streetDetailAddr]').val();
+            data.postNum = $('input[name=postNum]').val();
+            data.hmpgAddr = $('input[name=hmpgAddr]').val();
+            data.coedu = $('input[name=coedu]').val();
+
+            data.schoolIdx = $('input[name=schoolIdx]').val();
+
+            var jsonStr = JSON.stringify(data);
+            //console.log(data);
+            console.log(jsonStr);
+
+            $.ajax({
+                type: "POST",
+                url: "/high/school/api/modify",
+                //dataType: "string",
+                data : jsonStr,
+                contentType : "application/json; charset=utf-8",
+                error: function() {
+                    alert('학교수정실패');
+                    console.log('통신실패!!');
+                },
+                success: function(data) {
+                    alert("학교수정성공");
+                    console.log("통신데이터 값 : " + data);
+                }
+            });
+        }
+    </script>
 </main>
 </html>
