@@ -8,7 +8,6 @@ public class MainController {
 
     @GetMapping("/")
     public String index(){
-        return "redirect:/high/school/search";
+        return "main/views/index";
     }
-
 }
