@@ -99,13 +99,13 @@
             <tbody class="table-group-divider" id="tableBody">
                 <tr th:each="school : ${schoolList}">
                     <td class="text-center" th:text="${school.idx}">NO</td>
-                    <td class="text-center" th:text="${school.lctnScNm}">시도명</td>
-                    <td class="text-center" th:text="${school.orgRdnda}">시군구명</td>
-                    <td class="text-center" th:text="${school.schulKndScNm}">학교급</td>
-                    <td class="text-center" th:text="${school.schulNm}">학교명</td>
-                    <td class="text-center" th:text="${school.atptOfcdcScNm}">시도교육청</td>
-                    <td class="text-center" th:text="${school.juOrgNm}">지역교육청</td>
-                    <td class="text-center" th:text="${school.user != null ? school.user.userName : '-'}">등록자</td>
+                    <td class="text-center" th:text="${school.cityName}">시도명</td>
+                    <td class="text-center" th:text="${school.streetAddr}">시군구명</td>
+                    <td class="text-center" th:text="${school.schoolKind}">학교급</td>
+                    <td class="text-center" th:text="${school.schoolName}">학교명</td>
+                    <td class="text-center" th:text="${school.cityEduOrg}">시도교육청</td>
+                    <td class="text-center" th:text="${school.localEduOrg}">지역교육청</td>
+                    <td class="text-center" th:text="${school.userName != null ? school.userName : '-'}">등록자</td>
                     <td class="text-center" th:text="${school.createdAt}">등록일</td>
                 </tr>
             </tbody>
