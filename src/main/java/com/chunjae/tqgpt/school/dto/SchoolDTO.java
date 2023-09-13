@@ -16,7 +16,7 @@ public class SchoolDTO {
         //시도명
         private String cityName;
         //도로상세주소
-        private String streetDetailAddr;
+        private String streetAddr;
         //학교급
         private String schoolKind;
         //학교명
@@ -43,7 +43,7 @@ public class SchoolDTO {
         //주야구분
         private String dayNightName;
         //도로명주소
-        private String streetAddr;
+        private String streetDetailAddr;
         //우편번호
         private String postNum;
         //전화번호
@@ -62,7 +62,7 @@ public class SchoolDTO {
     public static class SchoolAddDto {
 
         private String cityName;    //시도명
-        private String streetDetailAddr;    //시군구명
+        private String streetAddr;    //시군구명
         private String schoolKind;//학교급   초등학교,중학교,고등학교
         private String schoolName;     //학교명
         private String cityEduOrg;//시도교육청명
@@ -70,16 +70,16 @@ public class SchoolDTO {
         private String schoolCode; //표준학교코드
         private String foundationName;    //설립명   공립,사립
         private String dayNightName;    //주야구분
-        private String streetAddr;    //도로명주소
+        private String streetDetailAddr;    //도로명주소
         private String postNum;    //우편번호
         private String telNum;    //전화번호
         private String hmpgAddr;   //홈페이지주소
         private String faxNum;    //팩스번호
         private String coedu;   //남여공학구분
 
-        public SchoolDetail toEntity(User user) {
-            School school = new School(cityName, streetDetailAddr, schoolKind, schoolName, cityEduOrg, localEduOrg, user);
-            return new SchoolDetail(school, schoolCode, foundationName, dayNightName, streetAddr, postNum, telNum, hmpgAddr, faxNum, coedu);
+        public SchoolDetail toEntity(String userName) {
+            School school = new School(cityName, streetAddr, schoolKind, schoolName, cityEduOrg, localEduOrg, userName);
+            return new SchoolDetail(school, schoolCode, foundationName, dayNightName, streetDetailAddr, postNum, telNum, hmpgAddr, faxNum, coedu);
         }
     }
 }

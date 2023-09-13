@@ -44,7 +44,8 @@ public class SchoolController {
 
     @GetMapping("/init-official-data")
     public String initOfficialData() {
-        schoolService.upsertSchoolData();
+        //유저 객체 받아서 이름 받아넣기
+        schoolService.upsertSchoolData("user1");
         return "redirect:/high/school/search";
     }
 
