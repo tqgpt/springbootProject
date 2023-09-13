@@ -1,15 +1,21 @@
 package com.chunjae.tqgpt.school.controller;
 
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
+import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -60,8 +66,17 @@ public class SchoolController {
         return "redirect:/high/school/search";
     }
 
-    @GetMapping("/map")
-    public String showMapPage() {
-        return "views/map/map";
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
+        List<School> schools = schoolService.findSchoolsByKeyword(keyword);
+
+        for (School s: schools) {
+            System.out.println(s.toString());
+        }
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

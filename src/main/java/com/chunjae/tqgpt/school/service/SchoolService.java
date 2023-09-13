@@ -170,4 +170,9 @@ public class SchoolService implements SchoolServiceImpl {
     public void addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
 
     }
+
+    @Override
+    public List<School> findSchoolsByKeyword(String keyword) {
+        return schoolRepository.findSchoolsByKeyword(keyword);
+    }
 }

@@ -18,4 +18,6 @@ public interface SchoolServiceImpl {
     School getSchoolById(Long id);
 
     SchoolDetail getSchoolDetailById(Long id);
+
+    List<School> findSchoolsByKeyword(String keyword);
 }

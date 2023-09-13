@@ -8,7 +8,7 @@ var curtLoca = "";
 var map = new naver.maps.Map('map', {
     scaleControl: true,      // 우측 하단 scale 표시
     mapDataControl: false,    // 좌측 하단 @ NAVER Corp 표시
-    zoom: 16,                  // 지도 줌 레벨
+    zoom: 17,                  // 지도 줌 레벨
     zoomControl: true,
 });
 
@@ -32,7 +32,7 @@ naver.maps.Event.once(map, 'init_stylemap', function() {
             // 얻은 좌표를 지도의 중심으로 설정
             map.setCenter(curtLoca);
             // 지도의 줌 레벨을 변경
-            map.setZoom(16);
+            map.setZoom(17);
         }
         else {
             alert("위치 액세스가 거부되었습니다.\n사용하시려면 위치 액세스를 허용해주세요.");
@@ -49,7 +49,7 @@ var onSuccessGeolocation = function (position) {
     map.setCenter(curtLoca);
 
     // 지도의 줌 레벨을 변경합니다.
-    map.setZoom(16);
+    map.setZoom(17);
 
     // 현재 위치에 마커 표시
     new naver.maps.Marker({
@@ -107,7 +107,7 @@ const searchAddressToCoordinate = (address) => {
                     const newPosition = new naver.maps.LatLng(lat, lng);
 
                     map.setCenter(newPosition); // 이동할 위치로 지도 이동
-                    map.setZoom(17);            // 원하는 줌 레벨로 설정
+                    map.setZoom(18);            // 원하는 줌 레벨로 설정
 
                     new naver.maps.Marker({
                         position: new naver.maps.LatLng(lat, lng),

@@ -10,6 +10,22 @@
     margin: 0;
 }
 
+#searchContainer {
+    width: 500px;
+}
+
 #search_resultArea {
     min-width: 20rem;
+}
+
+#search_result {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+#searchCard {
+    cursor: pointer;
+}
+#searchCard:hover {
+    filter: brightness(90%);
 }

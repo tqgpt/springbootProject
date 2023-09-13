@@ -26,7 +26,7 @@
 <body>
   <main>
     <div id="mapContent" class="d-flex">
-      <div class="col-4 px-3 py-1 shadow">
+      <div id="searchContainer" class="px-3 py-1 border-end border-1 border-success shadow">
         <div class="offcanvas-header py-1">
           <h5 class="offcanvas-title" id="offcanvasScrollingLabel">학교 검색</h5>
           <button class="btn btn-outline-success border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
@@ -66,34 +66,64 @@
   const searchButton = document.getElementById("button-addon");
   const searchResultDiv = document.getElementById("search_result");
 
+  const recordCookie = (school) => {
+    const schoolDataJSON = JSON.stringify(school);
+    const cookieName = 'schoolData';
+
+    // 쿠키 만료일 1일 후로 설정
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 1);
+
+    document.cookie = `${cookieName}=${encodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
+  };
+
+
+  const findSchoolInfo = async (keyword) => {
+      const response = await fetch(`/high/school/search/${keyword}`, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+      });
+    if (response.ok) {
+      const dataArray = await response.json();
+
+      searchResultDiv.innerHTML = '';
+
+      const htmlElements = dataArray.map((data) => {
+        const schoolItem = document.createElement('div');
+        schoolItem.classList.add('list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start', 'my-1', 'rounded', 'bg-secondary-subtle');
+        schoolItem.setAttribute('id', 'searchCard');
+        schoolItem.onclick = () => {
+          searchAddressToCoordinate(data.streetAddr);
+          recordCookie(data);
+        };
+
+        schoolItem.innerHTML = `
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${data.schoolName}</h5>
+            <small>${data.schoolKind}</small>
+          </div>
+          <p class="mb-1">${data.streetAddr}</p>
+          <small>${data.localEduOrg}</small>
+        `;
+
+        return schoolItem;
+      });
+
+      searchResultDiv.append(...htmlElements);
+    } else {
+        console.error("서버 응답 오류:", response.status, response.statusText);
+    }
+  };
+
   const handleSearch = async () => {
     const keyword = addressInput.value;
     if (!keyword) { return }
-    try {
-      const searchResult = await searchAddressToCoordinate(keyword);
-      const addressParts = searchResult.roadAddress.split(' ');
-      const lastPart = addressParts[addressParts.length - 1];
-
-      console.log(searchResult)
-
-      searchResultDiv.innerHTML = `
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">${lastPart}</h5>
-                <small>고등학교</small>
-              </div>
-              <p class="mb-1">${searchResult.roadAddress}</p>
-              <small>${searchResult.jibunAddress}</small>
-            </a>
-        `;
-    }
-    catch (error) { console.error('검색 오류:', error) }
+    await findSchoolInfo(keyword);
   };
 
   searchButton.addEventListener("click", handleSearch); // 버튼 클릭 이벤트 처리
-  addressInput.addEventListener("keyup", (event) => { // Enter 키 이벤트 처리
+  addressInput.addEventListener("keyup", (event) => {   // Enter 키 이벤트 처리
     if (event.key === "Enter") handleSearch();
   });
-
 </script>
 </html>
