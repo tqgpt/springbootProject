@@ -13,7 +13,7 @@ public class SchoolDataInitScheduler {
 
     private final SchoolService schoolService;
 
-    @Scheduled(cron = "50 10 13 9 * *") // 매년 1월 1일에 실행됨.
+    @Scheduled(cron = "0 0 4 1 1 *") // 매년 1월 1일에 새벽 4시에 실행됨.
     public void scheduleTaskUsingCronExpression() {
         log.info("API 공식 데이터 초기화 스케줄러 실행됨.");
         long startTime = System.currentTimeMillis(); // Start time
