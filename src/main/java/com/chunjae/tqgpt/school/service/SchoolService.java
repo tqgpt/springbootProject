@@ -51,6 +51,16 @@ public class SchoolService implements SchoolServiceImpl {
     }
 
     @Override
+    public School getSchoolById(Long id) {
+        return schoolRepository.getReferenceById(id);
+    }
+
+    @Override
+    public SchoolDetail getSchoolDetailById(Long id) {
+        return schoolDetailRepository.getReferenceById(id);
+    }
+
+    @Override
     public void upsertSchoolData(String userName) {
         deleteExistingData();
 

@@ -1,7 +1,6 @@
 package com.chunjae.tqgpt.user.entity;
 
 
-import com.chunjae.tqgpt.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

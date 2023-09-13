@@ -71,3 +71,6 @@ public class SchoolDetail {
         this.coedu = coedu;
     }
 }
+
+
+

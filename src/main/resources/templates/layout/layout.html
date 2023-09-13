@@ -29,8 +29,8 @@
 
 </head>
 <body>
-  <header th:replace="fragments/header :: header"></header>
+  <header th:replace="~{fragments/header :: header}"></header>
   <main layout:fragment="content"></main>
-  <footer th:replace="fragments/footer :: footer"></footer>
+  <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 </html>
