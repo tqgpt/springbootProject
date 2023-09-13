@@ -1,7 +1,6 @@
 package com.chunjae.tqgpt.school.entity;
 
 
-import com.chunjae.tqgpt.user.entity.User;
 import com.chunjae.tqgpt.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,9 +22,9 @@ public class School extends BaseEntity {
     @Column(name = "city_name")
     private String cityName;
 
-    //도로명상세주소
-    @Column(name = "street_detail_addr")
-    private String streetDetailAddr;
+    //도로명주소
+    @Column(name = "street_addr")
+    private String streetAddr;
 
     //학교급(학교종류명)
     @Column(name = "school_kind")
@@ -44,17 +43,16 @@ public class School extends BaseEntity {
     private String localEduOrg;
 
     //회원
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_idx")
-    private User user;
+    @Column(name = "user_name")
+    private String userName;
 
-    public School(String cityName, String streetDetailAddr, String schoolKind, String schoolName, String cityEduOrg, String localEduOrg, User user) {
+    public School(String cityName, String streetAddr, String schoolKind, String schoolName, String cityEduOrg, String localEduOrg, String userName) {
         this.cityName = cityName;
-        this.streetDetailAddr = streetDetailAddr;
+        this.streetAddr = streetAddr;
         this.schoolKind = schoolKind;
         this.schoolName = schoolName;
         this.cityEduOrg = cityEduOrg;
         this.localEduOrg = localEduOrg;
-        this.user = user;
+        this.userName = userName;
     }
 }

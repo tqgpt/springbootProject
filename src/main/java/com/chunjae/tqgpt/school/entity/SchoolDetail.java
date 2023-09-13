@@ -34,9 +34,9 @@ public class SchoolDetail {
     @Column(name = "day_night_name")
     private String dayNightName;
 
-    //도로명주소
-    @Column(name = "street_addr")
-    private String streetAddr;
+    //도로명상세주소
+    @Column(name = "street_detail_addr")
+    private String streetDetailAddr;
 
     //우편번호
     @Column(name = "post_num")
@@ -58,12 +58,12 @@ public class SchoolDetail {
     @Column(name = "coedu")
     private String coedu;
 
-    public SchoolDetail(School school, String schoolCode, String foundationName, String dayNightName, String streetAddr, String postNum, String telNum, String hmpgAddr, String faxNum, String coedu) {
+    public SchoolDetail(School school, String schoolCode, String foundationName, String dayNightName, String streetDetailAddr, String postNum, String telNum, String hmpgAddr, String faxNum, String coedu) {
         this.school = school;
         this.schoolCode = schoolCode;
         this.foundationName = foundationName;
         this.dayNightName = dayNightName;
-        this.streetAddr = streetAddr;
+        this.streetDetailAddr = streetDetailAddr;
         this.postNum = postNum;
         this.telNum = telNum;
         this.hmpgAddr = hmpgAddr;
