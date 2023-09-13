@@ -67,4 +67,4 @@ out/
 application-security.properties
 
 ### API script ###
-/resources/template/api/NaverMapAPI.html
+!**src/main/resources/template/api/**
