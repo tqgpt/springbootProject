@@ -21,9 +21,10 @@
   <link rel="stylesheet" th:href="@{/css/main/index.css}">
 
   <!-- Naver Map API -->
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+  <th:block th:include="fragments/api/NaverMapAPI"></th:block>
 </head>
 <body>
+  <th:block th:include="fragments/theme"></th:block>
   <main>
     <div id="mapContent" class="d-flex">
       <div id="searchContainer" class="px-3 py-1 border-end border-1 border-success shadow">
@@ -35,7 +36,7 @@
         </div>
         <div class="offcanvas-body">
           <label class="input-group">
-            <input id="addressInput" type="text" class="form-control form-control-lg border-dark" placeholder="검색" aria-describedby="button-addon">
+            <input id="addressInput" type="text" class="form-control form-control-lg" placeholder="검색" aria-describedby="button-addon">
             <button class="btn btn-outline-secondary" type="button" id="button-addon"><i class="bi bi-search"></i></button>
           </label>
           <div id="search_result" class="list-group px-1 py-3">

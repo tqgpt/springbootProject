@@ -74,8 +74,8 @@
             </div>
         </div>
     </section>
-
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+    <!-- Naver Map API -->
+    <th:block th:include="fragments/api/NaverMapAPI"></th:block>
     <script th:src="@{/js/map.js}"></script>
     <script>
         const schoolName = "[[${school.schoolName}]]";
