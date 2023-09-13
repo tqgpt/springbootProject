@@ -6,32 +6,39 @@
     flex-wrap: wrap;
 }
 
+#infoSection {
+    padding-right: calc(var(--bs-gutter-x) * .5) !important;
+    padding-left: calc(var(--bs-gutter-x) * .5) !important;
+}
+
 .infoTable{
+    align-items: center;
     display: flex;
     border-collapse: collapse;
-    width: 100%;
-    padding: 25px;
-    margin: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
 }
-
-.infoTable thead th {
-    border: 3px solid #ccc;
-    background-color: #999999;
-    margin: 5px;
+.infoTable th {
+    align-items: center;
+    background-color: #dddddd;
+    color: #666666;
+    margin-top: 5px;
+    margin-bottom: 5px;
     padding: 10px;
     text-align: left;
-    border-radius: 10px;
     width: 12rem;
+    height: 4rem;
 }
 
-.infoTable tbody td {
-    border: 3px solid #ccc;
-    background-color: #888888;
-    margin: 5px;
+.infoTable td {
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
     padding: 10px;
     text-align: left;
-    border-radius: 10px;
-    width: 36rem;
+    width: 24rem;
+    height: 4rem;
 }
 
 .infoTable tbody {
@@ -57,6 +64,29 @@
     height: 50rem;
 }
 
-#mapContent {
-    width: 30rem;
+/* 천재 초록색 실행단추 */
+.apiButtonGreen{
+    align-items: center;
+    margin-inline: 10px;
+    padding: 10px;
+
+    --bd-violet-bg: #24a148;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+    --bs-btn-font-weight: 600;
+    --bs-btn-bg: var(--bd-violet-bg);
+    --bs-btn-border-color: var(--bd-violet-bg);
+    --bs-btn-hover-bg: #6528e0;
+    --bs-btn-hover-border-color: #6528e0;
+    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+    --bs-btn-active-bg: #5a23c8;
+    --bs-btn-active-border-color: #5a23c8;
+}
+
+
+@media (min-width: 768px) {
+    #weatherContent {
+        flex: 0 0 auto;
+        width: 40%;
+    }
 }

@@ -3,91 +3,90 @@
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/infoSchool.css}">
-    <div class="container-fluid my-5">
-        <div class="row align-items-md-stretch p-5">
-            <p class="lead">
-            <div class="bd-example m-0 border-0 flex-container">
-                <div class="container-md-5 p-1">
-                    <table class="infoTable table">
-                        <thead>
-                        <tr>
-                            <th scope="col">정보공시학교코드</th>
-                            <th scope="col">학교명</th>
-                            <th scope="col">시도교육청</th>
-                            <th scope="col">지역교육청</th>
-                            <th scope="col">설립구분</th>
-                            <th scope="col">주야구분</th>
-                            <th scope="col">남녀공학여부</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>S01000738</td>
-                            <td>서울개일초등학교</td>
-                            <td>서울특별시교육청</td>
-                            <td>서울특별시강남서초교육지원청</td>
-                            <td>공립</td>
-                            <td>주간</td>
-                            <td>남녀공학</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="container-xl-2 p-1">
-                </div>
-                <div class="container-md-5 p-1">
-                    <table class="infoTable table">
-                        <thead>
-                        <tr>
-                            <th scope="col">시도명</th>
-                            <th scope="col">시군구명</th>
-                            <th scope="col">도로명주소</th>
-                            <th scope="col">우편번호</th>
-                            <th scope="col">전화번호</th>
-                            <th scope="col">홈페이지주소</th>
-                            <th scope="col">팩스번호</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>서울시특별시</td>
-                            <td>강남구</td>
-                            <td>서울특별시 강남구 개포로 401</td>
-                            <td>135804</td>
-                            <td>02-571-8320</td>
-                            <td>https://gaeil.sen.es.kr</td>
-                            <td>02-571-8325</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+
+    <section id="pageMap" class="container my-3">
+        <button onclick="redirectToPage()" class="apiButtonGreen btn btn-primary">학교관리 화면으로</button>
+    </section>
+
+    <section class="container my-3 justify-content-md-center flex-container" id="infoSection">
+        <div class="col-md-6">
+            <table class="infoTable table">
+                <tbody>
+                <tr>
+                    <th>정보공시학교코드</th>
+                    <th>학교명</th>
+                    <th>시도교육청</th>
+                    <th>지역교육청</th>
+                    <th>설립구분</th>
+                    <th>주야구분</th>
+                    <th>남녀공학여부</th>
+                </tr>
+                <tr>
+                    <td th:text="${schoolDetail.schoolCode}"></td>
+                    <td th:text="${school.schoolName}"></td>
+                    <td th:text="${school.cityEduOrg}"></td>
+                    <td th:text="${school.localEduOrg}"></td>
+                    <td th:text="${schoolDetail.foundationName}"></td>
+                    <td th:text="${schoolDetail.dayNightName}"></td>
+                    <td th:text="${schoolDetail.coedu}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
+        <div class="col-md-6">
+            <table class="infoTable table">
+                <tbody>
+                <tr>
+                    <th>시도명</th>
+                    <th>시군구명</th>
+                    <th>도로명주소</th>
+                    <th>우편번호</th>
+                    <th>전화번호</th>
+                    <th>홈페이지주소</th>
+                    <th>팩스번호</th>
+                </tr>
+                <tr>
+                    <td th:text="${school.cityName}"></td>
+                    <td th:text="${school.streetAddr}"></td>
+                    <td th:text="${school.streetAddr}"></td>
+                    <td th:text="${schoolDetail.postNum}"></td>
+                    <td th:text="${schoolDetail.telNum}"></td>
+                    <td th:text="${schoolDetail.hmpgAddr}"></td>
+                    <td th:text="${schoolDetail.faxNum}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <section class="container my-3">
-        <div class="row">
-            <div class="col-md-7">
-                <div id="mapArea" class="p-1 bg-body-tertiary border border-dark rounded-3">
+        <div class="row d-flex justify-content-between">
+            <div id="mapContent" class="col-md-7  border border-dark rounded-3 me-1">
+                <div id="mapArea" class="p-1 bg-body-tertiary">
                     <figure id="map" class="w-100 h-100"></figure>
                 </div>
             </div>
-            <div class="col-md-5">
-                <div class="h-100 p-1 bg-body-tertiary border border-dark rounded-3">
+            <div id="weatherContent" class="border border-dark rounded-3">
+                <div class="h-100 p-1 bg-body-tertiary">
                     <h2> 날씨 앱을 넣을 부분 </h2>
                     <p>기상청 단기예보 날씨 API를 넣을 예정</p>
                 </div>
             </div>
         </div>
     </section>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
-    <script th:src="@{/js/map_infoSchool.js}"></script>
-    <script>
-        // const schoolName = [[${schoolName}]];
-        // const streetAddress = [[${streetAddress}]];
-        const schoolName = "효원고등학교";
-        const streetAddress = "경기도 수원시 영통구 동수원로 336";
 
-        searchAddressToCoordinate(streetAddress, schoolName);
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+    <script th:src="@{/js/map.js}"></script>
+    <script>
+        const schoolName = "[[${school.schoolName}]]";
+        const streetDetailAddress = "[[${schoolDetail.streetDetailAddr}]]";
+
+        searchAddressToCoordinate(streetDetailAddress, schoolName);
+    </script>
+    <script type="text/javascript">
+        function redirectToPage() {
+            window.location.href = "/high/school/search"
+        }
     </script>
 </main>
 </html>
