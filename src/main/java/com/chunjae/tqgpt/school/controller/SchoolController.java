@@ -18,11 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SchoolController {
     private final SchoolService schoolService;
 
+    /*학교정보 추가 페이지
+    * GET
+    * */
     @GetMapping("/add")
     public String addSchool() {
         return "addSchool";
     }
 
+    /*학교 정보 추가 페이지
+    * POST
+    */
     @PostMapping("/add")
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         log.info("Controller addSchool start : " + schoolDto.toString());
@@ -31,6 +37,7 @@ public class SchoolController {
         return "addSchool";
     }
 
+    /**/
     @GetMapping("/search")
     public String showSchoolManageHomePage(Model model) { 
         model.addAttribute("schoolList", schoolService.getTop10Schools());
@@ -51,5 +58,10 @@ public class SchoolController {
         //유저 객체 받아서 이름 받아넣기
         schoolService.upsertSchoolData("user1");
         return "redirect:/high/school/search";
+    }
+
+    @GetMapping("/map")
+    public String showMapPage() {
+        return "views/map/map";
     }
 }

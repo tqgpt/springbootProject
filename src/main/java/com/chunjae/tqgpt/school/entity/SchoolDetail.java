@@ -17,7 +17,7 @@ public class SchoolDetail {
     private Long idx;
 
     //학교pk
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "school_idx")
     private School school;
@@ -57,6 +57,9 @@ public class SchoolDetail {
     //남녀공학 구분
     @Column(name = "coedu")
     private String coedu;
+
+    @Column(name = "user_name")
+    private String userName;
 
     public SchoolDetail(School school, String schoolCode, String foundationName, String dayNightName, String streetDetailAddr, String postNum, String telNum, String hmpgAddr, String faxNum, String coedu) {
         this.school = school;

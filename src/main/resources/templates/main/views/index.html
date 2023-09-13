@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>HighSchool | Map</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--Google jquery-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+  <!--BootStrap-->
+  <script th:src="@{/js/color-modes.js}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/main/index.css}">
+
+  <!-- Naver Map API -->
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+</head>
+<body>
+  <main>
+    <div id="mapContent" class="d-flex">
+      <div class="col-4 px-3 py-1 shadow">
+        <div class="offcanvas-header py-1">
+          <h5 class="offcanvas-title" id="offcanvasScrollingLabel">학교 검색</h5>
+          <button class="btn btn-outline-success border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+            <i class="bi bi-clipboard-data fs-4"></i>
+          </button>
+        </div>
+        <div class="offcanvas-body">
+          <label class="input-group">
+            <input id="addressInput" type="text" class="form-control form-control-lg border-dark" placeholder="검색" aria-describedby="button-addon">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon"><i class="bi bi-search"></i></button>
+          </label>
+          <div id="search_result" class="list-group px-1 py-3">
+            학교를 찾아보세요
+          </div>
+        </div>
+      </div>
+
+      <!-- Map-Start  -->
+      <figure id="map" class="w-100 h-100"></figure>
+      <!-- Map-End  -->
+
+      <div class="offcanvas offcanvas-bottom" data-bs-backdrop="false" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasBottomLabel">검색 기록</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body px-3">
+          쿠키~~
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+<script th:src="@{/js/main/map_index.js}"></script>
+<script>
+  const addressInput = document.getElementById("addressInput");
+  const searchButton = document.getElementById("button-addon");
+  const searchResultDiv = document.getElementById("search_result");
+
+  const handleSearch = async () => {
+    const keyword = addressInput.value;
+    if (!keyword) { return }
+    try {
+      const searchResult = await searchAddressToCoordinate(keyword);
+      const addressParts = searchResult.roadAddress.split(' ');
+      const lastPart = addressParts[addressParts.length - 1];
+
+      console.log(searchResult)
+
+      searchResultDiv.innerHTML = `
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">${lastPart}</h5>
+                <small>고등학교</small>
+              </div>
+              <p class="mb-1">${searchResult.roadAddress}</p>
+              <small>${searchResult.jibunAddress}</small>
+            </a>
+        `;
+    }
+    catch (error) { console.error('검색 오류:', error) }
+  };
+
+  searchButton.addEventListener("click", handleSearch); // 버튼 클릭 이벤트 처리
+  addressInput.addEventListener("keyup", (event) => { // Enter 키 이벤트 처리
+    if (event.key === "Enter") handleSearch();
+  });
+
+</script>
+</html>
