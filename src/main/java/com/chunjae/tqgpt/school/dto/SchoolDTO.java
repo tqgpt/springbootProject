@@ -6,6 +6,7 @@ import com.chunjae.tqgpt.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 public class SchoolDTO {
 

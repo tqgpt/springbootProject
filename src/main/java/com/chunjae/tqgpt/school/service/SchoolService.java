@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -202,8 +203,7 @@ public class SchoolService implements SchoolServiceImpl {
                 ,""
         );
         SchoolDetail modifySchoolDetail = new SchoolDetail(
-                schoolIdx
-                ,modifySchool
+                modifySchool
                 ,dto.getSchoolCode()
                 ,dto.getFoundationName()
                 ,dto.getDayNightName()
@@ -226,42 +226,26 @@ public class SchoolService implements SchoolServiceImpl {
 
     @Override
     public SchoolDetail modifySchoolOk(SchoolDTO.SchoolModifyDto dto) {
-        /*SchoolDetail modifySchool = schoolModifyDto.toEntity("testName");
-        School modifiedSchool = schoolRepository.save(modifySchool.getSchool());*/
-        SchoolDetail updateSchoolDetail = null;
-                School modifySchool = new School(
-                dto.getSchoolIdx()
-                ,dto.getCityName()
-                ,dto.getStreetDetailAddr()
-                ,dto.getSchoolKind()
-                ,dto.getSchoolName()
-                ,dto.getCityEduOrg()
-                ,dto.getLocalEduOrg()
-                ,""
-        );
-        SchoolDetail modifySchoolDetail = new SchoolDetail(
-                dto.getSchoolIdx()
-                ,modifySchool
-                ,dto.getSchoolCode()
-                ,dto.getFoundationName()
-                ,dto.getDayNightName()
-                ,dto.getStreetAddr()
-                ,dto.getPostNum()
-                ,dto.getTelNum()
-                ,dto.getHmpgAddr()
-                ,dto.getFaxNum()
-                ,dto.getCoedu()
-        );
-        try {
-            School updateSchool = schoolRepository.save(modifySchool);
-            updateSchoolDetail = schoolDetailRepository.save(modifySchoolDetail);
-            log.info("modifySchool update 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.info("modifySchool update error");
+        Optional<School> getSchool = schoolRepository.findById(dto.getSchoolIdx());
+        Optional<SchoolDetail> getSchoolDetail = schoolDetailRepository.findById(dto.getSchoolIdx());
+        School modifySchool = null;
+        SchoolDetail modifySchoolDetail = null;
+        SchoolDetail modifySchoolDetail2 = null;
+
+        if(getSchool.isPresent()) {
+            modifySchool = getSchool.get();
+            modifySchool.update(dto, "testName");
+
+            schoolRepository.save(modifySchool);
+        }
+        if (getSchoolDetail.isPresent()) {
+            modifySchoolDetail = getSchoolDetail.get();
+            modifySchoolDetail.update(dto, "testName");
+
+            schoolDetailRepository.save(modifySchoolDetail);
         }
 
-        return updateSchoolDetail;
+        return modifySchoolDetail;
     }
 
 

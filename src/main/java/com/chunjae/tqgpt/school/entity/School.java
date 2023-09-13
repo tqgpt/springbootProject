@@ -1,6 +1,7 @@
 package com.chunjae.tqgpt.school.entity;
 
 
+import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,6 +54,16 @@ public class School extends BaseEntity {
         this.schoolName = schoolName;
         this.cityEduOrg = cityEduOrg;
         this.localEduOrg = localEduOrg;
+        this.userName = userName;
+    }
+
+    public void update(SchoolDTO.SchoolModifyDto modifyDto,String userName){
+        this.cityName = modifyDto.getCityName();
+        this.streetAddr = modifyDto.getStreetAddr();
+        this.schoolKind = modifyDto.getSchoolKind();
+        this.schoolName = modifyDto.getSchoolName();
+        this.cityEduOrg = modifyDto.getCityEduOrg();
+        this.localEduOrg = modifyDto.getLocalEduOrg();
         this.userName = userName;
     }
 }

@@ -1,5 +1,6 @@
 package com.chunjae.tqgpt.school.entity;
 
+import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -72,6 +73,18 @@ public class SchoolDetail {
         this.hmpgAddr = hmpgAddr;
         this.faxNum = faxNum;
         this.coedu = coedu;
+    }
+    public void update(SchoolDTO.SchoolModifyDto dto, String userName) {
+        this.schoolCode = dto.getSchoolCode();
+        this.foundationName = dto.getFoundationName();
+        this.dayNightName = dto.getDayNightName();
+        this.streetDetailAddr = dto.getStreetDetailAddr();
+        this.postNum = dto.getPostNum();
+        this.telNum = dto.getTelNum();
+        this.hmpgAddr = dto.getHmpgAddr();
+        this.faxNum = dto.getFaxNum();
+        this.coedu = dto.getCoedu();
+        this.userName = userName;
     }
 }
 

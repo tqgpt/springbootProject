@@ -4,9 +4,9 @@
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/addSchool.css}">
     <section class="container my-4">
-        <div class="container w-80 acenter">
+        <div class="container w-75 acenter">
 
-            <h2 class="aleft">학교 추가</h2>
+            <h2 class="aleft">학교 수정</h2>
 
             <form action="" method="post">
                 <div class="row" id="sc-info">
@@ -18,9 +18,9 @@
                         <div class="input-group-text">학교급</div>
                         <div class="input-group-text">시도명</div>
                         <div class="input-group-text">도로명 주소
-                            <span class="aright">
+                            <!--<span class="aright">
                                 <button id="apiButton" class="btn btn-primary text-right">검색</button>
-                            </span>
+                            </span>-->
                         </div>
                         <div class="input-group-text">전화번호</div>
                         <div class="input-group-text">팩스번호</div>
@@ -86,13 +86,11 @@
             data.schoolIdx = $('input[name=schoolIdx]').val();
 
             var jsonStr = JSON.stringify(data);
-            //console.log(data);
-            console.log(jsonStr);
+            //console.log(jsonStr);
 
             $.ajax({
                 type: "POST",
                 url: "/high/school/api/modify",
-                //dataType: "string",
                 data : jsonStr,
                 contentType : "application/json; charset=utf-8",
                 error: function() {
@@ -100,8 +98,10 @@
                     console.log('통신실패!!');
                 },
                 success: function(data) {
+                    //console.log(data);
                     alert("학교수정성공");
-                    console.log("통신데이터 값 : " + data);
+                    //console.log("수정성공 데이터 값 : " + data);
+                    console.log($('input[name=schoolName]').val());
                 }
             });
         }
