@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller
@@ -85,8 +84,23 @@ public class SchoolController {
         return "redirect:/high/school/search";
     }
 
-    @GetMapping("/map")
-    public String showMapPage() {
-        return "views/map/map";
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
+        List<School> schools = schoolService.findSchoolsByKeyword(keyword);
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
+//    @GetMapping("/search/{keyword}")
+//    public ResponseEntity<List<School>> searchRelated(@PathVariable String keyword, @PathVariable String address) {
+//        List<School> schools = schoolService.findRelated(keyword);
+//        if (!schools.isEmpty()) {
+//            return new ResponseEntity<>(schools, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }
