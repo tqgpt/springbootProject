@@ -30,17 +30,6 @@ public class SchoolController {
         return "addSchool";
     }
 
-    /*학교 정보 추가 페이지
-     * POST
-     */
-    @PostMapping("/add")
-    public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
-        log.info("Controller addSchool start : " + schoolDto.toString());
-        schoolService.addSchool(schoolDto);
-
-        return "addSchool";
-    }
-
     /*페이지 로딩 시 학교 list 출력
      * GET
      * */
@@ -83,24 +72,4 @@ public class SchoolController {
         schoolService.upsertSchoolData("user1");
         return "redirect:/high/school/search";
     }
-
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
-        List<School> schools = schoolService.findSchoolsByKeyword(keyword);
-        if (!schools.isEmpty()) {
-            return new ResponseEntity<>(schools, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-//    @GetMapping("/search/{keyword}")
-//    public ResponseEntity<List<School>> searchRelated(@PathVariable String keyword, @PathVariable String address) {
-//        List<School> schools = schoolService.findRelated(keyword);
-//        if (!schools.isEmpty()) {
-//            return new ResponseEntity<>(schools, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 }
