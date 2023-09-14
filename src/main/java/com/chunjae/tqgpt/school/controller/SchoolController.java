@@ -1,15 +1,19 @@
 package com.chunjae.tqgpt.school.controller;
 
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
+import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,16 +23,16 @@ public class SchoolController {
     private final SchoolService schoolService;
 
     /*학교정보 추가 페이지
-    * GET
-    * */
+     * GET
+     * */
     @GetMapping("/add")
     public String addSchool() {
         return "addSchool";
     }
 
     /*학교 정보 추가 페이지
-    * POST
-    */
+     * POST
+     */
     @PostMapping("/add")
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         log.info("Controller addSchool start : " + schoolDto.toString());
@@ -37,12 +41,32 @@ public class SchoolController {
         return "addSchool";
     }
 
-    /**/
+    /*페이지 로딩 시 학교 list 출력
+     * GET
+     * */
+
+
     @GetMapping("/search")
-    public String showSchoolManageHomePage(Model model) { 
-        model.addAttribute("schoolList", schoolService.getTop10Schools());
-        model.addAttribute("count", schoolService.getAllSchoolsCnt());
+    public String search(Model model, @PageableDefault(sort = "idx") Pageable pageable) {
+        Page<School> allList = schoolService.getAllList(pageable);
+        model.addAttribute("searchList", allList);
         return "views/schoolManage/manageHome";
+    }
+
+    /*검색 시 학교 list 출력
+     * POST
+     * */
+    @ResponseBody
+    @GetMapping("/search-list")
+    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto,
+                                               @PageableDefault(sort = "idx") Pageable pageable) {
+        log.info("실행됨");
+        List<School> searchList = schoolService.search(requestDto, pageable);
+        if (!searchList.isEmpty()) {
+            return new ResponseEntity<>(searchList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/info/{id}")    // 해당 경로에 요청이 오면 이 메서드 실행
@@ -60,8 +84,23 @@ public class SchoolController {
         return "redirect:/high/school/search";
     }
 
-    @GetMapping("/map")
-    public String showMapPage() {
-        return "views/map/map";
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
+        List<School> schools = schoolService.findSchoolsByKeyword(keyword);
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
+//    @GetMapping("/search/{keyword}")
+//    public ResponseEntity<List<School>> searchRelated(@PathVariable String keyword, @PathVariable String address) {
+//        List<School> schools = schoolService.findRelated(keyword);
+//        if (!schools.isEmpty()) {
+//            return new ResponseEntity<>(schools, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

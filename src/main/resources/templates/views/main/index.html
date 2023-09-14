@@ -24,9 +24,10 @@
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
 </head>
 <body>
+  <th:block th:include="fragments/theme"></th:block>
   <main>
     <div id="mapContent" class="d-flex">
-      <div class="col-4 px-3 py-1 shadow">
+      <div id="searchContainer" class="px-3 py-1 border-end border-1 border-success shadow">
         <div class="offcanvas-header py-1">
           <h5 class="offcanvas-title" id="offcanvasScrollingLabel">학교 검색</h5>
           <button class="btn btn-outline-success border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
@@ -35,9 +36,15 @@
         </div>
         <div class="offcanvas-body">
           <label class="input-group">
-            <input id="addressInput" type="text" class="form-control form-control-lg border-dark" placeholder="검색" aria-describedby="button-addon">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon"><i class="bi bi-search"></i></button>
+            <input id="addressInput" type="text" class="form-control form-control-lg border-success" placeholder="검색" aria-describedby="button-addon">
+            <button class="btn border-success" type="button" id="button-addon"><i class="bi bi-search"></i></button>
           </label>
+<!--          <div id="input_result" class="container p-1, border border-1 border-success">-->
+<!--            <span class="row"><button class="btn text-start">연관어 1</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 2</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 3</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 4</button></span>-->
+<!--          </div>-->
           <div id="search_result" class="list-group px-1 py-3">
             학교를 찾아보세요
           </div>
@@ -61,39 +68,5 @@
   </main>
 </body>
 <script th:src="@{/js/main/map_index.js}"></script>
-<script>
-  const addressInput = document.getElementById("addressInput");
-  const searchButton = document.getElementById("button-addon");
-  const searchResultDiv = document.getElementById("search_result");
-
-  const handleSearch = async () => {
-    const keyword = addressInput.value;
-    if (!keyword) { return }
-    try {
-      const searchResult = await searchAddressToCoordinate(keyword);
-      const addressParts = searchResult.roadAddress.split(' ');
-      const lastPart = addressParts[addressParts.length - 1];
-
-      console.log(searchResult)
-
-      searchResultDiv.innerHTML = `
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">${lastPart}</h5>
-                <small>고등학교</small>
-              </div>
-              <p class="mb-1">${searchResult.roadAddress}</p>
-              <small>${searchResult.jibunAddress}</small>
-            </a>
-        `;
-    }
-    catch (error) { console.error('검색 오류:', error) }
-  };
-
-  searchButton.addEventListener("click", handleSearch); // 버튼 클릭 이벤트 처리
-  addressInput.addEventListener("keyup", (event) => { // Enter 키 이벤트 처리
-    if (event.key === "Enter") handleSearch();
-  });
-
-</script>
+<script th:src="@{/js/main/index.js}"></script>
 </html>

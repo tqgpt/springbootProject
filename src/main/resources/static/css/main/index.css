@@ -2,14 +2,26 @@
     height: 100vh;
 }
 
-#sidePanel {
-    transition: left 3s; /* 1초 동안 left 속성을 변경하는 것을 부드럽게 표현 */
-}
-
 #map {
     margin: 0;
 }
 
+#searchContainer {
+    width: 500px;
+}
+
 #search_resultArea {
     min-width: 20rem;
+}
+
+#search_result {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+#searchCard {
+    cursor: pointer;
+}
+#searchCard:hover {
+    filter: brightness(90%);
 }
