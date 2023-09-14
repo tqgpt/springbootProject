@@ -120,5 +120,7 @@ public class SchoolDTO {
         private String searchOption;
         //검색어
         private String searchValue;
+
+        private String page;
     }
 }

@@ -42,7 +42,10 @@ public class SchoolService {
     @Value("${nice-admin-key}")
     private String apiKey;
 
-    public List<School> search(SchoolDTO.searchRequestDto requestDto, Pageable pageable) {
+    public List<School> search(SchoolDTO.searchRequestDto requestDto) {
+//        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), "idx");
+        Pageable pageable = PageRequest.of(Integer.parseInt(requestDto.getPage())-1, 10);
+
         String city = requestDto.getCityName();
         String district = requestDto.getStreetAddr();
         String searchOption = requestDto.getSearchOption();
@@ -94,7 +97,8 @@ public class SchoolService {
             return schoolRepository.findAll(pageable).getContent();
         }
 
-        public Page<School> getAllList (Pageable pageable){
+        public Page<School> getAllList (){
+            Pageable pageable = PageRequest.of(0, 10);
             return schoolRepository.findAll(pageable);
         }
 

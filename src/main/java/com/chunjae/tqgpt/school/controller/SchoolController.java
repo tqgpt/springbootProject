@@ -7,8 +7,6 @@ import com.chunjae.tqgpt.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -66,8 +64,8 @@ public class SchoolController {
     }
 
     @GetMapping("/search")
-    public String search(Model model, @PageableDefault(sort = "idx") Pageable pageable) {
-        Page<School> allList = schoolService.getAllList(pageable);
+    public String search(Model model) {
+        Page<School> allList = schoolService.getAllList();
         model.addAttribute("searchList", allList);
         return "views/schoolManage/manageHome";
     }
@@ -77,10 +75,9 @@ public class SchoolController {
      * */
     @ResponseBody
     @PostMapping("/search-list")
-    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto,
-                                               @PageableDefault(sort = "idx") Pageable pageable) {
+    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
         log.info("실행됨");
-        List<School> searchList = schoolService.search(requestDto, pageable);
+        List<School> searchList = schoolService.search(requestDto);
         if (!searchList.isEmpty()) {
             return new ResponseEntity<>(searchList, HttpStatus.OK);
         } else {

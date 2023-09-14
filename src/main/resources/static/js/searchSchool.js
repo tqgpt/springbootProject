@@ -80,10 +80,10 @@ if (toastTrigger) {
  *
  * **/
 
-let ex_cityName         // 시/도
-let ex_streetAddr;      // 구/군
-let ex_search_option;   // 검색 조건
-let ex_search_value;    // 검색 입력 값
+let ex_cityName = '';         // 시/도
+let ex_streetAddr = '';      // 구/군
+let ex_search_option = '';   // 검색 조건
+let ex_search_value = '';    // 검색 입력 값
 
 //페이징
 const pageLinks = document.querySelectorAll('.page-link');
@@ -169,8 +169,8 @@ const getParams = (pageNumber) => {
     return {
         cityName: ex_cityName !== "" ? ex_cityName : null,
         streetAddr: ex_streetAddr !== "" ? ex_streetAddr : null,
-        searchOption: ex_search_option,
-        searchValue: ex_search_value !== "" ? ex_search_value : null,
+        searchOption: ex_search_option !== "" ? ex_search_option : null,
+        searchValue: ex_search_value !== "" ? ex_search_value : "",
         page: pageNumber ? pageNumber.toString() : '1'
     };
 }
