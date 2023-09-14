@@ -69,14 +69,20 @@ public class SchoolController {
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
         List<School> schools = schoolService.findSchoolsByKeyword(keyword);
-
-        for (School s: schools) {
-            System.out.println(s.toString());
-        }
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+//    @GetMapping("/search/{keyword}")
+//    public ResponseEntity<List<School>> searchRelated(@PathVariable String keyword, @PathVariable String address) {
+//        List<School> schools = schoolService.findRelated(keyword);
+//        if (!schools.isEmpty()) {
+//            return new ResponseEntity<>(schools, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

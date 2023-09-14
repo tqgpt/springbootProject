@@ -175,4 +175,9 @@ public class SchoolService implements SchoolServiceImpl {
     public List<School> findSchoolsByKeyword(String keyword) {
         return schoolRepository.findSchoolsByKeyword(keyword);
     }
+
+//    public List<School> findRelated(String keyword) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        return schoolRepository.findSchoolsByKeyword(keyword, (java.awt.print.Pageable) pageable);
+//    }
 }

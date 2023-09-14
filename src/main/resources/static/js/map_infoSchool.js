@@ -39,7 +39,7 @@ function searchAddressToCoordinate(address, schoolName) {
         }
 
         infoWindow.setContent([
-            '<div style="padding:10px;width: auto;line-height:150%; ">',
+            '<div style="padding:10px;max-width: 600px;line-height:150%;">',
             '<h4 style="margin-top:5px;">'+ schoolName +'</h4><br /><div id="mapContent">',
             htmlAddresses.join('<br />'),
             '</div></div>'

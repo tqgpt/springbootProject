@@ -75,11 +75,11 @@
         </div>
     </section>
     <!-- Naver Map API -->
-    <th:block th:include="fragments/api/NaverMapAPI"></th:block>
-    <script th:src="@{/js/map.js}"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+    <script th:src="@{/js/map_infoSchool.js}"></script>
     <script>
         const schoolName = "[[${school.schoolName}]]";
-        const streetDetailAddress = "[[${schoolDetail.streetDetailAddr}]]";
+        const streetDetailAddress = "[[${school.streetAddr}]]";
 
         searchAddressToCoordinate(streetDetailAddress, schoolName);
     </script>

@@ -10,8 +10,20 @@ var map = new naver.maps.Map('map', {
     mapDataControl: false,    // 좌측 하단 @ NAVER Corp 표시
     zoom: 17,                  // 지도 줌 레벨
     zoomControl: true,
+    LocationTrackingMode: true,
 });
 
+// 마커 저장 배열
+let markers = [];
+//마커 초기화
+const clearMarker = () => {
+    if (markers.length > 0) {
+        markers.forEach((marker) => {
+            marker.setMap(null);
+        });
+        markers = [];
+    }
+}
 
 // Map 사용자 정의 컨트롤 이벤트 추가 (현재위치로 이동 버튼을 추가)
 naver.maps.Event.once(map, 'init_stylemap', function() {
@@ -26,9 +38,15 @@ naver.maps.Event.once(map, 'init_stylemap', function() {
     // CustomControl를 Map에 설정
     cstmCtrl.setMap(map);
 
-    // 클릭 이벤트 리스너 설정
+    // 내위치로 이동 이벤트 리스너 설정
     naver.maps.Event.addDOMListener(cstmCtrl.getElement(), 'click', function() {
         if (curtLoca) {
+            clearMarker();
+            const newMarker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(curtLoca),
+                map: map,
+            });
+            markers.push(newMarker);
             // 얻은 좌표를 지도의 중심으로 설정
             map.setCenter(curtLoca);
             // 지도의 줌 레벨을 변경
@@ -47,15 +65,14 @@ var onSuccessGeolocation = function (position) {
 
     // 얻은 좌표를 지도의 중심으로 설정합니다.
     map.setCenter(curtLoca);
-
     // 지도의 줌 레벨을 변경합니다.
     map.setZoom(17);
-
     // 현재 위치에 마커 표시
-    new naver.maps.Marker({
+    const newMarker = new naver.maps.Marker({
         position: curtLoca,
         map: map,
     });
+    markers.push(newMarker);
 }
 
 
@@ -86,7 +103,7 @@ else {
 }
 
 // 주소 => 위/경도 조회
-const searchAddressToCoordinate = (address) => {
+const searchAddressToCoordinateMarker = (address, zoom) => {
     return new Promise((resolve, reject) => {
         naver.maps.Service.geocode({ query: address },
             (status, response) => {
@@ -107,15 +124,119 @@ const searchAddressToCoordinate = (address) => {
                     const newPosition = new naver.maps.LatLng(lat, lng);
 
                     map.setCenter(newPosition); // 이동할 위치로 지도 이동
-                    map.setZoom(18);            // 원하는 줌 레벨로 설정
+                    map.setZoom(zoom);            // 원하는 줌 레벨로 설정
 
-                    new naver.maps.Marker({
+                    const newMarker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(lat, lng),
                         map: map,
                     });
+                    markers.push(newMarker);
 
                     resolve(item);
                 }
             });
     });
+}
+
+// 위/경도 => 주소 조회
+function searchCoordinateToAddress(latlng) {
+    naver.maps.Service.reverseGeocode({
+        coords: latlng,
+        orders: [
+            naver.maps.Service.OrderType.ADDR,
+            naver.maps.Service.OrderType.ROAD_ADDR
+        ].join(',')
+    }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+            return alert('Something Wrong!');
+        }
+
+        var items = response.v2.results,
+            address = '',
+            htmlAddresses = [];
+
+        for (var i=0, ii=items.length, item, addrType; i<ii; i++) {
+            item = items[i];
+            address = makeAddress(item) || '';
+            addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+
+            htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
+
+            console.log(address)
+        }
+    });
+}
+
+function makeAddress(item) {
+    if (!item) {
+        return;
+    }
+
+    var name = item.name,
+        region = item.region,
+        land = item.land,
+        isRoadAddress = name === 'roadaddr';
+
+    var sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
+
+    if (hasArea(region.area1)) {
+        sido = region.area1.name;
+    }
+
+    if (hasArea(region.area2)) {
+        sigugun = region.area2.name;
+    }
+
+    if (hasArea(region.area3)) {
+        dongmyun = region.area3.name;
+    }
+
+    if (hasArea(region.area4)) {
+        ri = region.area4.name;
+    }
+
+    if (land) {
+        if (hasData(land.number1)) {
+            if (hasData(land.type) && land.type === '2') {
+                rest += '산';
+            }
+
+            rest += land.number1;
+
+            if (hasData(land.number2)) {
+                rest += ('-' + land.number2);
+            }
+        }
+
+        if (isRoadAddress === true) {
+            if (checkLastString(dongmyun, '면')) {
+                ri = land.name;
+            } else {
+                dongmyun = land.name;
+                ri = '';
+            }
+
+            if (hasAddition(land.addition0)) {
+                rest += ' ' + land.addition0.value;
+            }
+        }
+    }
+
+    return [sido, sigugun, dongmyun, ri, rest].join(' ');
+}
+
+function hasArea(area) {
+    return !!(area && area.name && area.name !== '');
+}
+
+function hasData(data) {
+    return !!(data && data !== '');
+}
+
+function checkLastString (word, lastString) {
+    return new RegExp(lastString + '$').test(word);
+}
+
+function hasAddition (addition) {
+    return !!(addition && addition.value);
 }

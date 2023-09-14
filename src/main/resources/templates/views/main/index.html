@@ -21,7 +21,7 @@
   <link rel="stylesheet" th:href="@{/css/main/index.css}">
 
   <!-- Naver Map API -->
-  <th:block th:include="api/NaverMapAPI"></th:block>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
 </head>
 <body>
   <th:block th:include="fragments/theme"></th:block>
@@ -36,9 +36,15 @@
         </div>
         <div class="offcanvas-body">
           <label class="input-group">
-            <input id="addressInput" type="text" class="form-control form-control-lg" placeholder="검색" aria-describedby="button-addon">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon"><i class="bi bi-search"></i></button>
+            <input id="addressInput" type="text" class="form-control form-control-lg border-success" placeholder="검색" aria-describedby="button-addon">
+            <button class="btn border-success" type="button" id="button-addon"><i class="bi bi-search"></i></button>
           </label>
+<!--          <div id="input_result" class="container p-1, border border-1 border-success">-->
+<!--            <span class="row"><button class="btn text-start">연관어 1</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 2</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 3</button></span>-->
+<!--            <span class="row"><button class="btn text-start">연관어 4</button></span>-->
+<!--          </div>-->
           <div id="search_result" class="list-group px-1 py-3">
             학교를 찾아보세요
           </div>
@@ -62,91 +68,5 @@
   </main>
 </body>
 <script th:src="@{/js/main/map_index.js}"></script>
-<script>
-  document.addEventListener("DOMContentLoaded",() => {
-    console.log(getCookie('visit_record'))
-  })
-
-  const addressInput = document.getElementById("addressInput");
-  const searchButton = document.getElementById("button-addon");
-  const searchResultDiv = document.getElementById("search_result");
-
-  const getCookie = (key) => {
-    //쿠키는 한번에 모두 불러와지기 때문에 사용할때 ';'나눠서 선택적으로 가져와야한다.
-    const cookies = document.cookie.split(`; `).map((el) => el.split('='));
-    let getItem = [];
-
-    for (let i = 0; i < cookies.length; i++) {
-      // 해당하는 key를 갖는 쿠키데이터를 찾기위해 반복문을 사용했는데 다른방법도 연구해봐야겠다.
-      if (cookies[i][0] === key) {
-        getItem.push(cookies[i][1]);
-        break;
-      }
-    }
-
-    if (getItem.length > 0) {
-      return JSON.parse(getItem[0]);
-    }
-  };
-
-  const recordCookie = (school) => {
-    const schoolDataJSON = JSON.stringify(school);
-    const cookieName = 'visit_record';
-
-    // 쿠키 만료일 1일 후로 설정
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 1);
-
-    document.cookie = `${cookieName}=${decodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
-  };
-
-
-  const findSchoolInfo = async (keyword) => {
-      const response = await fetch(`/high/school/search/${keyword}`, {
-        method: "GET",
-        headers: {"Content-Type": "application/json"},
-      });
-    if (response.ok) {
-      const dataArray = await response.json();
-
-      searchResultDiv.innerHTML = '';
-
-      const htmlElements = dataArray.map((data) => {
-        const schoolItem = document.createElement('div');
-        schoolItem.classList.add('list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start', 'my-1', 'rounded', 'bg-secondary-subtle');
-        schoolItem.setAttribute('id', 'searchCard');
-        schoolItem.onclick = () => {
-          searchAddressToCoordinate(data.streetAddr);
-          recordCookie(data);
-        };
-
-        schoolItem.innerHTML = `
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${data.schoolName}</h5>
-            <small>${data.schoolKind}</small>
-          </div>
-          <p class="mb-1">${data.streetAddr}</p>
-          <small>${data.localEduOrg}</small>
-        `;
-
-        return schoolItem;
-      });
-
-      searchResultDiv.append(...htmlElements);
-    } else {
-        console.error("서버 응답 오류:", response.status, response.statusText);
-    }
-  };
-
-  const handleSearch = async () => {
-    const keyword = addressInput.value;
-    if (!keyword) { return }
-    await findSchoolInfo(keyword);
-  };
-
-  searchButton.addEventListener("click", handleSearch); // 버튼 클릭 이벤트 처리
-  addressInput.addEventListener("keyup", (event) => {   // Enter 키 이벤트 처리
-    if (event.key === "Enter") handleSearch();
-  });
-</script>
+<script th:src="@{/js/main/index.js}"></script>
 </html>
