@@ -65,8 +65,8 @@ public class SchoolController {
 
     @GetMapping("/search")
     public String search(Model model) {
-        Page<School> allList = schoolService.getAllList();
-        model.addAttribute("searchList", allList);
+//        Page<School> allList = schoolService.getAllList();
+//        model.addAttribute("searchList", allList);
         return "views/schoolManage/manageHome";
     }
 
@@ -75,8 +75,7 @@ public class SchoolController {
      * */
     @ResponseBody
     @PostMapping("/search-list")
-    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
-        log.info("실행됨");
+    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto, Model model) {
         List<School> searchList = schoolService.search(requestDto);
         if (!searchList.isEmpty()) {
             return new ResponseEntity<>(searchList, HttpStatus.OK);

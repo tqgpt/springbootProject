@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    searchSchool(1);
     const area = $("select[name^=cityName]");
     const district = $("select[name^=streetAddr]");
 
@@ -80,29 +81,10 @@ if (toastTrigger) {
  *
  * **/
 
-let ex_cityName = '';         // 시/도
-let ex_streetAddr = '';      // 구/군
-let ex_search_option = '';   // 검색 조건
+let ex_cityName = '전체';         // 시/도
+let ex_streetAddr = '전체';      // 구/군
+let ex_search_option = '전체';   // 검색 조건
 let ex_search_value = '';    // 검색 입력 값
-
-//페이징
-const pageLinks = document.querySelectorAll('.page-link');
-    pageLinks.forEach(pageLink => {
-        pageLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            const pageNumber = pageLink.getAttribute('data-page');
-            if (pageNumber) {
-                document.querySelectorAll('.page-item').forEach(pageItem => {
-                    pageItem.classList.remove('active');
-                });
-                pageLink.closest('.page-item').classList.add('active');
-
-                searchSchool(pageNumber); // 검색 함수 호출
-            }
-        });
-    }
-);
-
 
 // 검색 버튼 클릭 시
 document.getElementById('searchBtn').addEventListener('click', function (event) {
@@ -143,6 +125,10 @@ const searchSchool = (pageNumber) => {
 
             data.forEach((school) => {
                 const row = document.createElement('tr');
+                row.onclick = () => {
+                    location.href=`/high/school/info/${school.idx}`
+                };
+
                 row.innerHTML = `
                     <th>${school.idx}</th>
                     <td>${school.cityName}</td>
@@ -154,6 +140,10 @@ const searchSchool = (pageNumber) => {
                     <td>${school.userName}</td>
                     <td>${school.createdAt}</td>
                 `;
+
+                row.onclick = function() {
+                    location.href = `/high/school/info/${school.idx}`;
+                };
                 tableBody.appendChild(row);
             });
         })
@@ -174,3 +164,95 @@ const getParams = (pageNumber) => {
         page: pageNumber ? pageNumber.toString() : '1'
     };
 }
+
+
+
+//페이징
+// const pageLinks = document.querySelectorAll('.page-link');
+// pageLinks.forEach(pageLink => {
+//     pageLink.addEventListener('click', (event) => {
+//         event.preventDefault();
+//         const pageNumber = pageLink.getAttribute('data-page');
+//         if (pageNumber) {
+//             document.querySelectorAll('.page-item').forEach(pageItem => {
+//                 pageItem.classList.remove('active');
+//             });
+//             pageLink.closest('.page-item').classList.add('active');
+//
+//             searchSchool(pageNumber); // 검색 함수 호출
+//         }
+//     });
+// });
+
+
+const goPage = (page) => {
+    event.preventDefault();
+    const pageNumber = page.getAttribute('data-page');
+    if (pageNumber) {
+        document.querySelectorAll('.page-item').forEach(pageItem => {
+            pageItem.classList.remove('active');
+        });
+        page.closest('.page-item').classList.add('active');
+
+
+        console.log(pageNumber)
+        searchSchool(pageNumber); // 검색 함수 호출
+    }
+}
+
+// 페이징 처리
+const totalCount = 108; //임의의 count값
+const pageCount = 5;
+let currentPage = 1;
+
+function generatePagination() {
+    let totalPage = Math.ceil(totalCount / pageCount);
+    let pageGroup = Math.ceil(currentPage / pageCount);
+
+    let lastNumber = pageGroup * pageCount;
+    if (lastNumber > totalPage) {
+        lastNumber = totalPage;
+    }
+    let firstNumber = lastNumber - (pageCount - 1);
+    currentPage = firstNumber;
+
+    let paginationHTML = '';
+
+    for (let i = firstNumber; i <= lastNumber; i++) {
+        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" href="#" onclick="goPage(this)">${i}</a></li>`;
+    }
+
+    // 아래는 Previous와 Next 버튼을 추가하는 부분입니다.
+    paginationHTML = `
+    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">&laquo;</span></a></li>
+    ${paginationHTML}
+    <li class="page-item"><a class="page-link" href="#" aria-label="Next" onclick="goNext()"><span aria-hidden="true">&raquo;</span></a></li>
+  `;
+
+    // 페이지네이션을 표시할 위치에 HTML을 삽입합니다.
+    const paginationContainer = document.querySelector('.pagination-container');
+    paginationContainer.innerHTML = paginationHTML;
+}
+
+generatePagination(); // 페이지네이션 생성
+
+// Previous 버튼을 눌렀을 때 이전 그룹 페이징으로 이동
+const goPrevious = (event) => {
+    currentPage -= pageCount; // 이전 그룹으로 이동
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+    generatePagination();
+};
+
+// Next 버튼을 눌렀을 때 다음 그룹 페이징으로 이동
+const goNext = (event) => {
+    currentPage += pageCount; // 다음 그룹으로 이동
+    if (currentPage > totalCount) {
+        currentPage = totalPage;
+    }
+    generatePagination();
+};
+
+
+
