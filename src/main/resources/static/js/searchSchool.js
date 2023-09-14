@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const area = $("select[name^=city]");
-    const district = $("select[name^=district]");
+    const area = $("select[name^=cityName]");
+    const district = $("select[name^=streetAddr]");
 
     $.getJSON("/json/city.json", (data) => {
         const cityData = data.area;
@@ -15,13 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const selectedArea = citiesData.area.find((item) => item.name === selectedCity); // 시/도
 
             district.find("option").remove();
-            if (selectedCity !== "") {
+            if (selectedCity !== "전체") {
                 const cities = selectedArea.cities; // 구/군
                 cities.forEach((item) => {
                     district.append(`<option value="${item}">${item}</option>`);
                 });
             } else {
-                district.append('<option value="">구/군</option>');
+                district.append('<option value="전체">구/군</option>');
             }
         });
     });
@@ -135,7 +135,7 @@ const getParams = (pageNumber) => {
         streetAddr: streetAddr !== "" ? streetAddr : null,
         searchOption: searchOption,
         searchValue: searchValue !== "" ? searchValue : null,
-        page: pageNumber ? pageNumber : null
+        page: pageNumber ? pageNumber : 1
     };
 }
 
