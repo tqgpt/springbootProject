@@ -43,21 +43,21 @@ public class SchoolService {
     private String apiKey;
 
     public List<School> search(SchoolDTO.searchRequestDto requestDto, Pageable pageable) {
-        String city = requestDto.getCity();
-        String district = requestDto.getDistrict();
+        String city = requestDto.getCityName();
+        String district = requestDto.getStreetAddr();
         String searchOption = requestDto.getSearchOption();
         String searchValue = requestDto.getSearchValue();
 
-        if (!requestDto.getCity().isEmpty()) {
+        if (!city.isEmpty()) {
             String addr = district.equals("전체") ? city : city + " " + district;
             if ("전체".equals(searchOption)) {
-                if (requestDto.getSearchOption().equals("전체")) {
+                if (searchOption.equals("전체")) {
                     //서울 : 전체 : 전체 : 검색어
                     return schoolRepository.findSchoolsByAddr(addr, searchValue, pageable);
-                } else if (requestDto.getSearchOption().equals("학교명")) {
+                } else if (searchOption.equals("학교명")) {
                     //서울 : 전체 : 학교명 : 검색어
                     return schoolRepository.findAllByStreetAddrContainingAndSchoolNameContaining(addr, searchValue, pageable);
-                } else if (requestDto.getSearchOption().equals("학교주소")) {
+                } else if (searchOption.equals("학교주소")) {
                     //서울 : 전체 : 학교주소 : 검색어
                     return schoolRepository.findSchoolsByAddrDetail(city, searchValue, pageable);
                 } else {
@@ -65,13 +65,13 @@ public class SchoolService {
                     return schoolRepository.findAllByStreetAddrContainingAndUserName(city, searchValue, pageable);
                 }
             } else {
-                if (requestDto.getSearchOption().equals("전체")) {
+                if (searchOption.equals("전체")) {
                     // 전체 : 전체 : 전체 : 검색어
                     return schoolRepository.findAllBySchoolNameContainingOrStreetAddrContainingOrUserName(searchValue, searchValue, searchValue, pageable);
-                } else if (requestDto.getSearchOption().equals("학교명")) {
+                } else if (searchOption.equals("학교명")) {
                     //전체 : 전체 : 학교명 : 검색어
                     return schoolRepository.findAllBySchoolNameContaining(searchValue, pageable);
-                } else if (requestDto.getSearchOption().equals("학교주소")) {
+                } else if (searchOption.equals("학교주소")) {
                     //전체 : 전체 : 학교주소 : 검색어
                     return schoolRepository.findAllByStreetAddrContaining(searchValue, pageable);
                 } else {

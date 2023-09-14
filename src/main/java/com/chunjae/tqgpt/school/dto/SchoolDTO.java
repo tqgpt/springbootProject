@@ -113,9 +113,9 @@ public class SchoolDTO {
     @Setter
     public static class searchRequestDto {
         //시
-        private String city;
+        private String cityName;
         //구/군
-        private String district;
+        private String streetAddr;
         //검색 옵션
         private String searchOption;
         //검색어
