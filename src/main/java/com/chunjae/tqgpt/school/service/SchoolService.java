@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -26,7 +28,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -169,83 +170,45 @@ public class SchoolService implements SchoolServiceImpl {
     }
 
     @Override
-    public void addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
+    public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
+        SchoolDetail addSchoolInfo = null;
         try {
-            //User user = userRepository.findByUserId("admin1").get();
-
-            SchoolDetail addSchoolInfo = schoolAddDto.toEntity("admin1");
+            addSchoolInfo = schoolAddDto.toEntity("admin1");
             schoolDetailRepository.save(addSchoolInfo);
+
         } catch (Exception e) {
-            e.printStackTrace();
             log.info("addSchool exception");
         }
+        return addSchoolInfo;
 
     }
 
     @Override
-    public SchoolDetail getSchoolOne(Long SchoolIdx) {
-        return schoolDetailRepository.findById(SchoolIdx).get();
+    public Optional<SchoolDetail> getSchoolOne(Long SchoolIdx) {
+        return schoolDetailRepository.findById(SchoolIdx);
     }
 
+    @Transactional
     @Override
-    public void modifySchool(Long schoolIdx, SchoolDTO.SchoolAddDto dto) {
-
-        //User user = userRepository.findByUserId("admin1").get();
-
-        School modifySchool = new School(
-                schoolIdx
-                ,dto.getCityName()
-                ,dto.getStreetDetailAddr()
-                ,dto.getSchoolKind()
-                ,dto.getSchoolName()
-                ,dto.getCityEduOrg()
-                ,dto.getLocalEduOrg()
-                ,""
-        );
-        SchoolDetail modifySchoolDetail = new SchoolDetail(
-                modifySchool
-                ,dto.getSchoolCode()
-                ,dto.getFoundationName()
-                ,dto.getDayNightName()
-                ,dto.getStreetAddr()
-                ,dto.getPostNum()
-                ,dto.getTelNum()
-                ,dto.getHmpgAddr()
-                ,dto.getFaxNum()
-                ,dto.getCoedu()
-        );
-        try {
-            School updateSchool = schoolRepository.save(modifySchool);
-            SchoolDetail updateSchoolDetail = schoolDetailRepository.save(modifySchoolDetail);
-            log.info("modifySchool update 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.info("modifySchool update error");
-        }
-    }
-
-    @Override
-    public SchoolDetail modifySchoolOk(SchoolDTO.SchoolModifyDto dto) {
+    public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto) {
         Optional<School> getSchool = schoolRepository.findById(dto.getSchoolIdx());
         Optional<SchoolDetail> getSchoolDetail = schoolDetailRepository.findById(dto.getSchoolIdx());
+
         School modifySchool = null;
         SchoolDetail modifySchoolDetail = null;
-        SchoolDetail modifySchoolDetail2 = null;
 
-        if(getSchool.isPresent()) {
-            modifySchool = getSchool.get();
-            modifySchool.update(dto, "testName");
-
-            schoolRepository.save(modifySchool);
-        }
-        if (getSchoolDetail.isPresent()) {
-            modifySchoolDetail = getSchoolDetail.get();
-            modifySchoolDetail.update(dto, "testName");
-
-            schoolDetailRepository.save(modifySchoolDetail);
+        if( getSchool.isEmpty() || getSchoolDetail.isEmpty() ) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return modifySchoolDetail;
+        modifySchool = getSchool.get();
+        modifySchoolDetail = getSchoolDetail.get();
+
+        modifySchool.update(dto, "testName");
+        modifySchoolDetail.update(dto, "testName");
+
+        //return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

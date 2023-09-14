@@ -3,12 +3,21 @@
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/addSchool.css}">
+    <script>
+        $(document).ready(function() {
+            $('input[type="text"]').keydown(function(e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                };
+            });
+        });
+    </script>
     <section class="container my-4">
         <div class="container w-75 acenter">
 
             <h2 class="aleft">학교 추가</h2>
 
-            <form action="/high/school/add" method="post">
+            <form action="/high/school/add" method="post" id="schoolForm">
                 <div class="row" id="sc-info">
                     <div class="col-md-3">
                         <div class="input-group-text">학교코드</div>
@@ -57,7 +66,4 @@
         </div>
     </section>
 </main>
-<script>
-
-</script>
 </html>

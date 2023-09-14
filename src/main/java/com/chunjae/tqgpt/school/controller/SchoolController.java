@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -32,37 +34,31 @@ public class SchoolController {
     */
     @PostMapping("/add")
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
-        log.info("Controller addSchool start : " + schoolDto.toString());
-        schoolService.addSchool(schoolDto);
+        SchoolDetail schoolDetail = schoolService.addSchool(schoolDto);
 
-        return "addSchool";
+        return "redirect:/high/school/info/"+schoolDetail.getSchool().getIdx();
     }
 
     @GetMapping("/modify/{school-idx}")
     public String modifySchool(@PathVariable("school-idx") Long schoolIdx, Model model) {
-        log.info("modifySchool Controller start : " + schoolIdx);
         if(schoolIdx == null) {
+            return "redirect:/";
         }
-        SchoolDetail schoolOne = schoolService.getSchoolOne(schoolIdx);
-        model.addAttribute("info", schoolOne);
+
+        Optional<SchoolDetail> getSchool =  schoolService.getSchoolOne(schoolIdx);
+        if(getSchool.isEmpty()) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("info", getSchool.get());
 
         return "modifySchool";
     }
 
-    @PostMapping("/modify")
-    public String modifySchool(SchoolDTO.SchoolAddDto modifiedSchoolInfo,@RequestParam Long schoolIdx) {
-        log.info("modifySchool Post modifiedSchool : " +schoolIdx + modifiedSchoolInfo.toString());
-        schoolService.modifySchool(schoolIdx, modifiedSchoolInfo);
-
-        return "addSchool";
-    }
-
     @PostMapping("/api/modify")
     public @ResponseBody ResponseEntity<SchoolDetail> modifyOk(@RequestBody SchoolDTO.SchoolModifyDto schoolModifyDto) {
-        log.info("modifyOk start dto : " + schoolModifyDto.toString());
-        SchoolDetail modified = schoolService.modifySchoolOk(schoolModifyDto);
 
-        return ResponseEntity.ok().body(modified);
+        return schoolService.modifySchool(schoolModifyDto);
     }
 
     /**/

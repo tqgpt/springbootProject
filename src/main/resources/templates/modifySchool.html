@@ -82,11 +82,9 @@
             data.postNum = $('input[name=postNum]').val();
             data.hmpgAddr = $('input[name=hmpgAddr]').val();
             data.coedu = $('input[name=coedu]').val();
-
             data.schoolIdx = $('input[name=schoolIdx]').val();
 
             var jsonStr = JSON.stringify(data);
-            //console.log(jsonStr);
 
             $.ajax({
                 type: "POST",
@@ -95,12 +93,9 @@
                 contentType : "application/json; charset=utf-8",
                 error: function() {
                     alert('학교수정실패');
-                    console.log('통신실패!!');
                 },
                 success: function(data) {
-                    //console.log(data);
                     alert("학교수정성공");
-                    //console.log("수정성공 데이터 값 : " + data);
                     console.log($('input[name=schoolName]').val());
                 }
             });
