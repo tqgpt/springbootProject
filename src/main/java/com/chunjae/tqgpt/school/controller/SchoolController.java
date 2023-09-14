@@ -46,7 +46,7 @@ public class SchoolController {
      * POST
      * */
     @ResponseBody
-    @GetMapping("/search-list")
+    @PostMapping("/search-list")
     public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto,
                                                @PageableDefault(sort = "idx") Pageable pageable) {
         log.info("실행됨");
