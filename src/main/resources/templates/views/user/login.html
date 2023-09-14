@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/layout}">
+<main layout:fragment="content">
+    <div id="wrap">
+        <div class="login_area">
+            <!-- <img src="images/logo.svg" alt="천재교육 ACA 관리자" /> -->
+            <img src="/images/logo.svg" alt="천재교육"/>
+            <h1>AI 기출 서비스 가공 플랫폼</h1>
+            <form th:action="@{/loginpro}" method="post" class="login_form">
+
+                <div class="login_box">
+                    <input type="text" th:if="${rememberId}" name="userId" th:value="${rememberId}" placeholder="아이디"/>
+                    <input type="text" th:unless="${rememberId}" name="userId" placeholder="아이디"/>
+                    <input class="mt12" name="password" type="password" placeholder="비밀번호"/>
+                    <div class="btn_right mt15 check_box">
+                        <input type="checkbox" id="box1" name="remember">
+                        <label for="box1">아이디 저장</label>
+                    </div>
+                    <div class="btn_zone">
+                        <a class="btn5 btn_color2 login-submit" onclick="submitForm()">로그인</a>
+                    </div>
+                </div>
+            </form>
+
+
+            <p class="login_notice">
+                <span>* </span>
+                <span class="notice_txt">
+                    아이디/비밀번호가 기억나지 않을 경우, 담당자에게 문의하시길 바랍니다.<br/>
+                    담당자 : 홍길동 (02-000-000)
+                </span>
+            </p>
+        </div>
+    </div>
+    <script th:src="@{/js/login.js}"></script>
+</main>
+</html>
