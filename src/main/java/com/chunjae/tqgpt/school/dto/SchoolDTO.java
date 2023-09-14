@@ -6,7 +6,6 @@ import com.chunjae.tqgpt.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 public class SchoolDTO {
 
@@ -62,9 +61,7 @@ public class SchoolDTO {
     @Getter
     @Setter
     @Builder
-    @ToString
     public static class SchoolAddDto {
-
         private String cityName;    //시도명
         private String streetAddr;    //시군구명
         private String schoolKind;//학교급   초등학교,중학교,고등학교
@@ -88,7 +85,6 @@ public class SchoolDTO {
     }
     @Getter
     @Setter
-    @ToString
     public static class SchoolModifyDto {
         private Long schoolIdx;
         private String cityName;    //시도명
@@ -111,5 +107,18 @@ public class SchoolDTO {
             School school = new School(schoolIdx, cityName, streetAddr, schoolKind, schoolName, cityEduOrg, localEduOrg, userName);
             return new SchoolDetail(school, schoolCode, foundationName, dayNightName, streetDetailAddr, postNum, telNum, hmpgAddr, faxNum, coedu);
         }
+    }
+
+    @Getter
+    @Setter
+    public static class searchRequestDto {
+        //시
+        private String city;
+        //구/군
+        private String district;
+        //검색 옵션
+        private String searchOption;
+        //검색어
+        private String searchValue;
     }
 }

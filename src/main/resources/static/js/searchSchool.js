@@ -1,4 +1,3 @@
-// 지역 선택란
 document.addEventListener("DOMContentLoaded", () => {
     const area = $("select[name^=city]");
     const district = $("select[name^=district]");
@@ -27,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
         event.preventDefault(); // 버튼의 기본 동작 막기
@@ -44,111 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
-let ex_city;
-let ex_district;
-let ex_search_option;
-let ex_search_option_value;
-
-//학교 데이터 출력
-const searchSchool = (pageNumber) => {
-    const tableBody = document.getElementById('tableBody');
-    const url = getSearchURL(pageNumber);
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            tableBody.innerHTML = '';
-            data.forEach((school) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                            <th>${school.idx}</th>
-                            <td>${school.city}</td>
-                            <td>${school.district}</td>
-                            <td>${school.class}</td>
-                            <td>${school.name}</td>
-                            <td>${school.educationOffice}</td>
-                            <td>${school.localEducationOffice}</td>
-                            <td>${school.register}</td>
-                            <td>${school.registDate}</td>
-                        `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
-            tableBody.appendChild(row);
-        });
-}
-
-// 검색 조건
-const getSearchURL = (pageNumber) => {
-    const city = ex_city || document.getElementById('city').value;
-    const district = ex_district || document.getElementById('district').value;
-    const searchOption = ex_search_option || document.querySelector('#searchOption').value;
-    const searchValue = ex_search_option_value || document.querySelector('#searchValue').value;
-
-    let url = '/high/search/school';
-    const params = [];
-
-    if (city !== "")
-        params.push(`city=${city}`);
-
-    if (district !== "")
-        params.push(`district=${district}`);
-
-    if (searchValue !== "")
-        params.push(`option=${searchOption}&value=${searchValue}`);
-
-    if (pageNumber)
-        params.push(`page=${pageNumber}`);
-
-    if (params.length > 0)
-        url += '?' + params.join('&');
-
-    return url;
-}
-
-//페이징
-const pageLinks = document.querySelectorAll('.page-link');
-pageLinks.forEach(pageLink => {
-    pageLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        const pageNumber = pageLink.getAttribute('data-page');
-        if (pageNumber) {
-            document.querySelectorAll('.page-item').forEach(pageItem => {
-                pageItem.classList.remove('active');
-            });
-            pageLink.closest('.page-item').classList.add('active');
-
-            // 검색 함수 호출
-            searchSchool(pageNumber);
-        }
-    });
-});
-
-// 검색 버튼 클릭 시
-document.getElementById('searchBtn').addEventListener('click', function (event) {
-    event.preventDefault(); // 버튼의 기본 동작 막기
-
-    // 검색 조건 업데이트
-    ex_city = document.getElementById('city').value;
-    ex_district = document.getElementById('district').value;
-    ex_search_option = document.querySelector('#searchOption').value;
-    ex_search_option_value = document.querySelector('#searchValue').value;
-
-    // 검색 함수 호출
-    searchSchool(1);
-
-    // 페이지 번호 업데이트: 1페이지로 이동
-    document.querySelectorAll('.page-item').forEach(pageItem => {
-        pageItem.classList.remove('active');
-    });
-    document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
-});
-
-
 const toggleTab = (tabName) => {
     const tabs = document.querySelectorAll('.nav-tabs .nav-link');
     tabs.forEach(tab => {
@@ -159,7 +52,6 @@ const toggleTab = (tabName) => {
         }
     });
 }
-
 
 // 데이터 테이블 라이브러리
 $('#tb').DataTable({
@@ -178,4 +70,115 @@ if (toastTrigger) {
     toastTrigger.addEventListener('click', () => {
         toastBootstrap.show()
     })
+}
+
+
+/*
+ * 검색
+ *
+ * **/
+
+let ex_cityName         // 시/도
+let ex_streetAddr;      // 구/군
+let ex_search_option;   // 검색 조건
+let ex_search_value;    // 검색 입력 값
+
+
+//페이징
+const pageLinks = document.querySelectorAll('.page-link');
+pageLinks.forEach(pageLink => {
+    pageLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const pageNumber = pageLink.getAttribute('data-page');
+        if (pageNumber) {
+            document.querySelectorAll('.page-item').forEach(pageItem => {
+                pageItem.classList.remove('active');
+            });
+            pageLink.closest('.page-item').classList.add('active');
+
+            searchSchool(pageNumber); // 검색 함수 호출
+        }
+    });
+});
+
+
+// 검색 버튼 클릭 시
+document.getElementById('searchBtn').addEventListener('click', function (event) {
+    event.preventDefault(); // 버튼의 기본 동작 막기
+
+    // 검색 조건 업데이트
+    ex_cityName = document.getElementById('cityName').value;
+    ex_streetAddr = document.getElementById('streetAddr').value;
+    ex_search_option = document.querySelector('#searchOption').value;
+    ex_search_value = document.querySelector('#searchValue').value;
+
+    // 검색 함수 호출
+    searchSchool(1);
+
+    // 페이지 번호 업데이트: 1페이지로 이동
+    document.querySelectorAll('.page-item').forEach(pageItem => {
+        pageItem.classList.remove('active');
+    });
+    document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
+});
+
+
+// 검색 조건
+const getParams = (pageNumber) => {
+    const cityName = document.getElementById('cityName').value;
+    const streetAddr = document.getElementById('streetAddr').value;
+    const searchOption = document.querySelector('#searchOption').value;
+    const searchValue = document.querySelector('#searchValue').value;
+
+    return {
+        cityName: cityName !== "" ? cityName : null,
+        streetAddr: streetAddr !== "" ? streetAddr : null,
+        searchOption: searchOption,
+        searchValue: searchValue !== "" ? searchValue : null,
+        page: pageNumber ? pageNumber : null
+    };
+}
+
+
+//학교 데이터 출력
+const searchSchool = (pageNumber) => {
+    const tableBody = document.getElementById('tableBody');
+    const searchParams = getParams(pageNumber);
+    ex_cityName = searchParams.cityName;
+    ex_streetAddr = searchParams.streetAddr;
+    ex_search_option = searchParams.searchOption;
+    ex_search_value = searchParams.searchValue;
+
+    console.log(searchParams);
+
+    fetch('/high/school/search-list', {
+        method: 'POST', // POST 요청 사용
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(searchParams)
+    }).then(response => response.json())
+        .then(data => {
+            tableBody.innerHTML = '';
+            data.forEach((school) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <th>${school.idx}</th>
+                    <td>${school.cityName}</td>
+                    <td>${school.streetAddr}</td>
+                    <td>${school.schoolKind}</td>
+                    <td>${school.schoolName}</td>
+                    <td>${school.cityEduOrg}</td>
+                    <td>${school.localEduOrg}</td>
+                    <td>${school.userName}</td>
+                    <td>${school.createdAt}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
+            tableBody.appendChild(row);
+        });
 }

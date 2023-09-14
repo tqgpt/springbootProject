@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,35 +35,75 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SchoolService implements SchoolServiceImpl {
+public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final SchoolDetailRepository schoolDetailRepository;
 
     @Value("${nice-admin-key}")
     private String apiKey;
 
-    @Override
+    public List<School> search(SchoolDTO.searchRequestDto requestDto, Pageable pageable) {
+        String city = requestDto.getCity();
+        String district = requestDto.getDistrict();
+        String searchOption = requestDto.getSearchOption();
+        String searchValue = requestDto.getSearchValue();
+
+        if (!requestDto.getCity().isEmpty()) {
+            String addr = district.equals("전체") ? city : city + " " + district;
+            if ("전체".equals(searchOption)) {
+                if (requestDto.getSearchOption().equals("전체")) {
+                    //서울 : 전체 : 전체 : 검색어
+                    return schoolRepository.findSchoolsByAddr(addr, searchValue, pageable);
+                } else if (requestDto.getSearchOption().equals("학교명")) {
+                    //서울 : 전체 : 학교명 : 검색어
+                    return schoolRepository.findAllByStreetAddrContainingAndSchoolNameContaining(addr, searchValue, pageable);
+                } else if (requestDto.getSearchOption().equals("학교주소")) {
+                    //서울 : 전체 : 학교주소 : 검색어
+                    return schoolRepository.findSchoolsByAddrDetail(city, searchValue, pageable);
+                } else {
+                    //서울 : 전체 : 등록자 : 검색어
+                    return schoolRepository.findAllByStreetAddrContainingAndUserName(city, searchValue, pageable);
+                }
+            } else {
+                if (requestDto.getSearchOption().equals("전체")) {
+                    // 전체 : 전체 : 전체 : 검색어
+                    return schoolRepository.findAllBySchoolNameContainingOrStreetAddrContainingOrUserName(searchValue, searchValue, searchValue, pageable);
+                } else if (requestDto.getSearchOption().equals("학교명")) {
+                    //전체 : 전체 : 학교명 : 검색어
+                    return schoolRepository.findAllBySchoolNameContaining(searchValue, pageable);
+                } else if (requestDto.getSearchOption().equals("학교주소")) {
+                    //전체 : 전체 : 학교주소 : 검색어
+                    return schoolRepository.findAllByStreetAddrContaining(searchValue, pageable);
+                } else {
+                    //전체 : 전체 : 등록자 : 검색어
+                    return schoolRepository.findAllByUserName(searchValue, pageable);
+                }
+            }
+        }
+        return null;
+    }
+
     public List<School> getTop10Schools() {
         Pageable pageable = PageRequest.of(0, 10);
         return schoolRepository.findAll(pageable).getContent();
     }
 
-    @Override
+    public Page<School> getAllList (Pageable pageable){
+        return schoolRepository.findAll(pageable);
+    }
+
     public int getAllSchoolsCnt() {
         return (int) schoolRepository.count();
     }
 
-    @Override
     public School getSchoolById(Long id) {
         return schoolRepository.getReferenceById(id);
     }
 
-    @Override
     public SchoolDetail getSchoolDetailById(Long id) {
         return schoolDetailRepository.getReferenceById(id);
     }
 
-    @Override
     @Transactional
     public void upsertSchoolData(String userName) {
         deleteExistingData(userName);
@@ -169,7 +210,7 @@ public class SchoolService implements SchoolServiceImpl {
         return new SchoolDetail(school, schoolCode, foundationName, dayNightName, streetDetailAddr, postNum, telNum, hmpgAddr, faxNum, coedu);
     }
 
-    @Override
+    
     public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
         SchoolDetail addSchoolInfo = null;
         try {
@@ -183,13 +224,12 @@ public class SchoolService implements SchoolServiceImpl {
 
     }
 
-    @Override
+    
     public Optional<SchoolDetail> getSchoolOne(Long SchoolIdx) {
         return schoolDetailRepository.findById(SchoolIdx);
     }
 
     @Transactional
-    @Override
     public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto) {
         Optional<School> getSchool = schoolRepository.findById(dto.getSchoolIdx());
         Optional<SchoolDetail> getSchoolDetail = schoolDetailRepository.findById(dto.getSchoolIdx());
@@ -211,5 +251,7 @@ public class SchoolService implements SchoolServiceImpl {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
+    public List<School> findSchoolsByKeyword(String keyword) {
+        return schoolRepository.findSchoolsByKeyword(keyword);
+    }
 }
