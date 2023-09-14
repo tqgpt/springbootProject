@@ -131,7 +131,7 @@ const searchSchool = (pageNumber) => {
     const searchParams = getParams(pageNumber);
 
     console.log(searchParams)
-
+    tableBody.innerHTML = '';
     fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
@@ -140,7 +140,7 @@ const searchSchool = (pageNumber) => {
         body: JSON.stringify(searchParams)
     }).then(response => response.json())
         .then(data => {
-            tableBody.innerHTML = '';
+
             data.forEach((school) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
