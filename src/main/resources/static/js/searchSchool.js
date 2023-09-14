@@ -1,4 +1,3 @@
-// 지역 선택란
 document.addEventListener("DOMContentLoaded", () => {
     const area = $("select[name^=city]");
     const district = $("select[name^=district]");
@@ -27,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
         event.preventDefault(); // 버튼의 기본 동작 막기
@@ -44,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
 let ex_city;
 let ex_district;
 let ex_search_option;
@@ -54,7 +51,7 @@ let ex_search_option_value;
 const searchSchool = (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const url = getSearchURL(pageNumber);
-
+    console.log(url)
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -63,14 +60,14 @@ const searchSchool = (pageNumber) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                             <th>${school.idx}</th>
-                            <td>${school.city}</td>
-                            <td>${school.district}</td>
-                            <td>${school.class}</td>
-                            <td>${school.name}</td>
-                            <td>${school.educationOffice}</td>
-                            <td>${school.localEducationOffice}</td>
-                            <td>${school.register}</td>
-                            <td>${school.registDate}</td>
+                            <td>${school.cityName}</td>
+                            <td>${school.streetAddr}</td>
+                            <td>${school.schoolKind}</td>
+                            <td>${school.schoolName}</td>
+                            <td>${school.cityEduOrg}</td>
+                            <td>${school.localEduOrg}</td>
+                            <td>${school.userName}</td>
+                            <td>${school.createdAt}</td>
                         `;
                 tableBody.appendChild(row);
             });
@@ -89,23 +86,15 @@ const getSearchURL = (pageNumber) => {
     const searchOption = ex_search_option || document.querySelector('#searchOption').value;
     const searchValue = ex_search_option_value || document.querySelector('#searchValue').value;
 
-    let url = '/high/search/school';
+    let url = '/high/school/search-list';
     const params = [];
 
-    if (city !== "")
-        params.push(`city=${city}`);
+    params.push(`city=${city}`);
+    params.push(`district=${district}`);
+    params.push(`option=${searchOption}&value=${searchValue}`);
+    params.push(`page=${pageNumber}`);
 
-    if (district !== "")
-        params.push(`district=${district}`);
-
-    if (searchValue !== "")
-        params.push(`option=${searchOption}&value=${searchValue}`);
-
-    if (pageNumber)
-        params.push(`page=${pageNumber}`);
-
-    if (params.length > 0)
-        url += '?' + params.join('&');
+    url += '?' + params.join('&');
 
     return url;
 }
@@ -148,7 +137,6 @@ document.getElementById('searchBtn').addEventListener('click', function (event) 
     document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
 });
 
-
 const toggleTab = (tabName) => {
     const tabs = document.querySelectorAll('.nav-tabs .nav-link');
     tabs.forEach(tab => {
@@ -159,7 +147,6 @@ const toggleTab = (tabName) => {
         }
     });
 }
-
 
 // 데이터 테이블 라이브러리
 $('#tb').DataTable({
