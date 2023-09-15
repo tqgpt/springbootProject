@@ -62,16 +62,14 @@ $('#tb').DataTable({
 });
 
 //toast UI
-const toastTrigger = document.getElementById('liveToastBtn')
+/*const toastTrigger = document.getElementById('liveToastBtn')
 const toastLiveExample = document.getElementById('liveToast')
 if (toastTrigger) {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
     toastTrigger.addEventListener('click', () => {
         toastBootstrap.show()
     })
-}
-
-
+}*/
 
 
 /*
@@ -119,11 +117,16 @@ const searchSchool = (pageNumber) => {
         body: JSON.stringify(searchParams)
     }).then(response => response.json())
         .then(data => {
+            console.log(data)
 
-            data.forEach((school) => {
+            const schoolList = data.contents.content;
+            const totalCount = data.count;
+
+
+            schoolList.forEach((school) => {
                 const row = document.createElement('tr');
                 row.onclick = () => {
-                    location.href=`/high/school/info/${school.idx}`
+                    location.href = `/high/school/info/${school.idx}`
                 };
 
                 const dateObj = new Date(school.createdAt);
@@ -141,10 +144,11 @@ const searchSchool = (pageNumber) => {
                     <td>${formattedDate}</td>
                 `;
 
-                row.onclick = function() {
+                row.onclick = function () {
                     location.href = `/high/school/info/${school.idx}`;
                 };
                 tableBody.appendChild(row);
+                document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
             });
         })
         .catch(error => {
@@ -245,4 +249,42 @@ const goNext = () => {
     }
     generatePagination();
     searchSchool(currentPage);
+};
+
+
+//Excel
+const ExcelDownloader = async () => {
+    const cityName = ex_cityName;
+    const streetAddr = ex_streetAddr;
+    const searchOption = ex_search_option;
+    const searchValue = ex_search_value;
+
+    const params = new URLSearchParams({
+        cityName,
+        streetAddr,
+        searchOption,
+        searchValue,
+    });
+
+    const url = '/high/school/xlsx-download?' + params.toString();
+
+    const response = await fetch(url, {
+        method: 'GET', // 메서드를 GET으로 설정
+    });
+
+    if (response.ok) {
+        console.log("요청 성공!");
+        // 응답 처리 로직
+        const blob = await response.blob();
+
+        // Blob을 사용하여 다운로드 링크를 만듬
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = '학교_정보.xlsx'; // 원하는 파일명을 설정
+        document.body.appendChild(a);
+        a.click();
+    } else {
+        alert("다운로드 실패");
+    }
 };
