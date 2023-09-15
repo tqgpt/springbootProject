@@ -65,13 +65,14 @@
 
     <section class="container my-4 py-5">
         <div class="py-2 d-flex justify-content-between">
-            <span class="d-flex align-items-center" th:text="'총 '+${count}+'개'"></span>
+            <span class="d-flex align-items-center" th:text="${'총 ' + count + '개'}"></span>
             <label>
                 <button type="button" class="btn btn-warning" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
-                <button type="button" class="btn btn-success" id="liveToastBtn">Excel 다운로드 <i class="bi bi-download"></i></button>
+
+                <button type="button" class="btn btn-success" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
                 <button type="button" class="btn btn-secondary" onclick="location.href='/high/school/add'">학교등록</button>
             </label>
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+           <!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
                         <img src="" class="rounded me-2" alt="...">
@@ -83,7 +84,7 @@
                         Hello, world! This is a toast message.
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <table id="tb" class="table table-hover table-striped border rounded-3">
             <thead>

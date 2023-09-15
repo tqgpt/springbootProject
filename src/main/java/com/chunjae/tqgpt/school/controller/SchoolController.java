@@ -4,7 +4,9 @@ import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -32,23 +36,23 @@ public class SchoolController {
     }
 
     /*학교 정보 추가 페이지
-    * POST
-    */
+     * POST
+     */
     @PostMapping("/add")
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         SchoolDetail schoolDetail = schoolService.addSchool(schoolDto);
 
-        return "redirect:/high/school/info/"+schoolDetail.getSchool().getIdx();
+        return "redirect:/high/school/info/" + schoolDetail.getSchool().getIdx();
     }
 
     @GetMapping("/modify/{school-idx}")
     public String modifySchool(@PathVariable("school-idx") Long schoolIdx, Model model) {
-        if(schoolIdx == null) {
+        if (schoolIdx == null) {
             return "redirect:/";
         }
 
-        Optional<SchoolDetail> getSchool =  schoolService.getSchoolOne(schoolIdx);
-        if(getSchool.isEmpty()) {
+        Optional<SchoolDetail> getSchool = schoolService.getSchoolOne(schoolIdx);
+        if (getSchool.isEmpty()) {
             return "redirect:/";
         }
 
@@ -75,10 +79,16 @@ public class SchoolController {
      * */
     @ResponseBody
     @PostMapping("/search-list")
-    public ResponseEntity<List<School>> search(@RequestBody SchoolDTO.searchRequestDto requestDto, Model model) {
-        List<School> searchList = schoolService.search(requestDto);
-        if (!searchList.isEmpty()) {
-            return new ResponseEntity<>(searchList, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
+        Page<School> contents = schoolService.search(requestDto);
+        if (!contents.isEmpty()) {
+            String count = String.valueOf(contents.getTotalElements());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("contents", contents);
+            response.put("count", count);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -107,5 +117,15 @@ public class SchoolController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @SneakyThrows
+    @ResponseBody
+    @GetMapping("/xlsx-download")
+    public void ExcelDownloader(HttpServletResponse res, @RequestParam String cityName, @RequestParam String streetAddr,
+                                @RequestParam String searchOption, @RequestParam String searchValue) {
+        SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
+        schoolService.xlsxDownloadService(res, requestDto);
+        log.info("성공");
     }
 }

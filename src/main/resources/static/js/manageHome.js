@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault(); // 버튼의 기본 동작 막기
 
         // 폼 필드 초기화
-        document.getElementById('cityName').value = "전체";
-        document.getElementById('streetAddr').value = "구/군";
-        document.querySelector('.form-select').value = "전체";
-        document.querySelector('.form-control').value = "";
+        // document.getElementById('cityName').value = "전체";
+        // document.getElementById('streetAddr').value = "구/군";
+        // document.querySelector('.form-select').value = "전체";
+        // document.querySelector('.form-control').value = "";
 
         // 검색 결과 지우기 (원하는 대상에 맞게 수정)
         const tableBody = document.getElementById('tableBody');
@@ -64,16 +64,14 @@ $('#tb').DataTable({
 });
 
 //toast UI
-const toastTrigger = document.getElementById('liveToastBtn')
+/*const toastTrigger = document.getElementById('liveToastBtn')
 const toastLiveExample = document.getElementById('liveToast')
 if (toastTrigger) {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
     toastTrigger.addEventListener('click', () => {
         toastBootstrap.show()
     })
-}
-
-
+}*/
 
 
 /*
@@ -121,11 +119,11 @@ const searchSchool = (pageNumber) => {
         body: JSON.stringify(searchParams)
     }).then(response => response.json())
         .then(data => {
-
+            console.log(data)
             data.forEach((school) => {
                 const row = document.createElement('tr');
                 row.onclick = () => {
-                    location.href=`/high/school/info/${school.idx}`
+                    location.href = `/high/school/info/${school.idx}`
                 };
 
                 const dateObj = new Date(school.createdAt);
@@ -143,7 +141,7 @@ const searchSchool = (pageNumber) => {
                     <td>${formattedDate}</td>
                 `;
 
-                row.onclick = function() {
+                row.onclick = function () {
                     location.href = `/high/school/info/${school.idx}`;
                 };
                 tableBody.appendChild(row);
@@ -248,4 +246,33 @@ const goNext = () => {
     }
     generatePagination();
     searchSchool(currentPage);
+};
+
+
+//Excel
+const ExcelDownloader = async () => {
+    const cityName = ex_cityName;
+    const streetAddr = ex_streetAddr;
+    const searchOption = ex_search_option;
+    const searchValue = ex_search_value;
+
+    const params = new URLSearchParams({
+        cityName,
+        streetAddr,
+        searchOption,
+        searchValue,
+    });
+
+    const url = '/high/school/xlsx-download?' + params.toString();
+
+    const response = await fetch(url, {
+        method: 'GET', // 메서드를 GET으로 설정
+    });
+
+    if (response.ok) {
+        console.log("요청 성공!");
+        // 응답 처리 로직
+    } else {
+        alert("다운로드 실패");
+    }
 };
