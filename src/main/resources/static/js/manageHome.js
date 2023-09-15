@@ -120,7 +120,12 @@ const searchSchool = (pageNumber) => {
     }).then(response => response.json())
         .then(data => {
             console.log(data)
-            data.forEach((school) => {
+
+            const schoolList = data.contents.content;
+            const totalCount = data.count;
+
+
+            schoolList.forEach((school) => {
                 const row = document.createElement('tr');
                 row.onclick = () => {
                     location.href = `/high/school/info/${school.idx}`
@@ -145,6 +150,7 @@ const searchSchool = (pageNumber) => {
                     location.href = `/high/school/info/${school.idx}`;
                 };
                 tableBody.appendChild(row);
+                document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
             });
         })
         .catch(error => {
@@ -272,6 +278,15 @@ const ExcelDownloader = async () => {
     if (response.ok) {
         console.log("요청 성공!");
         // 응답 처리 로직
+        const blob = await response.blob();
+
+        // Blob을 사용하여 다운로드 링크를 만듬
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = '학교_정보.xlsx'; // 원하는 파일명을 설정
+        document.body.appendChild(a);
+        a.click();
     } else {
         alert("다운로드 실패");
     }

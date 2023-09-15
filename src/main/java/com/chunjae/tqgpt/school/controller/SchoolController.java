@@ -9,12 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +82,7 @@ public class SchoolController {
     @ResponseBody
     @PostMapping("/search-list")
     public ResponseEntity<Map<String, Object>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
+        System.out.println("!!!");
         Page<School> contents = schoolService.search(requestDto);
         if (!contents.isEmpty()) {
             String count = String.valueOf(contents.getTotalElements());
@@ -119,7 +122,7 @@ public class SchoolController {
         }
     }
 
-    @SneakyThrows
+    /*@SneakyThrows
     @ResponseBody
     @GetMapping("/xlsx-download")
     public void ExcelDownloader(HttpServletResponse res, @RequestParam String cityName, @RequestParam String streetAddr,
@@ -127,5 +130,24 @@ public class SchoolController {
         SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
         schoolService.xlsxDownloadService(res, requestDto);
         log.info("성공");
+    }*/
+    @SneakyThrows
+    @ResponseBody
+    @GetMapping("/xlsx-download")
+    public ResponseEntity<byte[]> ExcelDownloader(@RequestParam String cityName, @RequestParam String streetAddr,
+                                @RequestParam String searchOption, @RequestParam String searchValue) {
+
+        SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        schoolService.xlsxDownloadService(bos, requestDto);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=school_information.xlsx");
+        log.info("성공");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(bos.toByteArray());
     }
 }
