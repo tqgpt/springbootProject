@@ -6,13 +6,11 @@ import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class SchoolController {
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         SchoolDetail schoolDetail = schoolService.addSchool(schoolDto);
 
-        return "redirect:/high/school/info/"+schoolDetail.getSchool().getIdx();
+        return "redirect:/high/school/search";
     }
 
     @GetMapping("/modify/{school-idx}")

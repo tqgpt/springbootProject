@@ -257,8 +257,7 @@ public class SchoolService {
         modifySchool.update(dto, "testName");
         modifySchoolDetail.update(dto, "testName");
 
-        //return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
     }
 
     public List<School> findSchoolsByKeyword (String keyword){

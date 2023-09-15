@@ -5,14 +5,62 @@
     <link rel="stylesheet" th:href="@{/css/addSchool.css}">
     <script>
         $(document).ready(function() {
+            $('input[name=schoolCode]').focus();
             $('input[type="text"]').keydown(function(e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 };
             });
         });
+        function form_ok() {
+            var schoolCode = $('input[name=schoolCode]');
+            var cityEduOrg = $('input[name=cityEduOrg]');
+            var foundationName = $('input[name=foundationName]');
+            var schoolKind = $('input[name=schoolKind]');
+            var cityName = $('input[name=cityName]');
+            var streetAddr = $('input[name=streetAddr]');
+            var telNum = $('input[name=telNum]');
+            var faxNum = $('input[name=faxNum]');
+
+            var schoolName = $('input[name=schoolName]');
+            var localEduOrg = $('input[name=localEduOrg]');
+            var dayNightName = $('input[name=dayNightName]');
+            var streetDetailAddr = $('input[name=streetDetailAddr]');
+            var postNum = $('input[name=postNum]');
+            var hmpgAddr = $('input[name=hmpgAddr]');
+            var coedu = $('input[name=coedu]');
+
+            if(schoolCode.val() == '') {
+                alert('학교코드를 입력해주세요');
+                schoolCode.focus();
+                return false;
+            }
+            if(schoolName.val() == ''){
+                alert('학교이름은 필수입니다');
+                schoolName.focus();
+                return false;
+            }
+            if(streetAddr.val() == ''){
+                alert('도로명주소는 필수입니다');
+                streetAddr.focus();
+                return false;
+            }
+            if(cityEduOrg.val() == ''){
+                alert('해당 시도교육청은 필수입니다');
+                cityEduOrg.focus();
+                return false;
+            }
+            if(localEduOrg.val() == ''){
+                alert('해당 지역교육청은 필수입니다');
+                localEduOrg.focus();
+                return false;
+            }
+            if(confirm('학교정보를 추가합니다'))
+                $('#schoolForm').submit();
+
+        }
     </script>
-    <section class="container my-4">
+    <section class="container my-4 mt-5">
         <div class="container w-75 acenter">
 
             <h2 class="aleft">학교 추가</h2>
@@ -25,19 +73,19 @@
                         <div class="input-group-text">설립구분</div>
                         <div class="input-group-text">학교급</div>
                         <div class="input-group-text">시도명</div>
-                        <div class="input-group-text">도로명 주소<span class="aright"><button id="apiButton" class="btn btn-primary text-right">검색</button></span></div>
+                        <div class="input-group-text">도로명 주소</div>
                         <div class="input-group-text">팩스번호</div>
                         <div class="input-group-text">전화번호</div>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="schoolCode">
-                        <input type="text" class="form-control" name="cityEduOrg">
+                        <input type="text" class="form-control" name="schoolCode" >
+                        <input type="text" class="form-control" name="cityEduOrg" >
                         <input type="text" class="form-control" name="foundationName">
-                        <input type="text" class="form-control" name="schoolKind">
+                        <input type="text" class="form-control" name="schoolKind" >
                         <input type="text" class="form-control" name="cityName">
-                        <input type="text" class="form-control" name="streetAddr">
-                        <input type="text" class="form-control" name="telNum">
+                        <input type="text" class="form-control" name="streetAddr" >
                         <input type="text" class="form-control" name="faxNum">
+                        <input type="text" class="form-control" name="telNum">
                     </div>
                     <div class="col-md-3">
                         <div class="input-group-text">학교명</div>
@@ -49,8 +97,8 @@
                         <div class="input-group-text">남여공학 구분</div>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="schoolName">
-                        <input type="text" class="form-control" name="localEduOrg">
+                        <input type="text" class="form-control" name="schoolName" >
+                        <input type="text" class="form-control" name="localEduOrg" >
                         <input type="text" class="form-control" name="dayNightName">
                         <input type="text" class="form-control" name="streetDetailAddr">
                         <input type="text" class="form-control" name="postNum">
@@ -60,7 +108,7 @@
                 </div>
 
                 <div class="aright">
-                    <button type="submit" class="btn btn-success">추가하기</button>
+                    <button type="button" onclick="form_ok(this)" class="btn btn-success">추가하기</button>
                 </div>
             </form>
         </div>
