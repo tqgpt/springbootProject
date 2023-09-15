@@ -110,7 +110,7 @@ const searchSchool = (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    tableBody.innerHTML = '';
+
     fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
@@ -119,7 +119,8 @@ const searchSchool = (pageNumber) => {
         body: JSON.stringify(searchParams)
     }).then(response => response.json())
         .then(data => {
-
+            const newTBody = document.createElement('tbody');
+            newTBody.id = 'tableBody';
             data.forEach((school) => {
                 const row = document.createElement('tr');
                 row.onclick = () => {
@@ -144,13 +145,17 @@ const searchSchool = (pageNumber) => {
                 row.onclick = function() {
                     location.href = `/high/school/info/${school.idx}`;
                 };
-                tableBody.appendChild(row);
+                newTBody.appendChild(row);
             });
+            tableBody.parentNode.replaceChild(newTBody, tableBody);
         })
         .catch(error => {
+            const newTBody = document.createElement('tbody');
+            newTBody.id = 'tableBody';
             const row = document.createElement('tr');
             row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
-            tableBody.appendChild(row);
+            newTBody.appendChild(row);
+            tableBody.parentNode.replaceChild(newTBody, tableBody);
         });
 }
 
