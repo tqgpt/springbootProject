@@ -7,6 +7,10 @@
     --primary-hover: rgba(36, 161, 72, 0.8);
 }
 
+html, body {
+    scroll-behavior: smooth;
+}
+
 .bg_primary {
     background-color: var(--primary) !important;
 }

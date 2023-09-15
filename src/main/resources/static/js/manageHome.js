@@ -29,16 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
-        event.preventDefault(); // 버튼의 기본 동작 막기
+        event.preventDefault();
 
         // 폼 필드 초기화
         document.getElementById('cityName').value = "전체";
-        document.getElementById('streetAddr').value = "구/군";
-        document.querySelector('.form-select').value = "전체";
-        document.querySelector('.form-control').value = "";
+        document.getElementById('streetAddr').innerHTML=`<option value="전체">구/군</option>`
+        document.getElementById('searchOption').value = "전체"
+        document.getElementById('searchValue').value = "";
 
-        // 검색 결과 지우기 (원하는 대상에 맞게 수정)
-        const tableBody = document.getElementById('tableBody');
         searchSchool(1);
     });
 });
@@ -176,10 +174,7 @@ const goPage = (page) => {
             pageItem.classList.remove('active');
         });
         page.closest('.page-item').classList.add('active');
-
-
-        console.log(pageNumber)
-        searchSchool(pageNumber); // 검색 함수 호출
+        searchSchool(pageNumber);
     }
 }
 
@@ -202,40 +197,52 @@ function generatePagination() {
     let paginationHTML = '';
 
     for (let i = firstNumber; i <= lastNumber; i++) {
-        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" onclick="goPage(this)">${i}</a></li>`;
+        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><label class="page-link" data-page="${i}" onclick="goPage(this)">${i}</label></li>`;
     }
 
-    // 아래는 Previous와 Next 버튼을 추가하는 부분입니다.
     paginationHTML = `
-    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">&laquo;</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><label aria-hidden="true">이전</label></a></li>
     ${paginationHTML}
-    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><span aria-hidden="true">&raquo;</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><label aria-hidden="true">다음</label></a></li>
   `;
 
-    // 페이지네이션을 표시할 위치에 HTML을 삽입합니다.
     const paginationContainer = document.querySelector('.pagination-container');
     paginationContainer.innerHTML = paginationHTML;
+
+    const prevButton = document.querySelector('.page-link[aria-label="Previous"]');
+    const nextButton = document.querySelector('.page-link[aria-label="Next"]');
+
+    if (pageGroup === 1) {
+        prevButton.style.display = 'none'; // 첫 페이지 그룹이면 Previous 버튼 숨김
+    } else {
+        prevButton.style.display = 'block'; // 그 외에는 표시
+    }
+
+    if (pageGroup * pageCount >= totalPage) {
+        nextButton.style.display = 'none'; // 마지막 페이지 그룹이면 Next 버튼 숨김
+    } else {
+        nextButton.style.display = 'block'; // 그 외에는 표시
+    }
 }
 
 generatePagination(); // 페이지네이션 생성
 
-// Previous 버튼을 눌렀을 때 이전 그룹 페이징으로 이동
-const goPrevious = (event) => {
+const goPrevious = () => {
+    event.preventDefault();
     currentPage -= pageCount; // 이전 그룹으로 이동
     if (currentPage < 1) {
         currentPage = 1;
     }
     generatePagination();
+    searchSchool(currentPage);
 };
 
-// Next 버튼을 눌렀을 때 다음 그룹 페이징으로 이동
-const goNext = (event) => {
+const goNext = () => {
+    event.preventDefault();
     currentPage += pageCount; // 다음 그룹으로 이동
     if (currentPage > totalCount) {
         currentPage = totalPage;
     }
     generatePagination();
+    searchSchool(currentPage);
 };
-
-
-

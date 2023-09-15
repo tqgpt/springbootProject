@@ -1,3 +1,7 @@
+#manageMain {
+    min-height: 80rem !important;
+}
+
 .dataTables_empty {
     height: 100px !important;
     font-weight: bold;
