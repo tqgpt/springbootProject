@@ -16,6 +16,12 @@
     height: 100vh;
 }
 
+@media screen and (max-width: 576px){
+    #mapContent #offcanvas {
+        width: 50%;
+    }
+}
+
 #mapContent #offcanvasBottom {
     z-index: 1100;
 }
