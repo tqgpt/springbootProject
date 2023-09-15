@@ -205,18 +205,15 @@ function generatePagination() {
         paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" onclick="goPage(this)">${i}</a></li>`;
     }
 
-    // 아래는 Previous와 Next 버튼을 추가하는 부분입니다.
     paginationHTML = `
-    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">&laquo;</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">이전</span></a></li>
     ${paginationHTML}
-    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><span aria-hidden="true">&raquo;</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><span aria-hidden="true">다음</span></a></li>
   `;
 
-    // 페이지네이션을 표시할 위치에 HTML을 삽입합니다.
     const paginationContainer = document.querySelector('.pagination-container');
     paginationContainer.innerHTML = paginationHTML;
 
-    // Previous 버튼이나 Next 버튼을 숨김 또는 표시
     const prevButton = document.querySelector('.page-link[aria-label="Previous"]');
     const nextButton = document.querySelector('.page-link[aria-label="Next"]');
 
@@ -235,7 +232,6 @@ function generatePagination() {
 
 generatePagination(); // 페이지네이션 생성
 
-// Previous 버튼을 눌렀을 때 이전 그룹 페이징으로 이동
 const goPrevious = () => {
     currentPage -= pageCount; // 이전 그룹으로 이동
     if (currentPage < 1) {
@@ -245,7 +241,6 @@ const goPrevious = () => {
     searchSchool(currentPage);
 };
 
-// Next 버튼을 눌렀을 때 다음 그룹 페이징으로 이동
 const goNext = () => {
     currentPage += pageCount; // 다음 그룹으로 이동
     if (currentPage > totalCount) {

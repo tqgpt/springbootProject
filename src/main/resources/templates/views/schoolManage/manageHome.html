@@ -87,44 +87,29 @@
         </div>
         <table id="tb" class="table table-hover table-striped border rounded-3">
             <thead>
-            <tr>
-                <th id="t_idx" class="text-center">NO</th>
-                <th id="t_cityName" class="text-center">시도명</th>
-                <th id="t_streetAddr" class="text-center">시군구명</th>
-                <th id="t_schoolKind" class="text-center">학교급</th>
-                <th id="t_schoolName" class="text-center">학교명</th>
-                <th id="t_cityEduOrg" class="text-center">시도교육청</th>
-                <th id="t_localEduOrg" class="text-center">지역교육청</th>
-                <th id="t_userName" class="text-center">등록자</th>
-                <th id="t_createdAt" class="text-center">등록일</th>
-            </tr>
+                <tr>
+                    <th id="t_idx" class="text-center">NO</th>
+                    <th id="t_cityName" class="text-center">시도명</th>
+                    <th id="t_streetAddr" class="text-center">시군구명</th>
+                    <th id="t_schoolKind" class="text-center">학교급</th>
+                    <th id="t_schoolName" class="text-center">학교명</th>
+                    <th id="t_cityEduOrg" class="text-center">시도교육청</th>
+                    <th id="t_localEduOrg" class="text-center">지역교육청</th>
+                    <th id="t_userName" class="text-center">등록자</th>
+                    <th id="t_createdAt" class="text-center">등록일</th>
+                </tr>
             </thead>
-            <tbody id="tableBody" class="table-group-divider">
-<!--                <th:block th:each="school : ${searchList}">-->
-<!--                    <tr th:onclick="|location.href='/high/school/info/'+${school.idx}|">-->
-<!--                        <td class="text-center" th:text="${school.idx}">NO</td>-->
-<!--                        <td class="text-center" th:text="${school.cityName}">시도명</td>-->
-<!--                        <td class="text-center" th:text="${school.streetAddr}">시군구명</td>-->
-<!--                        <td class="text-center" th:text="${school.schoolKind}">학교급</td>-->
-<!--                        <td class="text-center" th:text="${school.schoolName}">학교명</td>-->
-<!--                        <td class="text-center" th:text="${school.cityEduOrg}">시도교육청</td>-->
-<!--                        <td class="text-center" th:text="${school.localEduOrg}">지역교육청</td>-->
-<!--                        <td class="text-center" th:text="${school.userName != null ? school.userName : '-'}">등록자</td>-->
-<!--                        <td class="text-center" th:text="${school.createdAt}">등록일</td>-->
-<!--                    </tr>-->
-<!--                </th:block>-->
-            </tbody>
+            <tbody id="tableBody" class="table-group-divider"></tbody>
         </table>
         <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation example">
-                <ul class="pagination pagination-container">
-<!--                    <li class="page-item"><a class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>-->
-<!--                    <th:block th:each="pageNumber : ${#numbers.sequence(1, 28)}">-->
-<!--                        <li class="page-item" th:classappend="${pageNumber == 1} ? 'active'" >-->
-<!--                            <a class="page-link" th:data-page="${pageNumber}" th:text="${pageNumber}"></a>-->
-<!--                        </li>-->
-<!--                    </th:block>-->
-<!--                    <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>-->
+
+                <ul class="pagination ">
+                    <li class="page-item"><a class="page-link" onclick="searchSchool(1)"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="pagination-container d-flex">
+
+                    </li>
+                    <li class="page-item"><a class="page-link" onclick="searchSchool(108)"><span aria-hidden="true">&raquo;</span></a></li>
                 </ul>
             </nav>
         </div>
