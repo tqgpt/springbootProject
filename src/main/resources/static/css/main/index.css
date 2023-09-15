@@ -1,3 +1,7 @@
+#indexHTML {
+    overflow-y: hidden;
+}
+
 #mapContent {
     height: 100vh;
 }
@@ -6,8 +10,18 @@
     margin: 0;
 }
 
+#mapContent #offcanvas {
+    position: absolute;
+    left: 4.5rem;
+    height: 100vh;
+}
+
+#mapContent #offcanvasBottom {
+    z-index: 1100;
+}
+
 #searchContainer {
-    width: 500px;
+    height: 100%;
 }
 
 #search_resultArea {
@@ -25,3 +39,4 @@
 #searchCard:hover {
     filter: brightness(90%);
 }
+
