@@ -92,15 +92,15 @@ html, body {
 
 
 /* 로그인 */
-.login_area{position: relative; width: 500px; margin:0 auto; padding-top:245px; text-align: center;}
-.login_area h1 { margin: 35px auto 60px; font-size: 40px; line-height: 45px; color: #000000; font-family: 'NanumSquare', sans-serif; font-weight: 600; letter-spacing: -2.4px;}
-.login_area .login_box > input { width: 500px; height: 60px; padding-left: 20px; font-size: 18px; color: #000000; font-weight: 500;}
+.login_area{position: relative; width: 500px; margin:0 auto; padding: 7rem 0; text-align: center;}
+.login_area h1 { margin: 35px auto 60px; font-size: 40px; line-height: 45px; font-family: 'NanumSquare', sans-serif; font-weight: 600; letter-spacing: -2.4px;}
+.login_area .login_box > input { width: 500px; height: 60px; padding-left: 20px; font-size: 18px; font-weight: 500;}
 .login_area .login_box > input::placeholder { font-size: 18px; color: #aaaaaa; line-height:50px; padding-top: 8px;}
 
 .check_box{ position: relative;}
 .check_box input[type=checkbox] { display:none; }
-.check_box input[type=checkbox] + label { font-size: 14px; color: #000000; letter-spacing: -0.5px; cursor: pointer; padding-left: 23px; background-image: url('/images/checkbox.png'); background-repeat: no-repeat; background-position-y: 2px; height: 18px;}
-.check_box input[type=checkbox]:checked + label { background-image: url('/images/checkbox_active.png'); background-repeat: no-repeat; }
+.check_box input[type=checkbox] + label { font-size: 14px; letter-spacing: -0.5px; cursor: pointer; padding-left: 23px; background-image: url('../images/checkbox.png'); background-repeat: no-repeat; background-position-y: 2px; height: 18px;}
+.check_box input[type=checkbox]:checked + label { background-image: url('../images/checkbox_active.png'); background-repeat: no-repeat; }
 
 .login_area .btn_zone { margin-top: 46px; margin-bottom: 24px;}
 .login_area .btn_zone a { height: 60px; font-size: 18px;}
@@ -122,7 +122,7 @@ html, body {
 #content .middle h2{float:left; color:#000; padding-left:7px; font-size:16px;}
 #content .middle ol{float:right;}
 #content .middle ol li{position:relative; float:left; color:#9a9a9a; padding-right:10px; margin-right:5px; font-size:12px;}
-#content .middle ol li:after{content:""; display:block; clear:both; position:absolute; right:0; top:50%; margin-top:-6px; background:url('/images/arrow_location_right.png'); width:5px; height:8px;}
+#content .middle ol li:after{content:""; display:block; clear:both; position:absolute; right:0; top:50%; margin-top:-6px; background:url('../images/arrow_location_right.png'); width:5px; height:8px;}
 #content .middle ol li:last-child:after{background:none;}
 
 /* 버튼 정렬상태 */

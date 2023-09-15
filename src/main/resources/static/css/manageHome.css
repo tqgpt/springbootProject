@@ -8,8 +8,13 @@
     background-color: white;
 }
 
+#tb {
+    text-align: center;
+}
+
 #tableBody tr{
     height: 45px !important;
+    cursor: pointer;
 }
 
 #t_idx {
@@ -25,7 +30,7 @@
     width: 4rem !important;
 }
 #t_schoolName {
-    width: 25rem !important;
+    width: 22rem !important;
 }
 #t_cityEduOrg {
     width: 10rem !important;
@@ -37,5 +42,5 @@
     width: 4rem !important;
 }
 #t_createdAt {
-    width: 5rem !important;
+    width: 6rem !important;
 }

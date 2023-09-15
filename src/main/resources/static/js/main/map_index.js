@@ -132,7 +132,7 @@ const searchAddressToCoordinateMarker = (address, zoom) => {
                     });
                     markers.push(newMarker);
 
-                    resolve(item);
+                    // resolve(item);
                 }
             });
     });

@@ -58,6 +58,7 @@ $('#tb').DataTable({
     searching: false,
     info: false,
     paging: false,
+    ordering: false,
     language: {emptyTable: "학교를 찾을 수 없어요"},
 });
 

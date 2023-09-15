@@ -89,6 +89,38 @@ addressInput.addEventListener("keyup", (event) => {   // Enter 키 이벤트 처
 });
 
 
+//초중고 선택
+// 초기 아이콘 인덱스 및 라벨 배열 정의
+let currentIndex = 0; // 현재 아이콘의 인덱스
+const icons = ["bi-layers-fill", "bi-layers-half", "bi-layers"];
+const labels = ["high", "middle", "elementary"];
+
+// 토글 버튼 클릭 이벤트 처리
+toggleButton.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % icons.length; // 다음 아이콘 인덱스 계산
+    icon.className = `bi ${icons[currentIndex]}`; // 아이콘 클래스 변경
+
+    // 토글 버튼을 클릭할 때 라벨도 함께 전환
+    const labelId = labels[currentIndex];
+    toggleLabel(labelId);
+});
+
+// 라벨 토글 함수 정의
+const toggleLabel = (labelId) => {
+    labels.forEach((label) => {
+        const element = document.getElementById(label);
+        element.style.display = label === labelId ? "flex" : "none";
+    });
+}
+
+// 각 아이콘에 대한 클릭 이벤트 처리
+labels.forEach((label) => {
+    const iconElement = document.getElementById(`${label}Icon`);
+    iconElement.addEventListener("click", () => toggleLabel(label));
+});
+
+
+
 //연관검색어
 // const showRelate = (input) => {
 //     const keyword = input.value;
