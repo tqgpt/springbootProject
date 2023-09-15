@@ -10,7 +10,8 @@ var infoWindow = new naver.maps.InfoWindow({
 
 map.setCursor('pointer');
 
-function searchAddressToCoordinate(address, schoolName) {
+
+function searchAddressToCoordinate (address, schoolName) {
     naver.maps.Service.geocode({
         query: address
     }, function(status, response) {
@@ -54,4 +55,3 @@ function searchAddressToCoordinate(address, schoolName) {
         infoWindow.open(map, point);
     });
 }
-
