@@ -176,10 +176,7 @@ const goPage = (page) => {
             pageItem.classList.remove('active');
         });
         page.closest('.page-item').classList.add('active');
-
-
-        console.log(pageNumber)
-        searchSchool(pageNumber); // 검색 함수 호출
+        searchSchool(pageNumber);
     }
 }
 
@@ -202,13 +199,13 @@ function generatePagination() {
     let paginationHTML = '';
 
     for (let i = firstNumber; i <= lastNumber; i++) {
-        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" onclick="goPage(this)">${i}</a></li>`;
+        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><label class="page-link" data-page="${i}" onclick="goPage(this)">${i}</label></li>`;
     }
 
     paginationHTML = `
-    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">이전</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><label aria-hidden="true">이전</label></a></li>
     ${paginationHTML}
-    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><span aria-hidden="true">다음</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><label aria-hidden="true">다음</label></a></li>
   `;
 
     const paginationContainer = document.querySelector('.pagination-container');
@@ -233,6 +230,7 @@ function generatePagination() {
 generatePagination(); // 페이지네이션 생성
 
 const goPrevious = () => {
+    event.preventDefault();
     currentPage -= pageCount; // 이전 그룹으로 이동
     if (currentPage < 1) {
         currentPage = 1;
@@ -242,6 +240,7 @@ const goPrevious = () => {
 };
 
 const goNext = () => {
+    event.preventDefault();
     currentPage += pageCount; // 다음 그룹으로 이동
     if (currentPage > totalCount) {
         currentPage = totalPage;
