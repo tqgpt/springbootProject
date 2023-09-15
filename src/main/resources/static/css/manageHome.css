@@ -1,0 +1,37 @@
+.dataTables_empty {
+    height: 100px !important;
+    font-weight: bold;
+    background-color: white;
+}
+
+#tableBody tr{
+    height: 45px !important;
+}
+
+#t_idx {
+    width: 2rem !important;
+}
+#t_cityName {
+    width: 7rem !important;
+}
+#t_streetAddr {
+    width: 20rem !important;
+}
+#t_schoolKind {
+    width: 4rem !important;
+}
+#t_schoolName {
+    width: 25rem !important;
+}
+#t_cityEduOrg {
+    width: 10rem !important;
+}
+#t_localEduOrg {
+    width: 10rem !important;
+}
+#t_userName {
+    width: 4rem !important;
+}
+#t_createdAt {
+    width: 5rem !important;
+}
