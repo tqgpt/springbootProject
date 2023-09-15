@@ -110,7 +110,6 @@ const searchSchool = (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-
     fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
@@ -188,7 +187,7 @@ const totalCount = 108; //임의의 count값
 const pageCount = 5;
 let currentPage = 1;
 
-function generatePagination() {
+const generatePagination = (isLast) => {
     let totalPage = Math.ceil(totalCount / pageCount);
     let pageGroup = Math.ceil(currentPage / pageCount);
 
@@ -196,8 +195,10 @@ function generatePagination() {
     if (lastNumber > totalPage) {
         lastNumber = totalPage;
     }
+
     let firstNumber = lastNumber - (pageCount - 1);
-    currentPage = firstNumber;
+
+    currentPage = !isLast ? firstNumber : lastNumber;   // 마지막 페이지 구분
 
     let paginationHTML = '';
 
@@ -242,6 +243,7 @@ const goPrevious = () => {
     searchSchool(currentPage);
 };
 
+
 const goNext = () => {
     event.preventDefault();
     currentPage += pageCount; // 다음 그룹으로 이동
@@ -250,4 +252,28 @@ const goNext = () => {
     }
     generatePagination();
     searchSchool(currentPage);
+};
+
+const goFirst = () => {
+    currentPage = 1;
+    generatePagination();
+    searchSchool(currentPage);
+
+    // 현재 페이지 그룹을 1로 설정하고 1번 페이지가 활성화되도록 처리
+    document.querySelectorAll('.page-item').forEach(pageItem => {
+        pageItem.classList.remove('active');
+    });
+    document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
+};
+
+const goLast = () => {
+    currentPage = Math.ceil(totalCount / pageCount);
+    generatePagination(true);
+    searchSchool(currentPage);
+
+    const pageGroup = Math.ceil(currentPage / pageCount);
+    document.querySelectorAll('.page-item').forEach(pageItem => {
+        pageItem.classList.remove('active');
+    });
+    document.querySelector(`.page-link[data-page="${currentPage}"]`).closest('.page-item').classList.add('active');
 };
