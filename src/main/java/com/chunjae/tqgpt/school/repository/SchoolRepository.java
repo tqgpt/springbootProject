@@ -33,4 +33,6 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
     // schoolName이 주어진 키워드와 일치하는 학교 검색
     @Query("SELECT s FROM t_school s WHERE s.schoolName LIKE %:keyword%")
     List<School> findSchoolsByKeyword(@Param("keyword") String keyword);
+
+    List<School> findByUserName(String userName);
 }

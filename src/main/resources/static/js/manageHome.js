@@ -129,9 +129,6 @@ const searchSchool = (pageNumber) => {
                     location.href = `/high/school/info/${school.idx}`
                 };
 
-                const dateObj = new Date(school.createdAt);
-                const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
-
                 row.innerHTML = `
                     <th>${school.idx}</th>
                     <td>${school.cityName}</td>
@@ -141,7 +138,7 @@ const searchSchool = (pageNumber) => {
                     <td>${school.cityEduOrg}</td>
                     <td>${school.localEduOrg}</td>
                     <td>${school.userName}</td>
-                    <td>${formattedDate}</td>
+                    <td>${school.createdAt}</td>
                 `;
 
                 row.onclick = function () {

@@ -142,8 +142,13 @@ public class SchoolService {
     }
 
     private void deleteExistingData(String userName) {
-        schoolDetailRepository.deleteAll();
-//        schoolRepository.deleteAllByUserName(userName);
+        List<School> schools = schoolRepository.findByUserName(userName);
+        for (School school : schools) {
+            SchoolDetail detail = schoolDetailRepository.findById(school.getIdx()).orElse(null);
+            if (detail != null) {
+                schoolDetailRepository.delete(detail);
+            }
+        }
     }
 
     private JsonObject fetchSchoolData(int pageIndex) throws IOException {
@@ -258,7 +263,7 @@ public class SchoolService {
         modifySchoolDetail = getSchoolDetail.get();
 
         modifySchool.update(dto, "testName");
-        modifySchoolDetail.update(dto, "testName");
+        modifySchoolDetail.update(dto);
 
         return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
     }

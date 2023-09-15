@@ -59,9 +59,6 @@ public class SchoolDetail {
     @Column(name = "coedu")
     private String coedu;
 
-    @Column(name = "user_name")
-    private String userName;
-
     public SchoolDetail(School school, String schoolCode, String foundationName, String dayNightName, String streetDetailAddr, String postNum, String telNum, String hmpgAddr, String faxNum, String coedu) {
         this.school = school;
         this.schoolCode = schoolCode;
@@ -74,7 +71,7 @@ public class SchoolDetail {
         this.faxNum = faxNum;
         this.coedu = coedu;
     }
-    public void update(SchoolDTO.SchoolModifyDto dto, String userName) {
+    public void update(SchoolDTO.SchoolModifyDto dto) {
         this.schoolCode = dto.getSchoolCode();
         this.foundationName = dto.getFoundationName();
         this.dayNightName = dto.getDayNightName();
@@ -84,7 +81,6 @@ public class SchoolDetail {
         this.hmpgAddr = dto.getHmpgAddr();
         this.faxNum = dto.getFaxNum();
         this.coedu = dto.getCoedu();
-        this.userName = userName;
     }
 }
 
