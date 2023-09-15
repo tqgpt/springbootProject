@@ -3,36 +3,81 @@ const searchButton = document.getElementById("button-addon");
 const searchResultDiv = document.getElementById("search_result");
 
 document.addEventListener("DOMContentLoaded",() => {
-    if(getCookie('visit_record')) {
-        console.log(getCookie('visit_record'))
-    }
+    showCookies();
 })
 
 const getCookie = (key) => {
     const cookies = document.cookie.split(`; `).map((el) => el.split('='));
-    let getItem = [];
+    let getItem = null;
 
     for (let i = 0; i < cookies.length; i++) {
         if (cookies[i][0] === key) {
-            getItem.push(cookies[i][1]);
+            getItem = cookies[i][1];
             break;
         }
     }
 
     if (getItem) {
-        const decodedValue = decodeURIComponent(getItem);
-        return JSON.parse(decodedValue);
+        try {
+            const decodedValue = decodeURIComponent(getItem);
+            return JSON.parse(decodedValue);
+        } catch (error) {
+            console.error("JSON 파싱 오류:", error);
+            return null;
+        }
     }
+
+    return null;
 };
 
 const recordCookie = (school) => {
-    const schoolDataJSON = JSON.stringify(school);
+    const MAX_DATA_COUNT = 5; // 최대 저장할 데이터 개수
     const cookieName = 'visit_record';
+    let existingData = getCookie(cookieName); // 이전 데이터 가져오기
+    const newData = school;
+
+    if (!existingData) {
+        existingData = {}; // 이전 데이터가 없으면 빈 객체로 초기화
+    }
+
+    const existingKeys = Object.keys(existingData);
+    let newKey;
+
+    // 데이터 개수가 최대 개수를 초과하는 경우, 가장 오래된 데이터를 제거하고 새 키를 생성합니다.
+    if (existingKeys.length >= MAX_DATA_COUNT) {
+        const oldestKey = Math.min(...existingKeys.map(Number)); // 가장 오래된 데이터 키 찾기
+        delete existingData[oldestKey]; // 가장 오래된 데이터 제거
+        newKey = Math.max(...existingKeys.map(Number)) + 1; // 새 데이터 키 생성
+    } else {
+        newKey = existingKeys.length + 1; // 새 데이터 키 생성
+    }
+
+    existingData[newKey] = newData; // 새 데이터를 기존 데이터에 추가
+
+    const schoolDataJSON = JSON.stringify(existingData); // 기록할 데이터 JSON으로 변환
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 1); // 쿠키 만료일 1일 후로 설정
 
     document.cookie = `${cookieName}=${encodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
+    showCookies();
 };
+
+const showCookies = () => {
+    const outputElement = document.querySelector('#cookies');
+    const jsonData = getCookie("visit_record");
+
+    let htmlString = '<ul>';
+    for (const key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            const data = jsonData[key];
+            htmlString += `<li>${data.schoolName} - ${data.streetAddr}</li>`;
+        }
+    }
+    htmlString += '</ul>';
+
+    outputElement.innerHTML = htmlString;
+}
+
 
 
 const findSchoolInfo = async (keyword) => {
