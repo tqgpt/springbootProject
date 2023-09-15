@@ -44,7 +44,7 @@ public class SchoolController {
     public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
         SchoolDetail schoolDetail = schoolService.addSchool(schoolDto);
 
-        return "redirect:/high/school/info/" + schoolDetail.getSchool().getIdx();
+        return "redirect:/high/school/search";
     }
 
     @GetMapping("/modify/{school-idx}")

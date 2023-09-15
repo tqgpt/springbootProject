@@ -3,7 +3,7 @@
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/addSchool.css}">
-    <section class="container my-4">
+    <section class="container my-4 mt-5">
         <div class="container w-75 acenter">
 
             <h2 class="aleft">학교 수정</h2>
@@ -65,6 +65,8 @@
     </section>
     <script type="text/javascript">
         function modify_ok() {
+            if(!confirm('학교정보를 수정하시겠습니까?'))
+                return false;
             var data ={};
             data.schoolCode = $('input[name=schoolCode]').val();
             data.cityEduOrg = $('input[name=cityEduOrg]').val();

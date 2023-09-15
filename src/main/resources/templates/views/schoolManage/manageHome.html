@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/layout}">
-<main layout:fragment="content">
+<main layout:fragment="content" id="manageMain">
     <link rel="stylesheet" th:href="@{/css/manageHome.css}">
     <section class="container pt-4">
         <h1>학교 관리</h1>
@@ -106,11 +106,11 @@
             <nav aria-label="Page navigation example">
 
                 <ul class="pagination ">
-                    <li class="page-item"><a class="page-link" onclick="searchSchool(1)"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" onclick="searchSchool(1)"><label aria-hidden="true">&laquo;</label></a></li>
                     <li class="pagination-container d-flex">
 
                     </li>
-                    <li class="page-item"><a class="page-link" onclick="searchSchool(108)"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" onclick="searchSchool(108)"><label aria-hidden="true">&raquo;</label></a></li>
                 </ul>
             </nav>
         </div>
