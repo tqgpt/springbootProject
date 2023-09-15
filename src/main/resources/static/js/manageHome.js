@@ -215,27 +215,42 @@ function generatePagination() {
     // 페이지네이션을 표시할 위치에 HTML을 삽입합니다.
     const paginationContainer = document.querySelector('.pagination-container');
     paginationContainer.innerHTML = paginationHTML;
+
+    // Previous 버튼이나 Next 버튼을 숨김 또는 표시
+    const prevButton = document.querySelector('.page-link[aria-label="Previous"]');
+    const nextButton = document.querySelector('.page-link[aria-label="Next"]');
+
+    if (pageGroup === 1) {
+        prevButton.style.display = 'none'; // 첫 페이지 그룹이면 Previous 버튼 숨김
+    } else {
+        prevButton.style.display = 'block'; // 그 외에는 표시
+    }
+
+    if (pageGroup * pageCount >= totalPage) {
+        nextButton.style.display = 'none'; // 마지막 페이지 그룹이면 Next 버튼 숨김
+    } else {
+        nextButton.style.display = 'block'; // 그 외에는 표시
+    }
 }
 
 generatePagination(); // 페이지네이션 생성
 
 // Previous 버튼을 눌렀을 때 이전 그룹 페이징으로 이동
-const goPrevious = (event) => {
+const goPrevious = () => {
     currentPage -= pageCount; // 이전 그룹으로 이동
     if (currentPage < 1) {
         currentPage = 1;
     }
     generatePagination();
+    searchSchool(currentPage);
 };
 
 // Next 버튼을 눌렀을 때 다음 그룹 페이징으로 이동
-const goNext = (event) => {
+const goNext = () => {
     currentPage += pageCount; // 다음 그룹으로 이동
     if (currentPage > totalCount) {
         currentPage = totalPage;
     }
     generatePagination();
+    searchSchool(currentPage);
 };
-
-
-
