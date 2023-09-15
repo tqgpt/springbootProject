@@ -112,7 +112,6 @@ const searchSchool = (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    console.log(searchParams)
     tableBody.innerHTML = '';
     fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
@@ -129,6 +128,9 @@ const searchSchool = (pageNumber) => {
                     location.href=`/high/school/info/${school.idx}`
                 };
 
+                const dateObj = new Date(school.createdAt);
+                const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+
                 row.innerHTML = `
                     <th>${school.idx}</th>
                     <td>${school.cityName}</td>
@@ -138,7 +140,7 @@ const searchSchool = (pageNumber) => {
                     <td>${school.cityEduOrg}</td>
                     <td>${school.localEduOrg}</td>
                     <td>${school.userName}</td>
-                    <td>${school.createdAt}</td>
+                    <td>${formattedDate}</td>
                 `;
 
                 row.onclick = function() {
@@ -164,25 +166,6 @@ const getParams = (pageNumber) => {
         page: pageNumber ? pageNumber.toString() : '1'
     };
 }
-
-
-
-//페이징
-// const pageLinks = document.querySelectorAll('.page-link');
-// pageLinks.forEach(pageLink => {
-//     pageLink.addEventListener('click', (event) => {
-//         event.preventDefault();
-//         const pageNumber = pageLink.getAttribute('data-page');
-//         if (pageNumber) {
-//             document.querySelectorAll('.page-item').forEach(pageItem => {
-//                 pageItem.classList.remove('active');
-//             });
-//             pageLink.closest('.page-item').classList.add('active');
-//
-//             searchSchool(pageNumber); // 검색 함수 호출
-//         }
-//     });
-// });
 
 
 const goPage = (page) => {
@@ -219,14 +202,14 @@ function generatePagination() {
     let paginationHTML = '';
 
     for (let i = firstNumber; i <= lastNumber; i++) {
-        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" href="#" onclick="goPage(this)">${i}</a></li>`;
+        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" data-page="${i}" onclick="goPage(this)">${i}</a></li>`;
     }
 
     // 아래는 Previous와 Next 버튼을 추가하는 부분입니다.
     paginationHTML = `
     <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><span aria-hidden="true">&laquo;</span></a></li>
     ${paginationHTML}
-    <li class="page-item"><a class="page-link" href="#" aria-label="Next" onclick="goNext()"><span aria-hidden="true">&raquo;</span></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><span aria-hidden="true">&raquo;</span></a></li>
   `;
 
     // 페이지네이션을 표시할 위치에 HTML을 삽입합니다.
