@@ -29,16 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
-        event.preventDefault(); // 버튼의 기본 동작 막기
+        event.preventDefault();
 
         // 폼 필드 초기화
         document.getElementById('cityName').value = "전체";
-        document.getElementById('streetAddr').value = "구/군";
-        document.querySelector('.form-select').value = "전체";
-        document.querySelector('.form-control').value = "";
+        document.getElementById('streetAddr').innerHTML=`<option value="전체">구/군</option>`
+        document.getElementById('searchOption').value = "전체"
+        document.getElementById('searchValue').value = "";
 
-        // 검색 결과 지우기 (원하는 대상에 맞게 수정)
-        const tableBody = document.getElementById('tableBody');
         searchSchool(1);
     });
 });
