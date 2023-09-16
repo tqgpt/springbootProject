@@ -1,3 +1,8 @@
+let ex_cityName = '전체';      // 시/도
+let ex_streetAddr = '전체';    // 구/군
+let ex_search_option = '전체'; // 검색 조건
+let ex_search_value = '';     // 검색 입력 값
+
 document.addEventListener("DOMContentLoaded", () => {
     searchSchool(1);
     const area = $("select[name^=cityName]");
@@ -29,15 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
-        event.preventDefault();
-
         // 폼 필드 초기화
         document.getElementById('cityName').value = "전체";
         document.getElementById('streetAddr').innerHTML=`<option value="전체">구/군</option>`
         document.getElementById('searchOption').value = "전체"
         document.getElementById('searchValue').value = "";
 
-        searchSchool(1);
+        searchFirstPage();
     });
 });
 
@@ -77,14 +80,12 @@ if (toastTrigger) {
  * =========================================================검색=========================================================
  *
  * **/
-
-let ex_cityName = '전체';         // 시/도
-let ex_streetAddr = '전체';      // 구/군
-let ex_search_option = '전체';   // 검색 조건
-let ex_search_value = '';    // 검색 입력 값
-
 // 검색 버튼 클릭 시
 document.getElementById('searchBtn').addEventListener('click', function (event) {
+    searchFirstPage()
+});
+
+const searchFirstPage = () => {
     event.preventDefault(); // 버튼의 기본 동작 막기
 
     // 검색 조건 업데이트
@@ -100,10 +101,15 @@ document.getElementById('searchBtn').addEventListener('click', function (event) 
     document.querySelectorAll('.page-item').forEach(pageItem => {
         pageItem.classList.remove('active');
     });
-    document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
-});
 
-
+    const pageLink = document.querySelector('.page-link[data-page="1"]');
+    if (pageLink) {
+        const pageItem = pageLink.closest('.page-item');
+        if (pageItem) {
+            pageItem.classList.add('active');
+        }
+    }
+}
 
 // 검색 조건
 const getParams = (pageNumber) => {
@@ -164,7 +170,6 @@ const searchSchool = (pageNumber) => {
             });
             document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
             tableBody.parentNode.replaceChild(newTBody, tableBody);
-
             generatePagination(Number(pageNumber)); // 페이지네이션 생성
         })
         .catch(error => {
@@ -174,6 +179,7 @@ const searchSchool = (pageNumber) => {
             row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
             newTBody.appendChild(row);
             tableBody.parentNode.replaceChild(newTBody, tableBody);
+            generatePagination(0)
         });
 }
 
@@ -187,8 +193,6 @@ const generatePagination = (currentPage) => {
     if (lastNumber > totalPage) {
         lastNumber = totalPage;
     }
-
-    console.log(totalPage, lastNumber)
 
     let firstNumber = lastNumber > 5 ? lastNumber - (pageCount - 1) : 1;
     let paginationHTML = '';
@@ -237,7 +241,7 @@ const goPage = (page) => {
 
 const goPrevious = (currentPage) => {
     event.preventDefault();
-    currentPage -= pageCount; // 이전 그룹으로 이동
+    currentPage = Math.ceil(currentPage / pageCount) * pageCount - pageCount;
     if (currentPage < 1) {
         currentPage = 1;
     }
@@ -247,7 +251,9 @@ const goPrevious = (currentPage) => {
 
 const goNext = (currentPage) => {
     event.preventDefault();
-    currentPage += pageCount; // 다음 그룹으로 이동
+    const currentGroupLastPage = Math.ceil(currentPage / pageCount) * pageCount;
+
+    currentPage = currentGroupLastPage + 1;
     if (currentPage > totalCount) {
         currentPage = totalPage;
     }
