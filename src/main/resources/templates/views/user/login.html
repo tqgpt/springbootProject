@@ -8,22 +8,19 @@
             <img src="/images/logo.svg" alt="천재교육"/>
             <h1>AI 기출 서비스 가공 플랫폼</h1>
             <form th:action="@{/loginpro}" method="post" class="login_form">
-
                 <div class="login_box">
-                    <input type="text" th:if="${rememberId}" name="userId" th:value="${rememberId}" placeholder="아이디"/>
-                    <input type="text" th:unless="${rememberId}" name="userId" placeholder="아이디"/>
-                    <input class="mt12" name="password" type="password" placeholder="비밀번호"/>
-                    <div class="btn_right mt15 check_box">
+                    <input type="text" th:if="${rememberId}" name="userId" th:value="${rememberId}" class="my-2" placeholder="아이디"/>
+                    <input type="text" th:unless="${rememberId}" name="userId" class="my-2" placeholder="아이디"/>
+                    <input class="my-2" name="password" type="password"  placeholder="비밀번호"/>
+                    <div class="btn_right mt15 check_box py-2">
                         <input type="checkbox" id="box1" name="remember">
-                        <label for="box1">아이디 저장</label>
+                        <label for="box1" class="py-1">아이디 저장</label>
                     </div>
                     <div class="btn_zone">
                         <a class="btn5 btn_color2 login-submit" onclick="submitForm()">로그인</a>
                     </div>
                 </div>
             </form>
-
-
             <p class="login_notice">
                 <span>* </span>
                 <span class="notice_txt">

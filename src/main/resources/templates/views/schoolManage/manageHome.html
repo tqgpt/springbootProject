@@ -53,7 +53,6 @@
                 <div class="row">
                     <div class="d-flex justify-content-end">
                         <label>
-                            <!--해당 버튼은 js로 검색 input값들 초기화-->
                             <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
                             <input type="submit" class="btn btn-secondary" id="searchBtn" value="검색">
                         </label>
@@ -67,10 +66,9 @@
         <div class="py-2 d-flex justify-content-between">
             <span class="d-flex align-items-center" name="total"></span>
             <label>
-                <button type="button" class="btn btn-warning" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
-
-                <button type="button" class="btn btn-success" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='/high/school/add'">학교등록</button>
+                <button type="button" class="btn btn-warning mx-1" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
+                <button type="button" class="btn btn-success mx-1" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
+                <button type="button" class="btn btn-secondary mx-1" onclick="location.href='/high/school/add'">학교등록</button>
             </label>
            <!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -86,31 +84,28 @@
                 </div>
             </div>-->
         </div>
-        <table id="tb" class="table table-hover table-striped border rounded-3">
+        <table id="tb" class="table table-hover table-striped border rounded-3 table-sm pt-2 px-2">
             <thead>
                 <tr>
-                    <th id="t_idx" class="text-center">NO</th>
-                    <th id="t_cityName" class="text-center">시도명</th>
-                    <th id="t_streetAddr" class="text-center">시군구명</th>
-                    <th id="t_schoolKind" class="text-center">학교급</th>
-                    <th id="t_schoolName" class="text-center">학교명</th>
-                    <th id="t_cityEduOrg" class="text-center">시도교육청</th>
-                    <th id="t_localEduOrg" class="text-center">지역교육청</th>
-                    <th id="t_userName" class="text-center">등록자</th>
-                    <th id="t_createdAt" class="text-center">등록일</th>
+                    <th scope="col" id="t_idx" class="text-center">NO</th>
+                    <th scope="col" id="t_cityName" class="text-center">시도명</th>
+                    <th scope="col" id="t_streetAddr" class="text-center">시군구명</th>
+                    <th scope="col" id="t_schoolKind" class="text-center">학교급</th>
+                    <th scope="col" id="t_schoolName" class="text-center">학교명</th>
+                    <th scope="col" id="t_cityEduOrg" class="text-center">시도교육청</th>
+                    <th scope="col" id="t_localEduOrg" class="text-center">지역교육청</th>
+                    <th scope="col" id="t_userName" class="text-center">등록자</th>
+                    <th scope="col" id="t_createdAt" class="text-center">등록일</th>
                 </tr>
             </thead>
-            <tbody id="tableBody" class="table-group-divider"></tbody>
+            <tbody id="tableBody"></tbody>
         </table>
         <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation example">
-
                 <ul class="pagination ">
-                    <li class="page-item"><a class="page-link" onclick="searchSchool(1)"><label aria-hidden="true">&laquo;</label></a></li>
-                    <li class="pagination-container d-flex">
-
-                    </li>
-                    <li class="page-item"><a class="page-link" onclick="searchSchool(108)"><label aria-hidden="true">&raquo;</label></a></li>
+                    <li class="page-item"><a class="page-link" onclick="goFirst()"><label aria-hidden="true">&laquo;</label></a></li>
+                    <li class="pagination-container d-flex"></li>
+                    <li class="page-item"><a class="page-link" onclick="goLast()"><label aria-hidden="true">&raquo;</label></a></li>
                 </ul>
             </nav>
         </div>

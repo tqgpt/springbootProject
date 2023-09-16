@@ -58,6 +58,7 @@ $('#tb').DataTable({
     searching: false,
     info: false,
     paging: false,
+    ordering: false,
     language: {emptyTable: "학교를 찾을 수 없어요"},
 });
 
@@ -103,57 +104,6 @@ document.getElementById('searchBtn').addEventListener('click', function (event) 
 });
 
 
-//학교 데이터 출력
-const searchSchool = (pageNumber) => {
-    const tableBody = document.getElementById('tableBody');
-    const searchParams = getParams(pageNumber);
-
-    tableBody.innerHTML = '';
-    fetch('/high/school/search-list', {
-        method: 'POST', // POST 요청 사용
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(searchParams)
-    }).then(response => response.json())
-        .then(data => {
-            console.log(data)
-
-            const schoolList = data.contents.content;
-            const totalCount = data.count;
-
-
-            schoolList.forEach((school) => {
-                const row = document.createElement('tr');
-                row.onclick = () => {
-                    location.href = `/high/school/info/${school.idx}`
-                };
-
-                row.innerHTML = `
-                    <th>${school.idx}</th>
-                    <td>${school.cityName}</td>
-                    <td>${school.streetAddr}</td>
-                    <td>${school.schoolKind}</td>
-                    <td>${school.schoolName}</td>
-                    <td>${school.cityEduOrg}</td>
-                    <td>${school.localEduOrg}</td>
-                    <td>${school.userName}</td>
-                    <td>${school.createdAt}</td>
-                `;
-
-                row.onclick = function () {
-                    location.href = `/high/school/info/${school.idx}`;
-                };
-                tableBody.appendChild(row);
-                document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
-            });
-        })
-        .catch(error => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
-            tableBody.appendChild(row);
-        });
-}
 
 // 검색 조건
 const getParams = (pageNumber) => {
@@ -166,35 +116,81 @@ const getParams = (pageNumber) => {
     };
 }
 
+// 페이징 변수
+let totalCount = 0;
+const pageCount = 5;
+const showCount = 10;
 
-const goPage = (page) => {
-    event.preventDefault();
-    const pageNumber = page.getAttribute('data-page');
-    if (pageNumber) {
-        document.querySelectorAll('.page-item').forEach(pageItem => {
-            pageItem.classList.remove('active');
+const searchSchool = (pageNumber) => {
+    const tableBody = document.getElementById('tableBody');
+    const searchParams = getParams(pageNumber);
+
+    fetch('/high/school/search-list', {
+        method: 'POST', // POST 요청 사용
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(searchParams)
+    }).then(response => response.json())
+        .then(data => {
+            const schoolList = data.contents.content;
+            totalCount = data.count;
+            const newTBody = document.createElement('tbody');
+            newTBody.id = 'tableBody';
+
+            schoolList.forEach((school) => {
+                const row = document.createElement('tr');
+                row.onclick = () => {
+                    location.href=`/high/school/info/${school.idx}`
+                };
+
+                const dateObj = new Date(school.createdAt);
+                const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+
+                row.innerHTML = `
+                    <th>${school.idx}</th>
+                    <td>${school.cityName}</td>
+                    <td>${school.streetAddr}</td>
+                    <td>${school.schoolKind}</td>
+                    <td>${school.schoolName}</td>
+                    <td>${school.cityEduOrg}</td>
+                    <td>${school.localEduOrg}</td>
+                    <td>${school.userName}</td>
+                    <td>${formattedDate}</td>
+                `;
+
+                row.onclick = () => {location.href = `/high/school/info/${school.idx}`};
+                newTBody.appendChild(row);
+            });
+            document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
+            tableBody.parentNode.replaceChild(newTBody, tableBody);
+
+            generatePagination(Number(pageNumber)); // 페이지네이션 생성
+        })
+        .catch(error => {
+            const newTBody = document.createElement('tbody');
+            newTBody.id = 'tableBody';
+            const row = document.createElement('tr');
+            row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
+            newTBody.appendChild(row);
+            tableBody.parentNode.replaceChild(newTBody, tableBody);
         });
-        page.closest('.page-item').classList.add('active');
-        searchSchool(pageNumber);
-    }
 }
 
 // 페이징 처리
-const totalCount = 108; //임의의 count값
-const pageCount = 5;
-let currentPage = 1;
-
-function generatePagination() {
-    let totalPage = Math.ceil(totalCount / pageCount);
+const generatePagination = (currentPage) => {
+    let totalPage = Math.ceil(totalCount / showCount);
     let pageGroup = Math.ceil(currentPage / pageCount);
+
 
     let lastNumber = pageGroup * pageCount;
     if (lastNumber > totalPage) {
         lastNumber = totalPage;
     }
-    let firstNumber = lastNumber - (pageCount - 1);
-    currentPage = firstNumber;
 
+    console.log(totalPage, lastNumber)
+
+    let firstNumber = lastNumber > 5 ? lastNumber - (pageCount - 1) : 1;
     let paginationHTML = '';
 
     for (let i = firstNumber; i <= lastNumber; i++) {
@@ -202,9 +198,9 @@ function generatePagination() {
     }
 
     paginationHTML = `
-    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious()"><label aria-hidden="true">이전</label></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Previous" onclick="goPrevious(${currentPage})"><label aria-hidden="true">이전</label></a></li>
     ${paginationHTML}
-    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext()"><label aria-hidden="true">다음</label></a></li>
+    <li class="page-item"><a class="page-link" aria-label="Next" onclick="goNext(${currentPage})"><label aria-hidden="true">다음</label></a></li>
   `;
 
     const paginationContainer = document.querySelector('.pagination-container');
@@ -226,9 +222,20 @@ function generatePagination() {
     }
 }
 
-generatePagination(); // 페이지네이션 생성
 
-const goPrevious = () => {
+const goPage = (page) => {
+    event.preventDefault();
+    const pageNumber = page.getAttribute('data-page');
+    if (pageNumber) {
+        document.querySelectorAll('.page-item').forEach(pageItem => {
+            pageItem.classList.remove('active');
+        });
+        page.closest('.page-item').classList.add('active');
+        searchSchool(pageNumber);
+    }
+}
+
+const goPrevious = (currentPage) => {
     event.preventDefault();
     currentPage -= pageCount; // 이전 그룹으로 이동
     if (currentPage < 1) {
@@ -238,7 +245,7 @@ const goPrevious = () => {
     searchSchool(currentPage);
 };
 
-const goNext = () => {
+const goNext = (currentPage) => {
     event.preventDefault();
     currentPage += pageCount; // 다음 그룹으로 이동
     if (currentPage > totalCount) {
@@ -248,6 +255,28 @@ const goNext = () => {
     searchSchool(currentPage);
 };
 
+const goFirst = () => {
+    const currentPage = 1;
+    generatePagination(1);
+    searchSchool(currentPage);
+
+    // 현재 페이지 그룹을 1로 설정하고 1번 페이지가 활성화되도록 처리
+    document.querySelectorAll('.page-item').forEach(pageItem => {
+        pageItem.classList.remove('active');
+    });
+    document.querySelector('.page-link[data-page="1"]').closest('.page-item').classList.add('active');
+};
+
+const goLast = () => {
+    const currentPage = Math.ceil(totalCount / showCount);
+    generatePagination(Math.ceil(totalCount / showCount),true);
+    searchSchool(currentPage);
+
+    document.querySelectorAll('.page-item').forEach(pageItem => {
+        pageItem.classList.remove('active');
+    });
+    document.querySelector(`.page-link[data-page="${currentPage}"]`).closest('.page-item').classList.add('active');
+};
 
 //Excel
 const ExcelDownloader = async () => {
@@ -270,7 +299,6 @@ const ExcelDownloader = async () => {
     });
 
     if (response.ok) {
-        console.log("요청 성공!");
         // 응답 처리 로직
         const blob = await response.blob();
 
@@ -284,4 +312,4 @@ const ExcelDownloader = async () => {
     } else {
         alert("다운로드 실패");
     }
-};
+}

@@ -13,12 +13,11 @@
 #mapContent #offcanvas {
     position: absolute;
     left: 4.5rem;
-    height: 100vh;
 }
 
 @media screen and (max-width: 576px){
     #mapContent #offcanvas {
-        width: 50%;
+        width: 65%;
     }
 }
 
@@ -44,5 +43,18 @@
 }
 #searchCard:hover {
     filter: brightness(90%);
+}
+
+#nav {
+   width: 4.5rem;
+    z-index: 1050;
+}
+
+#nav .nav-item:hover {
+    background-color: var(--bs-success);
+}
+
+.nav-item:hover .nav-link {
+    color: white !important;
 }
 

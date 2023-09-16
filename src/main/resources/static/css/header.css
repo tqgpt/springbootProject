@@ -1,5 +1,5 @@
 .header-wrap { width: 100%;}
-.header-wrap .header {background-color: #ffffff;}
+/*.header-wrap .header {background-color: #ffffff;}*/
 .header .top { width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px;}
 .header .top .logo h1 img { width: 100px;}
 .header .top .name { font-size: 13px; line-height: 16px; color: #555555; font-weight: 600; border-right: 1px solid #cccccc; padding-right: 12px; margin-right: 12px}
