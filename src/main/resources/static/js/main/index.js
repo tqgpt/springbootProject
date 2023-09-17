@@ -18,59 +18,62 @@ const getCookie = (key) => {
     }
 
     if (getItem) {
-        try {
-            const decodedValue = decodeURIComponent(getItem);
-            return JSON.parse(decodedValue);
-        } catch (error) {
-            console.error("JSON 파싱 오류:", error);
-            return null;
-        }
+        return JSON.parse(decodeURIComponent(getItem));
     }
 
     return null;
 };
 
 const recordCookie = (school) => {
-    const MAX_DATA_COUNT = 5; // 최대 저장할 데이터 개수
-    const cookieName = 'visit_record';
+    const MAX_DATA_COUNT = 5; // 최대 저장할 데이터 개수 (5가 최대)
+    const cookieName = 'visitRecord';
     let existingData = getCookie(cookieName); // 이전 데이터 가져오기
     const newData = school;
 
     if (!existingData) {
-        existingData = {}; // 이전 데이터가 없으면 빈 객체로 초기화
+        existingData = {};
     }
 
     const existingKeys = Object.keys(existingData);
-    let newKey;
 
-    // 데이터 개수가 최대 개수를 초과하는 경우, 가장 오래된 데이터를 제거하고 새 키를 생성합니다.
+    // 기존 데이터 중에 동일한 "idx"가 있는 경우 해당 데이터 삭제
+    const existingIdx = existingKeys.find(key => existingData[key].idx === newData.idx);
+    if (existingIdx) {
+        delete existingData[existingIdx];
+    }
+
+    // 데이터 개수가 5를 초과하는 경우, 가장 오래된 데이터를 제거
     if (existingKeys.length >= MAX_DATA_COUNT) {
         const oldestKey = Math.min(...existingKeys.map(Number)); // 가장 오래된 데이터 키 찾기
         delete existingData[oldestKey]; // 가장 오래된 데이터 제거
-        newKey = Math.max(...existingKeys.map(Number)) + 1; // 새 데이터 키 생성
-    } else {
-        newKey = existingKeys.length + 1; // 새 데이터 키 생성
     }
 
+    // 새 데이터를 최신 데이터로 추가
+    const newKey = new Date().getTime(); // 현재 시간을 키로 사용하여 최신 데이터로 추가
     existingData[newKey] = newData; // 새 데이터를 기존 데이터에 추가
 
     const schoolDataJSON = JSON.stringify(existingData); // 기록할 데이터 JSON으로 변환
     const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 1); // 쿠키 만료일 1일 후로 설정
+    expirationDate.setDate(expirationDate.getDate() + 7); // 쿠키 만료일 7일 후로 설정
 
     document.cookie = `${cookieName}=${encodeURIComponent(schoolDataJSON)}; expires=${expirationDate.toUTCString()}; path=/`;
     showCookies();
 };
 
+
 const showCookies = () => {
     const outputElement = document.querySelector('#cookies');
-    const jsonData = getCookie("visit_record");
+    const jsonData = getCookie("visitRecord");
 
-    let htmlString = '<ul>';
+    let htmlString = '<ul id="recentList" class="container-fluid">';
     for (const key in jsonData) {
         if (jsonData.hasOwnProperty(key)) {
             const data = jsonData[key];
-            htmlString += `<li>${data.schoolName} - ${data.streetAddr}</li>`;
+            htmlString += `
+                <li class="col-2 recent" onclick="searchAddressToCoordinateMarker('${data.streetAddr}', 18)">
+                    <span>${data.schoolName}</span>
+                    <p class="text-truncate">${data.streetAddr}</p>
+                </li>`;
         }
     }
     htmlString += '</ul>';
@@ -89,7 +92,7 @@ const findSchoolInfo = async (keyword) => {
         const dataArray = await response.json();
         initSchools(dataArray);
     } else {
-        console.error("서버 응답 오류:", response.status, response.statusText);
+        console.log("일치하는 학교 없음", response.status, response.statusText);
     }
 };
 

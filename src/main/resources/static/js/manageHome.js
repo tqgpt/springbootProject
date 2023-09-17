@@ -55,16 +55,6 @@ const toggleTab = (tabName) => {
     });
 }
 
-// 데이터 테이블 라이브러리
-$('#tb').DataTable({
-    lengthChange: false,
-    searching: false,
-    info: false,
-    paging: false,
-    ordering: false,
-    language: {emptyTable: "학교를 찾을 수 없어요"},
-});
-
 //toast UI
 /*const toastTrigger = document.getElementById('liveToastBtn')
 const toastLiveExample = document.getElementById('liveToast')
@@ -127,11 +117,11 @@ let totalCount = 0;
 const pageCount = 5;
 const showCount = 10;
 
-const searchSchool = (pageNumber) => {
+const searchSchool = async (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    fetch('/high/school/search-list', {
+    await fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
             'Content-Type': 'application/json'
@@ -156,9 +146,9 @@ const searchSchool = (pageNumber) => {
                 row.innerHTML = `
                     <th>${school.idx}</th>
                     <td>${school.cityName}</td>
-                    <td>${school.streetAddr}</td>
+                    <td class="text-start">${school.streetAddr}</td>
                     <td>${school.schoolKind}</td>
-                    <td>${school.schoolName}</td>
+                    <td class="text-start">${school.schoolName}</td>
                     <td>${school.cityEduOrg}</td>
                     <td>${school.localEduOrg}</td>
                     <td>${school.userName}</td>

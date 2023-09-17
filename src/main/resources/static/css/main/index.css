@@ -58,3 +58,29 @@
     color: white !important;
 }
 
+
+/* 검색 기록*/
+#recentList {
+    display: flex !important;
+    justify-content: center;
+    list-style-type: none !important;
+    padding: 0;
+}
+
+#recentList .recent {
+    margin: 0 0.5rem;
+    padding: 1rem 0.5rem;
+    border: 1px solid green;
+    border-radius: 5px;
+}
+
+#recentList .recent:hover {
+    background-color: green;
+    cursor: pointer;
+}
+
+#recentList .recent span {
+    font-weight: bold !important;
+    margin-bottom: 1rem;
+}
+

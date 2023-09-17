@@ -36,7 +36,7 @@
               <h3 id="offcanvasScrollingLabel" class="offcanvas-title" >
                 학교 검색
               </h3>
-              <button id="toggleButton" class="btn btn-outline-success border-0">
+              <button id="toggleButton" class="btn btn-outline-success border-0" onclick="showCookies()">
                 <i id="icon" class="bi bi-layers-fill"></i>
               </button>
             </div>
@@ -54,11 +54,12 @@
                 <button class="btn border-primary" type="button" id="button-addon_elementary"><i id="elementaryIcon" class="bi bi-search"></i></button>
               </label>
               <div id="search_result" class="list-group px-1 py-2">
-                학교를 찾아보세요
+                학교를 찾아보세요 (학교명)
               </div>
             </div>
           </div>
         </div>
+
         <!-- Map-Start  -->
         <figure id="map" class="w-100 h-100"></figure>
         <!-- Map-End  -->
@@ -68,7 +69,7 @@
             <h5 class="offcanvas-title" id="offcanvasBottomLabel">검색 기록</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div id="cookies" class="offcanvas-body px-3">
+          <div id="cookies" class="offcanvas-body">
             쿠키~~
           </div>
         </div>

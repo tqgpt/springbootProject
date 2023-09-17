@@ -5,7 +5,6 @@ html, body{margin:0; padding:0; font-family: "Noto Sans KR", sans-serif; font-si
 /*div, span, object, embed, iframe, applet, h1, h2, h3, h4, h5, h6, p, blockquote, pre, address, dl, dt, dd, ol, ul, li, form, fieldset, center, ins, del, table, caption, tbody, tfoot, thead, tr, th, td, q, cite, a, img, em, strong, abbr, acronym, sub, sup, dfn, code, var, samp, kbd, b, i, small, big, tt, s, strike, u, input, label, select, legend, textarea, button {margin:0; padding:0; font-size:100%; box-sizing: border-box;}*/
 
 /* 특성별 선택자 리셋 */
-html {overflow-y: scroll;}
 ol, ul ,li {list-style:none;}
 h1, h2, h3, h4, h5, h6 {font-weight:normal;}
 input,textarea,select,td,th {font-family: "Noto Sans KR", sans-serif; font-size:14px; vertical-align:middle; color:#666;}
@@ -21,36 +20,52 @@ a {color:#666; text-decoration:none;}
 hr, legend {position:absolute; top:0; left:-9999px; visibility:hidden; overflow:hidden; width:1px; height:1px; margin:0; padding:0; line-height:1px;}
 caption {visibility:hidden; overflow:hidden; width:1px; height:0; margin:0; padding:0; line-height:0;}
 
-/* 폼 요소에 대한 리셋 */
-* html input {margin:-1px 0;} /* ie6과 ie7에서 input의 1px 마진 리셋 */
-*:first-child+html input {margin:-1px 0;} /* ie6과 ie7에서 input의 1px 마진 리셋 */
-input { border: 1px solid #cccccc; border-radius: 4px;}
-input[type="checkbox"] {width:16px; height:16px; vertical-align:-2px;} /* 체크박스/라디오버튼 위치 최적화 */
-input[type="password"]{height:30px;line-height:30px;padding-left:9px;}
-
-input[type="button"]{padding:0;border:none;}
-input[type="date"]::-webkit-calendar-picker-indicator { opacity: .5; display: block; background-size: 20px; background-position-x: -5px; height: 20px;}
-input[type="radio"] { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; outline: none; border: 1px solid #cccccc; margin-right: 1px; margin-bottom: 2px;}
-input[type='radio']:before { content: ''; display: block; width: 70%; height: 70%; margin: 15% auto; border-radius: 50%;}
-input[type="radio"]:checked:before { background: #24a148;}
-input[type="radio"]:checked { border-color: #24a148;}
-input[type="radio"].small { width: 12px; height: 12px; margin-right:2px; margin-top: 3px;}
-input[type='radio'].small:before { width: 60%; height: 60%; margin: 20% auto;}
-
-input:focus { outline: none;}
-input:focus::-webkit-input-placeholder,
-input:focus::-moz-placeholder,
-input:focus:-ms-input-placeholder,
-input:focus::-ms-input-placeholder{ color: transparent;}
-
-select { border: 1px solid #cccccc; background: url('../images/ic_drop.svg') no-repeat 95% 50%; background-color: #ffffff; -webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 4px; padding-left: 5px;}
-select:focus { outline: 0;}
-select::-ms-expand {display: none;}
-textarea{padding:10px;border:1px solid #c6cacc;}
-
-.clearFix:after{content:""; display:block; clear:both;}
-.cBoth{clear:both !important;}
-.hide { display: none;}
-
 /* 대체 텍스트가 아닌 접근성을 위한 숨김 텍스트를 제공할 때 */
 .ir_su {overflow: hidden; position:absolute; width:0; height:0; line-height:0; text-indent:-9999px;}
+
+
+/* 로그인 */
+.login_area{position: relative; width: 500px; margin:0 auto; padding: 7rem 0; text-align: center;}
+.login_area h1 { margin: 35px auto 60px; font-size: 40px; line-height: 45px; font-family: 'NanumSquare', sans-serif; font-weight: 600; letter-spacing: -2.4px;}
+.login_area .login_box > input { width: 500px; height: 60px; padding-left: 20px; font-size: 18px; font-weight: 500;}
+.login_area .login_box > input::placeholder { font-size: 18px; color: #aaaaaa; line-height:50px; padding-top: 8px;}
+
+.check_box{ position: relative;}
+.check_box input[type=checkbox] { display:none; }
+.check_box input[type=checkbox] + label { font-size: 14px; letter-spacing: -0.5px; cursor: pointer; padding-left: 23px; background-image: url('../images/checkbox.png'); background-repeat: no-repeat; background-position-y: 2px; height: 18px;}
+.check_box input[type=checkbox]:checked + label { background-image: url('../images/checkbox_active.png'); background-repeat: no-repeat; }
+
+.login_area .btn_zone { margin-top: 46px; margin-bottom: 24px;}
+.login_area .btn_zone a { height: 60px; font-size: 18px;}
+.login_area .login_notice { display: flex; text-align: left;}
+.login_area .login_notice span { line-height: 24px; font-size: 14px; letter-spacing: -1px; }
+.login_area .login_notice .notice_txt { padding-left: 3px;}
+
+.btn5 { display: flex; align-items: center; justify-content: center; height: 24px; font-size: 13px; border:1px solid #000; border-radius: 4px; text-decoration: none;}
+.btn_color2{border:none; background-color: #24a148;  color:#fff;}
+
+/* 상단 로케이션 본인정보수정 , 로그아웃 버튼 */
+#content .top .btn_wrap{float:right;}
+#content .top .left{float:left;}
+#content .top .right{float:right;}
+.btn_default{display:inline-block; border:0; padding:5px 10px; border-radius:4px; margin-left:10px; font-size: 13px;}
+.btn_sky_blue{color:#327ce1; border-color:#327ce1;}
+
+#content .middle{margin-top:23px;}
+#content .middle h2{float:left; color:#000; padding-left:7px; font-size:16px;}
+#content .middle ol{float:right;}
+#content .middle ol li{position:relative; float:left; color:#9a9a9a; padding-right:10px; margin-right:5px; font-size:12px;}
+#content .middle ol li:after{content:""; display:block; clear:both; position:absolute; right:0; top:50%; margin-top:-6px; background:url('../images/arrow_location_right.png'); width:5px; height:8px;}
+#content .middle ol li:last-child:after{background:none;}
+
+/* 버튼 정렬상태 */
+.btn_right{width:100%; text-align:right;}
+.btn_right a{margin-left:5px;}
+.btn_left{width:100%; text-align:left;}
+.btn_left a{margin-right:5px;}
+.btn_left_right{width:100%; position: relative;}
+.btn_left_right p{display: inline-block;}
+.btn_left_right .blr_left{left:0;}
+.btn_left_right .blr_left a{margin-right:5px;}
+.btn_left_right .blr_right{right:0; position: absolute;}
+.btn_left_right .blr_right a{margin-left:5px;}

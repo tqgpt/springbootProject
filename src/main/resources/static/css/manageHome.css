@@ -1,15 +1,20 @@
-#manageMain {
-    min-height: 80rem !important;
+#manageMain .nav-link,
+#manageMain .page-link {
+    color: var(--bs-success-text-emphasis);
 }
 
-.dataTables_empty {
-    height: 100px !important;
-    font-weight: bold;
-    background-color: white;
+#manageMain .active.nav-link,
+#manageMain .active .page-link {
+    color: white !important;
+    background-color: var(--bs-success) !important;
 }
 
 #tb {
     text-align: center;
+}
+
+#tb td {
+    padding: 0 0.5rem;
 }
 
 #tableBody tr{

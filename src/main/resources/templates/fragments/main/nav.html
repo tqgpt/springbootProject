@@ -1,20 +1,24 @@
 <nav class="d-flex flex-column flex-shrink-0 bg-body-tertiary" id="nav">
-    <a href="/" class="d-block p-3 link-body-emphasis text-decoration-none text-center" title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="right">
-        <i class="bi bi-bank fs-3"></i>
+    <a href="/" class="d-block p-3 link-body-emphasis text-decoration-none text-center" title="Icon-only" data-bs-toggle="tooltip"
+       data-tooltip-toggle="tooltip" data-bs-placement="right" data-bs-title="Home">
+        <i class="bi bi-house fs-3"></i>
     </a>
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
         <li class="nav-item">
-                <a class="nav-link py-3 border-bottom rounded-0 text-success" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
+            <a class="nav-link py-3 border-bottom rounded-0 text-success" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"
+               data-tooltip-toggle="tooltip" data-bs-placement="right" data-bs-title="학교 검색">
                 <i class="bi bi-map fs-3"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link py-3 border-bottom rounded-0 text-success" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+            <a class="nav-link py-3 border-bottom rounded-0 text-success" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"
+               data-tooltip-toggle="tooltip" data-bs-placement="right" data-bs-title="검색 기록">
                 <i class="bi bi-clipboard-data fs-3"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a href="/admin" class="nav-link py-3 border-bottom rounded-0 text-success" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right">
+            <a href="/admin" class="nav-link py-3 border-bottom rounded-0 text-success" title="Dashboard" data-bs-toggle="tooltip"
+                data-tooltip-toggle="tooltip" data-bs-placement="right" data-bs-title="학교 관리">
                 <i class="bi bi-bar-chart-line fs-3"></i>
             </a>
         </li>
@@ -31,3 +35,7 @@
         </ul>
     </div>
 </nav>
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-tooltip-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
