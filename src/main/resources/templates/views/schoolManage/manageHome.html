@@ -51,11 +51,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="d-flex justify-content-end">
-                        <label>
-                            <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
-                            <input type="submit" class="btn btn-secondary" id="searchBtn" value="검색">
-                        </label>
+                    <div class="d-flex justify-content-end hstack  gap-3">
+                        <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
+                        <input type="submit" class="btn btn-secondary" id="searchBtn" value="검색">
                     </div>
                 </div>
             </form>
@@ -66,23 +64,23 @@
         <div class="py-2 d-flex justify-content-between">
             <span class="d-flex align-items-center" name="total"></span>
             <label>
-                <button type="button" class="btn btn-warning mx-1" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
-                <button type="button" class="btn btn-success mx-1" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
+                <button type="button" class="btn btn-outline-danger mx-1" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
+                <button type="button" class="btn btn-success mx-1" id="liveToastBtn" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
                 <button type="button" class="btn btn-secondary mx-1" onclick="location.href='/high/school/add'">학교등록</button>
             </label>
-           <!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
+           <div class="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
-                        <img src="" class="rounded me-2" alt="...">
-                        <strong class="me-auto">Toast Title</strong>
-                        <small>1 mins ago</small>
+                        <i class="bi bi-download"></i>
+                        <strong class="me-auto mx-1">엑셀 파일 다운로드</strong>
+                        <small th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></small>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        Hello, world! This is a toast message.
+                       학교 정보를 엑셀로 변환합니다.
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
         <div class="table-responsive-md">
             <table id="tb" class="table table-hover table-striped-columns border rounded-3 table-sm pt-2 px-2 ">

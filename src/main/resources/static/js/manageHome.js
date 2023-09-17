@@ -56,14 +56,14 @@ const toggleTab = (tabName) => {
 }
 
 //toast UI
-/*const toastTrigger = document.getElementById('liveToastBtn')
+const toastTrigger = document.getElementById('liveToastBtn')
 const toastLiveExample = document.getElementById('liveToast')
 if (toastTrigger) {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
     toastTrigger.addEventListener('click', () => {
         toastBootstrap.show()
     })
-}*/
+}
 
 
 /*
@@ -166,7 +166,7 @@ const searchSchool = async (pageNumber) => {
             const newTBody = document.createElement('tbody');
             newTBody.id = 'tableBody';
             const row = document.createElement('tr');
-            row.innerHTML = `<th colspan="9" class="text-center" style="height: 100px">학교를 찾을 수 없어요</th>`;
+            row.innerHTML = `<th colspan="9" class="text-center">학교를 찾을 수 없어요</th>`;
             newTBody.appendChild(row);
             tableBody.parentNode.replaceChild(newTBody, tableBody);
             generatePagination(0)
@@ -177,7 +177,6 @@ const searchSchool = async (pageNumber) => {
 const generatePagination = (currentPage) => {
     let totalPage = Math.ceil(totalCount / showCount);
     let pageGroup = Math.ceil(currentPage / pageCount);
-
 
     let lastNumber = pageGroup * pageCount;
     if (lastNumber > totalPage) {
@@ -276,6 +275,11 @@ const goLast = () => {
 
 //Excel
 const ExcelDownloader = async () => {
+    const currentTime = new Date();
+    const time = currentTime.toLocaleString();
+    var toastTime = document.querySelector('#liveToast .toast-header small');
+    toastTime.innerText = time;
+
     const cityName = ex_cityName;
     const streetAddr = ex_streetAddr;
     const searchOption = ex_search_option;

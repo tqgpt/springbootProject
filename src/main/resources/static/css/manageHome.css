@@ -7,6 +7,7 @@
 #manageMain .active .page-link {
     color: white !important;
     background-color: var(--bs-success) !important;
+    border-color: var(--bs-success) !important;
 }
 
 #tb {
@@ -27,12 +28,14 @@
 }
 #t_cityName {
     width: 7rem !important;
+    white-space: pre;
 }
 #t_streetAddr {
     width: 20rem !important;
 }
 #t_schoolKind {
-    width: 4rem !important;
+    width: 5rem !important;
+    white-space: pre;
 }
 #t_schoolName {
     width: 22rem !important;
