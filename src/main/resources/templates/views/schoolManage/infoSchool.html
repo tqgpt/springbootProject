@@ -5,7 +5,14 @@
     <link rel="stylesheet" th:href="@{/css/infoSchool.css}">
 
     <section id="pageMap" class="container my-3">
-        <button onclick="location.href='/high/school/search'" class="apiButtonGreen btn btn-primary">학교관리 화면으로</button>
+        <div class="d-flex justify-content-between">
+            <div>
+                <button onclick="location.href='/high/school/search'" class="apiButtonGreen btn btn-primary">학교관리 화면가기</button>
+            </div>
+            <div>
+                <button th:onclick="|location.href='/high/school/modify/'+${school.idx}|" class="apiButtonGreen btn btn-primary">학교 수정하기</button>
+            </div>
+        </div>
     </section>
 
     <section class="container my-3 justify-content-md-center flex-container" id="infoSection">

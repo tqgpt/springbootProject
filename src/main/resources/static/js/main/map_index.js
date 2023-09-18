@@ -1,5 +1,5 @@
 // 현재 위치로 이동 이미지
-var curtBtn = '<button class="btn btn-outline-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
+var curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
 
 // 현재 위치 위도, 경도 좌표 객체를 담을 변수
 var curtLoca = "";
@@ -73,6 +73,9 @@ var onSuccessGeolocation = function (position) {
         map: map,
     });
     markers.push(newMarker);
+
+    // 주변 도로명 주소 찾기
+    findNearbyAddresses(position.coords.latitude, position.coords.longitude);
 }
 
 
@@ -239,4 +242,52 @@ function checkLastString (word, lastString) {
 
 function hasAddition (addition) {
     return !!(addition && addition.value);
+}
+
+
+const findNearbyAddresses = (currentLat, currentLng) => {
+    const searchRadius = 3; // 검색 반경 (3KM)
+    const nearbyAddresses = [];
+
+    // 3KM 범위 내에 있는 주소를 검색합니다.
+    naver.maps.Service.reverseGeocode({
+        coords: new naver.maps.LatLng(currentLat, currentLng),
+        orders: [
+            naver.maps.Service.OrderType.ADDR,
+            naver.maps.Service.OrderType.ROAD_ADDR
+        ].join(',')
+    }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+            console.error('주소 검색 중 오류가 발생했습니다.');
+            return;
+        }
+
+        // 검색 결과에서 주소 정보를 추출합니다.
+        const items = response.v2.results;
+
+        // 검색 결과를 확인하기 위해 콘솔에 출력합니다.
+        console.log(items);
+
+        // 주소 정보를 가져와서 처리합니다.
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const address = item.address; // 주소 정보 가져오기
+
+            // 현재 위치와 주소의 좌표 사이의 거리를 계산합니다.
+            const lat = item.point.y;
+            const lng = item.point.x;
+            const distance = calculateDistance(currentLat, currentLng, lat, lng);
+
+            // 3KM 이내의 주소만 선택합니다.
+            if (distance <= searchRadius) {
+                nearbyAddresses.push(address);
+            }
+        }
+
+        // 콘솔에 주변 도로명 주소 목록을 출력합니다.
+        console.log("주변 도로명 주소 목록:");
+        nearbyAddresses.forEach(address => {
+            console.log(address);
+        });
+    });
 }

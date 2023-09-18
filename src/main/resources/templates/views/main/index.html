@@ -42,17 +42,20 @@
             </div>
             <div class="offcanvas-body pt-2">
               <label id="high" class="input-group">
-                <input id="addressInput" type="text" class="form-control form-control-lg border-success" placeholder="고등학교" aria-describedby="button-addon">
+                <input id="addressInput" type="text" class="form-control form-control-lg border-success" placeholder="고등학교" aria-describedby="button-addon" autocomplete='off'>
                 <button class="btn border-success" type="button" id="button-addon"><i id="highIcon" class="bi bi-search"></i></button>
               </label>
               <label id="middle" class="input-group" style="display: none;">
-                <input id="addressInput_middle" type="text" class="form-control form-control-lg border-warning" placeholder="중학교" aria-describedby="button-addon">
+                <input id="addressInput_middle" type="text" class="form-control form-control-lg border-warning" placeholder="중학교" aria-describedby="button-addon" autocomplete='off'>
                 <button class="btn border-warning" type="button" id="button-addon_middle"><i id="middleIcon" class="bi bi-search"></i></button>
               </label>
               <label id="elementary" class="input-group" style="display: none;">
-                <input id="addressInput_elementary" type="text" class="form-control form-control-lg border-primary" placeholder="초등학교" aria-describedby="button-addon">
+                <input id="addressInput_elementary" type="text" class="form-control form-control-lg border-primary" placeholder="초등학교" aria-describedby="button-addon" autocomplete='off'>
                 <button class="btn border-primary" type="button" id="button-addon_elementary"><i id="elementaryIcon" class="bi bi-search"></i></button>
               </label>
+              <div id="input_result" class="container p-1, border border-1 border-success">
+
+              </div>
               <div id="search_result" class="list-group px-1 py-2">
                 학교를 찾아보세요 (학교명)
               </div>

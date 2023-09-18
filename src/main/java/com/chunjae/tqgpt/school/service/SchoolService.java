@@ -450,5 +450,15 @@ public class SchoolService {
 
         workbook.write(bos);
         workbook.close();
+
+    }
+
+    public List<School> findTop5SchoolsByKeyword(String keyword) {
+        return schoolRepository.findAllBySchoolNameContaining(keyword).stream().limit(5).toList();
+    }
+
+    public School searchSchoolOne(String schoolName) {
+        return schoolRepository.findSchoolBySchoolName(schoolName);
     }
 }
+
