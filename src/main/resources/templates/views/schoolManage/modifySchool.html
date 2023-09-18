@@ -4,9 +4,10 @@
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/addSchool.css}">
     <section class="container w-75 mtb-10 acenter">
-
-        <h2 class="aleft mb-4">학교 수정</h2>
-
+        <div class="d-flex justify-content-between">
+            <h2 class="aleft mb-4">학교 수정</h2>
+            <a class="btn btn-success mb-3 acenter" href="/high/school/search">학교관리화면으로</a>
+        </div>
         <form action="" method="post">
             <div class="row mb-3" id="sc-info">
                 <input type="hidden" name="schoolIdx" th:value="${info.school.idx}">
