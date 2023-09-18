@@ -266,6 +266,19 @@ public class SchoolService {
         return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
     }
 
+    public ResponseEntity<String> removeSchool(Long idx) {
+        try {
+            if( schoolDetailRepository.findById(idx).isEmpty() )
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("잘못된 정보입니다");
+
+            schoolDetailRepository.deleteById(idx);
+            return ResponseEntity.ok("학교정보 삭제완료");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
+        }
+    }
+
     public List<School> findSchoolsByKeyword(String keyword) {
         return schoolRepository.findSchoolsByKeyword(keyword);
     }

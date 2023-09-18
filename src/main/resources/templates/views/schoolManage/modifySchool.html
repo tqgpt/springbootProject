@@ -80,7 +80,8 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-between">
+                <button type="button" onclick="remove_ok()" class="btn btn-warning">삭제하기</button>
                 <button type="button" onclick="modify_ok()" class="btn btn-success">수정하기</button>
             </div>
         </form>
@@ -147,6 +148,24 @@
                 },
                 success: function (data) {
                     alert("학교수정성공");
+                }
+            });
+        }
+        function remove_ok() {
+            if (!confirm('학교정보를 삭제하시겠습니까?'))
+                return false;
+
+            var idx = $('input[name=schoolIdx]').val();
+
+            $.ajax({
+                type: "POST",
+                url: "/high/school/remove/"+idx,
+                error: function (data) {
+                    alert(data);
+                },
+                success: function (data) {
+                    alert(data);
+                    location.replace("/high/school/search");
                 }
             });
         }
