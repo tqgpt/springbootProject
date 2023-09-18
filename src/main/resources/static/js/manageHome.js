@@ -1,10 +1,20 @@
-let ex_cityName = '전체';      // 시/도
-let ex_streetAddr = '전체';    // 구/군
-let ex_search_option = '전체'; // 검색 조건
-let ex_search_value = '';     // 검색 입력 값
+let ex_cityName = sessionStorage.getItem('cityName') || '전체';           // 시/도
+let ex_streetAddr = sessionStorage.getItem('streetAddr') || '전체';       // 구/군
+let ex_search_option = sessionStorage.getItem('search_option') || '전체'; // 검색 조건
+let ex_search_value = sessionStorage.getItem('search_value') || '';      // 검색 입력 값
+let page_number = sessionStorage.getItem('pageNumber') || '1';          // 페이지 번호
+
+window.onload = () => {
+    sessionStorage.removeItem('cityName');
+    sessionStorage.removeItem('streetAddr');
+    sessionStorage.removeItem('search_option');
+    sessionStorage.removeItem('search_value');
+    sessionStorage.removeItem('pageNumber');
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
-    searchSchool(1);
+    searchSchool(page_number);
     const area = $("select[name^=cityName]");
     const district = $("select[name^=streetAddr]");
 
@@ -43,6 +53,26 @@ document.addEventListener("DOMContentLoaded", () => {
         searchFirstPage();
     });
 });
+
+const remindKeywords = () => {
+    const cityNameSelect = document.getElementById('cityName');
+    const streetAddrSelect = document.getElementById('streetAddr');
+
+    for (let i = 0; i < cityNameSelect.options.length; i++) {
+        if (cityNameSelect.options[i].value === ex_cityName) {
+            cityNameSelect.options[i].selected = true;
+            break;
+        }
+    }
+
+    for (let i = 0; i < streetAddrSelect.options.length; i++) {
+        if (streetAddrSelect.options[i].value === ex_streetAddr) {
+            streetAddrSelect.options[i].selected = true;
+            break;
+        }
+    }
+}
+
 
 const toggleTab = (tabName) => {
     const tabs = document.querySelectorAll('.nav-tabs .nav-link');
@@ -117,11 +147,11 @@ let totalCount = 0;
 const pageCount = 5;
 const showCount = 10;
 
-const searchSchool = async (pageNumber) => {
+const searchSchool = (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    await fetch('/high/school/search-list', {
+    fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
             'Content-Type': 'application/json'
@@ -137,7 +167,12 @@ const searchSchool = async (pageNumber) => {
             schoolList.forEach((school) => {
                 const row = document.createElement('tr');
                 row.onclick = () => {
-                    location.href=`/high/school/info/${school.idx}`
+                    sessionStorage.setItem('cityName', ex_cityName);
+                    sessionStorage.setItem('streetAddr', ex_streetAddr);
+                    sessionStorage.setItem('search_option', ex_search_option);
+                    sessionStorage.setItem('search_value', ex_search_value);
+                    sessionStorage.setItem('pageNumber', pageNumber);
+                    location.href=`/high/school/info/${school.idx}`;
                 };
 
                 const dateObj = new Date(school.createdAt);
@@ -154,8 +189,6 @@ const searchSchool = async (pageNumber) => {
                     <td>${school.userName}</td>
                     <td>${formattedDate}</td>
                 `;
-
-                row.onclick = () => {location.href = `/high/school/info/${school.idx}`};
                 newTBody.appendChild(row);
             });
             document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";

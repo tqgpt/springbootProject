@@ -10,7 +10,6 @@
                 if (e.keyCode === 13) {
                     e.preventDefault();
                 }
-                ;
             });
         });
 
@@ -32,27 +31,27 @@
             var hmpgAddr = $('input[name=hmpgAddr]');
             var coedu = $('input[name=coedu]');
 
-            if (schoolCode.val() == '') {
+            if (schoolCode.val() === '') {
                 alert('학교코드를 입력해주세요');
                 schoolCode.focus();
                 return false;
             }
-            if (cityEduOrg.val() == '') {
+            if (cityEduOrg.val() === '') {
                 alert('해당 시도교육청은 필수입니다');
                 cityEduOrg.focus();
                 return false;
             }
-            if (streetAddr.val() == '') {
+            if (streetAddr.val() === '') {
                 alert('도로명주소는 필수입니다');
                 streetAddr.focus();
                 return false;
             }
-            if (schoolName.val() == '') {
+            if (schoolName.val() === '') {
                 alert('학교이름은 필수입니다');
                 schoolName.focus();
                 return false;
             }
-            if (localEduOrg.val() == '') {
+            if (localEduOrg.val() === '') {
                 alert('해당 지역교육청은 필수입니다');
                 localEduOrg.focus();
                 return false;
@@ -63,8 +62,10 @@
         }
     </script>
     <section class="container w-75 mtb-10 acenter">
-        <h2 class="aleft mb-4">학교 추가</h2>
-
+        <div class="d-flex justify-content-between">
+            <h2 class="aleft mb-4">학교 추가</h2>
+            <a class="btn btn-success mb-3 acenter" href="/high/school/search">학교관리화면으로</a>
+        </div>
         <form action="/high/school/add" method="post" id="schoolForm">
             <div class="row mb-3" id="sc-info">
 

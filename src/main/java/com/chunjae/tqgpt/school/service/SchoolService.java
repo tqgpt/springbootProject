@@ -228,10 +228,10 @@ public class SchoolService {
     }
 
 
-    public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
+    public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto, String userName) {
         SchoolDetail addSchoolInfo = null;
         try {
-            addSchoolInfo = schoolAddDto.toEntity("admin1");
+            addSchoolInfo = schoolAddDto.toEntity(userName);
             schoolDetailRepository.save(addSchoolInfo);
 
         } catch (Exception e) {
@@ -247,7 +247,7 @@ public class SchoolService {
     }
 
     @Transactional
-    public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto) {
+    public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto, String userName) {
         Optional<School> getSchool = schoolRepository.findById(dto.getSchoolIdx());
         Optional<SchoolDetail> getSchoolDetail = schoolDetailRepository.findById(dto.getSchoolIdx());
 
@@ -261,10 +261,23 @@ public class SchoolService {
         modifySchool = getSchool.get();
         modifySchoolDetail = getSchoolDetail.get();
 
-        modifySchool.update(dto, "testName");
+        modifySchool.update(dto, userName);
         modifySchoolDetail.update(dto);
 
         return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> removeSchool(Long idx) {
+        try {
+            if( schoolDetailRepository.findById(idx).isEmpty() )
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("잘못된 정보입니다");
+
+            schoolDetailRepository.deleteById(idx);
+            return ResponseEntity.ok("학교정보 삭제완료");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
+        }
     }
 
     public List<School> findSchoolsByKeyword(String keyword) {
