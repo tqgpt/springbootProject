@@ -68,6 +68,12 @@ public class SchoolController {
         return schoolService.modifySchool(schoolModifyDto);
     }
 
+    @ResponseBody
+    @PostMapping("/remove/{school-idx}")
+    public ResponseEntity<String> removeSchool(@PathVariable("school-idx") Long idx) {
+        return schoolService.removeSchool(idx);
+    }
+
     @GetMapping("/search")
     public String search(Model model) {
 //        Page<School> allList = schoolService.getAllList();
