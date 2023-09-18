@@ -56,55 +56,25 @@ public class SchoolService {
         String addr = district.equals("전체") ? city : city + " " + district;
         if (!city.equals("전체")) {
             if (searchOption.equals("전체")) {
-                //서울 : 전체or강남구 : 전체 : 검색어
-                log.info("서울 : 전체 : 전체 : 검색어");
                 return schoolRepository.findSchoolsByAddr(addr, searchValue, pageable);
             } else if (searchOption.equals("학교명")) {
-                //서울 : 전체or강남구 : 학교명 : 검색어
-                log.info("서울: 전체 : 학교명 : 검색어");
                 return schoolRepository.findAllByStreetAddrContainingAndSchoolNameContaining(addr, searchValue, pageable);
             } else if (searchOption.equals("학교주소")) {
-                //서울 : 전체or강남구 : 학교주소 : 검색어
-                log.info("서울 : 전체 : 학교주소 : 검색어");
                 return schoolRepository.findSchoolsByAddrDetail(city, searchValue, pageable);
             } else {
-                //서울 : 전체or강남구 : 등록자 : 검색어
-                log.info("서울 : 전체 : 등록자 : 검색어");
                 return schoolRepository.findAllByStreetAddrContainingAndUserName(city, searchValue, pageable);
             }
         } else {
             if (searchOption.equals("전체")) {
-                // 전체 : 전체 : 전체 : 검색어
-                log.info("전체 : 전체 : 전체 : 검색어");
-                return schoolRepository.findAllBySchoolNameContainingOrStreetAddrContainingOrUserName(searchValue, searchValue, searchValue, pageable);
+              return schoolRepository.findAllBySchoolNameContainingOrStreetAddrContainingOrUserName(searchValue, searchValue, searchValue, pageable);
             } else if (searchOption.equals("학교명")) {
-                //전체 : 전체 : 학교명 : 검색어
-                log.info("전체 : 전체 : 학교명 : 검색어");
                 return schoolRepository.findAllBySchoolNameContaining(searchValue, pageable);
             } else if (searchOption.equals("학교주소")) {
-                //전체 : 전체 : 학교주소 : 검색어
-                log.info("전체 : 전체 : 학교주소 : 검색어");
                 return schoolRepository.findAllByStreetAddrContaining(searchValue, pageable);
             } else {
-                //전체 : 전체 : 등록자 : 검색어
-                log.info("전체 : 전체 : 등록자 : 검색어");
                 return schoolRepository.findAllByUserName(searchValue, pageable);
             }
         }
-    }
-
-    public List<School> getTop10Schools() {
-        Pageable pageable = PageRequest.of(0, 10);
-        return schoolRepository.findAll(pageable).getContent();
-    }
-
-    public Page<School> getAllList() {
-        Pageable pageable = PageRequest.of(0, 10);
-        return schoolRepository.findAll(pageable);
-    }
-
-    public int getAllSchoolsCnt() {
-        return (int) schoolRepository.count();
     }
 
     public School getSchoolById(Long id) {
@@ -117,7 +87,7 @@ public class SchoolService {
 
     @Transactional
     public void upsertSchoolData(String userName) {
-        deleteExistingData(userName);
+        deleteApiData(userName);
 
         int pageIndex = 1;
         while (true) {
@@ -139,7 +109,7 @@ public class SchoolService {
         }
     }
 
-    private void deleteExistingData(String userName) {
+    private void deleteApiData(String userName) {
         List<School> schools = schoolRepository.findByUserName(userName);
         for (School school : schools) {
             SchoolDetail detail = schoolDetailRepository.findById(school.getIdx()).orElse(null);
@@ -163,7 +133,7 @@ public class SchoolService {
         return null;
     }
 
-    private String buildApiUrl(int pageIndex) throws UnsupportedEncodingException {
+    private String buildApiUrl(int pageIndex) {
         StringBuilder urlParametersBuilder = new StringBuilder()
                 .append("&Type=json")
                 .append("&SCHUL_KND_SC_NM=").append(URLEncoder.encode("고등학교", StandardCharsets.UTF_8))
@@ -202,26 +172,26 @@ public class SchoolService {
     }
 
     private School createSchool(JsonObject row, String userName) {
-        String cityName = row.get("LCTN_SC_NM").getAsString();                 //시도명(소재지명)
-        String streetAddr = row.get("ORG_RDNMA").getAsString();               //시군구명(도로명주소)
-        String schoolKind = row.get("SCHUL_KND_SC_NM").getAsString();      //학교급(학교종류명)
-        String schoolName = row.get("SCHUL_NM").getAsString();              //학교명
-        String cityEduOrg = row.get("ATPT_OFCDC_SC_NM").getAsString();   //시도교육청명
-        String localEduOrg = row.get("JU_ORG_NM").getAsString();   //시도교육청명
+        String cityName = row.get("LCTN_SC_NM").getAsString();
+        String streetAddr = row.get("ORG_RDNMA").getAsString();
+        String schoolKind = row.get("SCHUL_KND_SC_NM").getAsString();
+        String schoolName = row.get("SCHUL_NM").getAsString();
+        String cityEduOrg = row.get("ATPT_OFCDC_SC_NM").getAsString();
+        String localEduOrg = row.get("JU_ORG_NM").getAsString();
 
         return new School(cityName, streetAddr, schoolKind, schoolName, cityEduOrg, localEduOrg, userName);
     }
 
     private SchoolDetail createSchoolDetail(JsonObject row, School school) {
-        String schoolCode = row.get("SD_SCHUL_CODE").getAsString();        //표준학교코드
-        String foundationName = row.get("FOND_SC_NM").getAsString();              //설립명
-        String dayNightName = row.get("DGHT_SC_NM").getAsString();              //주야구분
-        String streetDetailAddr = row.get("ORG_RDNDA").getAsString();               //도로명주소
-        String postNum = row.get("ORG_RDNZC").getAsString();               //우편번호
-        String telNum = row.get("ORG_TELNO").getAsString();               //전화번호
-        String hmpgAddr = row.get("HMPG_ADRES").isJsonNull() ? "" : row.get("HMPG_ADRES").getAsString();   //홈페이지 주소
-        String faxNum = row.get("ORG_FAXNO").isJsonNull() ? "" : row.get("ORG_FAXNO").getAsString();      //팩스 번호
-        String coedu = row.get("COEDU_SC_NM").getAsString();            //남녀공학 구분
+        String schoolCode = row.get("SD_SCHUL_CODE").getAsString();
+        String foundationName = row.get("FOND_SC_NM").getAsString();
+        String dayNightName = row.get("DGHT_SC_NM").getAsString();
+        String streetDetailAddr = row.get("ORG_RDNDA").getAsString();
+        String postNum = row.get("ORG_RDNZC").getAsString();
+        String telNum = row.get("ORG_TELNO").getAsString();
+        String hmpgAddr = row.get("HMPG_ADRES").isJsonNull() ? "" : row.get("HMPG_ADRES").getAsString();
+        String faxNum = row.get("ORG_FAXNO").isJsonNull() ? "" : row.get("ORG_FAXNO").getAsString();
+        String coedu = row.get("COEDU_SC_NM").getAsString();
 
         return new SchoolDetail(school, schoolCode, foundationName, dayNightName, streetDetailAddr, postNum, telNum, hmpgAddr, faxNum, coedu);
     }
@@ -269,101 +239,6 @@ public class SchoolService {
     public List<School> findSchoolsByKeyword(String keyword) {
         return schoolRepository.findSchoolsByKeyword(keyword);
     }
-
-    /*public void xlsxDownloadService(HttpServletResponse res, SchoolDTO.searchRequestDto requestDto) throws IOException {
-        //excel sheet 생성
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("학교_정보");    //파일명
-        sheet.setDefaultColumnWidth(28);    //디폴트 너비
-
-        //엑셀 폰트
-        XSSFFont headerXSSFFont = (XSSFFont) workbook.createFont();
-        headerXSSFFont.setColor(new XSSFColor((new byte[]{(byte) 255, (byte) 255, (byte) 255})));
-
-        //엘셀 쉘
-        XSSFCellStyle headerXssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
-
-        //테두리
-        headerXssfCellStyle.setBorderLeft(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderRight(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderTop(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderBottom(BorderStyle.THIN);
-
-        //배경
-        headerXssfCellStyle.setFillForegroundColor(new XSSFColor(new byte[]{(byte) 34, (byte) 37, (byte) 41}));
-        headerXssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerXssfCellStyle.setFont(headerXSSFFont);
-
-        //바디
-        XSSFCellStyle bodyXssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
-
-        // 테두리 설정
-        bodyXssfCellStyle.setBorderLeft(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderRight(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderTop(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderBottom(BorderStyle.THIN);
-
-        int rowCount = 0;
-        String headerNames[] = new String[]{"No", "시도명", "시군구명", "학교급", "학교명", "시도교육청명", "지역교육청명", "등록자", "등록일"};
-
-        Row headerRow = null;
-        Cell headerCell = null;
-
-        headerRow = sheet.createRow(rowCount++);
-        for (int i = 0; i < headerNames.length; i++) {
-            headerCell = headerRow.createCell(i);
-            headerCell.setCellValue(headerNames[i]);    //데이터 추가
-            headerCell.setCellStyle(headerXssfCellStyle);   //디자인 적용
-        }
-
-        List<School> allSchoolData = new ArrayList<>();
-        int pageNumber = 0;
-        Page<School> schoolPages;
-
-        do {
-            requestDto.setPage(String.valueOf(pageNumber + 1));
-            schoolPages = search(requestDto);
-            List<School> schools = schoolPages.getContent();
-            allSchoolData.addAll(schools);
-            pageNumber++;
-        } while (schoolPages.hasNext());
-
-        Row bodyRow = null;
-        Cell bodyCell = null;
-
-        for (School school : allSchoolData) {
-            bodyRow = sheet.createRow(rowCount++);
-            String[] bodyDatas = new String[]{
-                    String.valueOf(school.getIdx()),  // 가정: getIdx()는 정수 ID를 반환
-                    school.getCityName(),
-                    school.getStreetAddr(),
-                    school.getSchoolKind(),
-                    school.getSchoolName(),
-                    school.getCityEduOrg(),
-                    school.getLocalEduOrg(),
-                    school.getUserName(),
-                    school.getCreatedAt().toString()  // 가정: getCreatedAt()는 java.util.Date 또는 java.time.LocalDateTime 등을 반환
-            };
-
-            for (int i = 0; i < bodyDatas.length; i++) {
-                bodyCell = bodyRow.createCell(i);
-                bodyCell.setCellValue(bodyDatas[i]);  // 데이터 추가
-                bodyCell.setCellStyle(bodyXssfCellStyle);  // 스타일 추가, 필요하다면
-            }
-        }
-
-        String fileName = "school_information";
-
-        res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-
-        ServletOutputStream servletOutputStream = res.getOutputStream();
-
-        workbook.write(servletOutputStream);
-        workbook.close();
-        servletOutputStream.flush();
-        servletOutputStream.close();
-    }*/
 
     public void xlsxDownloadService(ByteArrayOutputStream bos, SchoolDTO.searchRequestDto requestDto) throws IOException {
         //excel sheet 생성

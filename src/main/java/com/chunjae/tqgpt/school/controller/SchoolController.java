@@ -30,7 +30,7 @@ import java.util.Optional;
 public class SchoolController {
     private final SchoolService schoolService;
 
-    /*학교정보 추가 페이지
+    /*학교 정보 추가 페이지
      * GET
      * */
     @GetMapping("/add")
@@ -66,6 +66,7 @@ public class SchoolController {
         return "views/schoolManage/modifySchool";
     }
 
+
     @PostMapping("/api/modify")
     public @ResponseBody ResponseEntity<SchoolDetail> modifyOk(@RequestBody SchoolDTO.SchoolModifyDto schoolModifyDto, @AuthenticationPrincipal User user) {
         if(user == null)
@@ -75,8 +76,6 @@ public class SchoolController {
 
     @GetMapping("/search")
     public String search(Model model) {
-//        Page<School> allList = schoolService.getAllList();
-//        model.addAttribute("searchList", allList);
         return "views/schoolManage/manageHome";
     }
 
@@ -126,15 +125,6 @@ public class SchoolController {
         }
     }
 
-    /*@SneakyThrows
-    @ResponseBody
-    @GetMapping("/xlsx-download")
-    public void ExcelDownloader(HttpServletResponse res, @RequestParam String cityName, @RequestParam String streetAddr,
-                                @RequestParam String searchOption, @RequestParam String searchValue) {
-        SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
-        schoolService.xlsxDownloadService(res, requestDto);
-        log.info("성공");
-    }*/
     @SneakyThrows
     @ResponseBody
     @GetMapping("/xlsx-download")
