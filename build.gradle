@@ -36,6 +36,10 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.apache.poi:poi:5.2.2'
     implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    // https://mvnrepository.com/artifact/com.google.code.geocoder-java/geocoder-java
+    implementation group: 'com.google.code.geocoder-java', name: 'geocoder-java', version: '0.16'
+
+
 
 }
 

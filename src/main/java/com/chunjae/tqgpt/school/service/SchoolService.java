@@ -115,6 +115,7 @@ public class SchoolService {
         return schoolDetailRepository.getReferenceById(id);
     }
 
+
     @Transactional
     public void upsertSchoolData(String userName) {
         deleteExistingData(userName);
