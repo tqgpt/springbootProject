@@ -192,7 +192,7 @@ function debounce(func, delay) {
 }
 
 let debouncedSearchRelate;
-debouncedSearchRelate = debounce(searchRelate, 5);
+debouncedSearchRelate = debounce(searchRelate, 100);
 
 
 searchButton.addEventListener("click", handleSearch);
