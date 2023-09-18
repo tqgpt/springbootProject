@@ -1,5 +1,5 @@
 // 현재 위치로 이동 이미지
-var curtBtn = '<button class="btn btn-outline-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
+var curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
 
 // 현재 위치 위도, 경도 좌표 객체를 담을 변수
 var curtLoca = "";
