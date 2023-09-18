@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/layout}">
+<main layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/addSchool.css}">
+    <section class="container w-75 mtb-10 acenter">
+
+        <h2 class="aleft mb-4">학교 수정</h2>
+
+        <form action="" method="post">
+            <div class="row mb-3" id="sc-info">
+                <input type="hidden" name="schoolIdx" th:value="${info.school.idx}">
+
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-text">학교코드</div>
+                        <input type="text" class="form-control" name="schoolCode" th:value="${info.schoolCode}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시도교육청</div>
+                        <input type="text" class="form-control" name="cityEduOrg" th:value="${info.school.cityEduOrg}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">설립구분</div>
+                        <input type="text" class="form-control" name="foundationName" th:value="${info.foundationName}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">학교급</div>
+                        <input type="text" class="form-control" name="schoolKind" th:value="${info.school.schoolKind}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시도명</div>
+                        <input type="text" class="form-control" name="cityName" th:value="${info.school.cityName}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">도로명 주소</div>
+                        <input type="text" class="form-control" name="streetAddr" th:value="${info.school.streetAddr}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">전화번호</div>
+                        <input type="text" class="form-control" name="telNum" th:value="${info.telNum}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">팩스번호</div>
+                        <input type="text" class="form-control" name="faxNum" th:value="${info.faxNum}">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-text">학교명</div>
+                        <input type="text" class="form-control" name="schoolName" th:value="${info.school.schoolName}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">지역교육청</div>
+                        <input type="text" class="form-control" name="localEduOrg"
+                               th:value="${info.school.localEduOrg}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">주야구분</div>
+                        <input type="text" class="form-control" name="dayNightName" th:value="${info.dayNightName}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시군구명</div>
+                        <input type="text" class="form-control" name="streetDetailAddr" th:value="${info.streetDetailAddr}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">우편번호</div>
+                        <input type="text" class="form-control" name="postNum" th:value="${info.postNum}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">홈페이지주소</div>
+                        <input type="text" class="form-control" name="hmpgAddr" th:value="${info.hmpgAddr}">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">남여공학 구분</div>
+                        <input type="text" class="form-control" name="coedu" th:value="${info.coedu}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" onclick="modify_ok()" class="btn btn-success">수정하기</button>
+            </div>
+        </form>
+    </section>
+    <script type="text/javascript">
+        function modify_ok() {
+            if (!confirm('학교정보를 수정하시겠습니까?'))
+                return false;
+
+            var data = {};
+            data.schoolCode = $('input[name=schoolCode]').val();
+            data.cityEduOrg = $('input[name=cityEduOrg]').val();
+            data.foundationName = $('input[name=foundationName]').val();
+            data.schoolKind = $('input[name=schoolKind]').val();
+            data.cityName = $('input[name=cityName]').val();
+            data.streetAddr = $('input[name=streetAddr]').val();
+            data.telNum = $('input[name=telNum]').val();
+            data.faxNum = $('input[name=faxNum]').val();
+
+            data.schoolName = $('input[name=schoolName]').val();
+            data.localEduOrg = $('input[name=localEduOrg]').val();
+            data.dayNightName = $('input[name=dayNightName]').val();
+            data.streetDetailAddr = $('input[name=streetDetailAddr]').val();
+            data.postNum = $('input[name=postNum]').val();
+            data.hmpgAddr = $('input[name=hmpgAddr]').val();
+            data.coedu = $('input[name=coedu]').val();
+            data.schoolIdx = $('input[name=schoolIdx]').val();
+
+            if (data.schoolCode === '') {
+                alert('학교코드를 입력해주세요');
+                $('input[name=schoolCode]').focus();
+                return false;
+            }
+            if (data.cityEduOrg === '') {
+                alert('해당 시도교육청은 필수입니다');
+                $('input[name=cityEduOrg]').focus();
+                return false;
+            }
+            if (data.streetAddr === '') {
+                alert('도로명주소는 필수입니다');
+                $('input[name=streetAddr]').focus();
+                return false;
+            }
+            if (data.schoolName === '') {
+                alert('학교이름은 필수입니다');
+                $('input[name=schoolName]').focus();
+                return false;
+            }
+            if (data.localEduOrg === '') {
+                alert('해당 지역교육청은 필수입니다');
+                $('input[name=localEduOrg]').focus();
+                return false;
+            }
+
+            var jsonStr = JSON.stringify(data);
+
+            $.ajax({
+                type: "POST",
+                url: "/high/school/api/modify",
+                data: jsonStr,
+                contentType: "application/json; charset=utf-8",
+                error: function () {
+                    alert('학교수정실패');
+                },
+                success: function (data) {
+                    alert("학교수정성공");
+                }
+            });
+        }
+    </script>
+</main>
+</html>
