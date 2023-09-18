@@ -5,14 +5,17 @@ let ex_search_value = sessionStorage.getItem('search_value') || '';      // 검�
 let page_number = sessionStorage.getItem('pageNumber') || '1';          // 페이지 번호
 
 window.onload = () => {
-    sessionStorage.removeItem('cityName');
-    sessionStorage.removeItem('streetAddr');
-    sessionStorage.removeItem('search_option');
-    sessionStorage.removeItem('search_value');
-    sessionStorage.removeItem('pageNumber');
+    const searchOption = document.getElementById('searchOption');
+    const searchValue = document.getElementById('searchValue');
+
+    for (let i = 0; i < searchOption.options.length; i++) {
+        if (searchOption.options[i].value === ex_search_option) {
+            searchOption.options[i].selected = true;
+            break;
+        }
+    }
+    searchValue.value = ex_search_value;
 }
-
-
 document.addEventListener("DOMContentLoaded", () => {
     searchSchool(page_number);
     const area = $("select[name^=cityName]");
@@ -39,40 +42,34 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 district.append('<option value="전체">구/군</option>');
             }
+
+            const ex_streetAddr = sessionStorage.getItem('streetAddr') || '전체';
+            district.val(ex_streetAddr);
         });
+
+        // 선택된 city에 따라 초기 streetAddr 선택
+        const ex_cityName = sessionStorage.getItem('cityName') || '전체';
+        area.val(ex_cityName);
+        area.trigger('change');
+
+        sessionStorage.removeItem('cityName');
+        sessionStorage.removeItem('streetAddr');
+        sessionStorage.removeItem('search_option');
+        sessionStorage.removeItem('search_value');
+        sessionStorage.removeItem('pageNumber');
     });
 
     // 초기화 버튼 클릭 시
     document.getElementById('resetBtn').addEventListener('click', function (event) {
         // 폼 필드 초기화
         document.getElementById('cityName').value = "전체";
-        document.getElementById('streetAddr').innerHTML=`<option value="전체">구/군</option>`
+        document.getElementById('streetAddr').innerHTML = `<option value="전체">구/군</option>`
         document.getElementById('searchOption').value = "전체"
         document.getElementById('searchValue').value = "";
 
         searchFirstPage();
     });
 });
-
-const remindKeywords = () => {
-    const cityNameSelect = document.getElementById('cityName');
-    const streetAddrSelect = document.getElementById('streetAddr');
-
-    for (let i = 0; i < cityNameSelect.options.length; i++) {
-        if (cityNameSelect.options[i].value === ex_cityName) {
-            cityNameSelect.options[i].selected = true;
-            break;
-        }
-    }
-
-    for (let i = 0; i < streetAddrSelect.options.length; i++) {
-        if (streetAddrSelect.options[i].value === ex_streetAddr) {
-            streetAddrSelect.options[i].selected = true;
-            break;
-        }
-    }
-}
-
 
 const toggleTab = (tabName) => {
     const tabs = document.querySelectorAll('.nav-tabs .nav-link');
@@ -179,15 +176,15 @@ const searchSchool = (pageNumber) => {
                 const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
 
                 row.innerHTML = `
-                    <th>${school.idx}</th>
-                    <td>${school.cityName}</td>
-                    <td class="text-start">${school.streetAddr}</td>
-                    <td>${school.schoolKind}</td>
-                    <td class="text-start">${school.schoolName}</td>
-                    <td>${school.cityEduOrg}</td>
-                    <td>${school.localEduOrg}</td>
-                    <td>${school.userName}</td>
-                    <td>${formattedDate}</td>
+                    <th id="t_idx">${school.idx}</th>
+                    <td id="t_cityName">${school.cityName}</td>
+                    <td id="t_streetAddr" class="text-start">${school.streetAddr}</td>
+                    <td id="t_schoolKind">${school.schoolKind}</td>
+                    <td id="t_schoolName" class="text-start">${school.schoolName}</td>
+                    <td id="t_cityEduOrg">${school.cityEduOrg}</td>
+                    <td id="t_localEduOrg">${school.localEduOrg}</td>
+                    <td id="t_userName">${school.userName}</td>
+                    <td id="t_createdAt">${formattedDate}</td>
                 `;
                 newTBody.appendChild(row);
             });
