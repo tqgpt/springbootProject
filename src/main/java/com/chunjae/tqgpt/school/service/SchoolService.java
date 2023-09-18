@@ -227,10 +227,10 @@ public class SchoolService {
     }
 
 
-    public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto) {
+    public SchoolDetail addSchool(SchoolDTO.SchoolAddDto schoolAddDto, String userName) {
         SchoolDetail addSchoolInfo = null;
         try {
-            addSchoolInfo = schoolAddDto.toEntity("admin1");
+            addSchoolInfo = schoolAddDto.toEntity(userName);
             schoolDetailRepository.save(addSchoolInfo);
 
         } catch (Exception e) {
@@ -246,7 +246,7 @@ public class SchoolService {
     }
 
     @Transactional
-    public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto) {
+    public ResponseEntity<SchoolDetail> modifySchool(SchoolDTO.SchoolModifyDto dto, String userName) {
         Optional<School> getSchool = schoolRepository.findById(dto.getSchoolIdx());
         Optional<SchoolDetail> getSchoolDetail = schoolDetailRepository.findById(dto.getSchoolIdx());
 
@@ -260,7 +260,7 @@ public class SchoolService {
         modifySchool = getSchool.get();
         modifySchoolDetail = getSchoolDetail.get();
 
-        modifySchool.update(dto, "testName");
+        modifySchool.update(dto, userName);
         modifySchoolDetail.update(dto);
 
         return new ResponseEntity<>(modifySchoolDetail,HttpStatus.OK);
