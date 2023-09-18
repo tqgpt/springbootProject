@@ -33,7 +33,7 @@ public class SchoolController {
      * */
     @GetMapping("/add")
     public String addSchool() {
-        return "addSchool";
+        return "views/schoolManage/addSchool";
     }
 
     /*학교 정보 추가 페이지
@@ -59,7 +59,7 @@ public class SchoolController {
 
         model.addAttribute("info", getSchool.get());
 
-        return "modifySchool";
+        return "views/schoolManage/modifySchool";
     }
 
     @PostMapping("/api/modify")
