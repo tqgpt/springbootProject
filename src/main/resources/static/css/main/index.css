@@ -84,3 +84,12 @@
     margin-bottom: 1rem;
 }
 
+#input_result{
+    display: none;
+}
+
+.btn.text-start:hover {
+    background-color: dimgray;
+    color: #fff;
+    cursor: pointer;
+}

@@ -27,7 +27,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/login")
-    public String login(HttpServletRequest req, Model model) {
+    public String login(@AuthenticationPrincipal User user, HttpServletRequest req, HttpServletResponse res, Model model) {
+        if (user != null){
+            return "redirect:/";
+        }
         Optional<Cookie> cookie = CookieUtil.getCookie(req, "userId");
         cookie.ifPresent(value -> model.addAttribute("rememberId", value.getValue()));
 
@@ -35,17 +38,17 @@ public class UserController {
     }
 
     @GetMapping("/user/success")
-    public String loginSuccess(@AuthenticationPrincipal User user, HttpServletRequest req, HttpServletResponse response) {
+    public String loginSuccess(@AuthenticationPrincipal User user, HttpServletRequest req, HttpServletResponse res) {
         if (user == null) {
             return "redirect:/login";
         }
+
         String ip = ConnectUtil.getClientIP(req);
         userService.logUserAccess(user, ip);
         log.info("user-toString: {}", user.toString());
         log.info("userAuth: {}", user.getRoles().stream()
                 .map(role -> role.getRole().toString())
                 .collect(Collectors.toList()));
-
         return "views/schoolManage/manageHome";
     }
 

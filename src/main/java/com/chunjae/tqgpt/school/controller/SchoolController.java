@@ -149,4 +149,28 @@ public class SchoolController {
                 .headers(headers)
                 .body(bos.toByteArray());
     }
+
+    @ResponseBody
+    @GetMapping("/search-relate")
+    public ResponseEntity<List<String>> searchRelateSchool(@RequestParam("keyword")String keyword){
+        log.info("keyword: {}", keyword);
+        List<School> schoolList = schoolService.findTop5SchoolsByKeyword(keyword);
+        if (!schoolList.isEmpty()) {
+            return new ResponseEntity<>(schoolList.stream().map(School::getSchoolName).toList(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/search-one")
+    public ResponseEntity<School> searchGetOneSchool(@RequestParam("keyword")String schoolName){
+        School school = schoolService.searchSchoolOne(schoolName);
+        if (school != null) {
+            return new ResponseEntity<>(school, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
