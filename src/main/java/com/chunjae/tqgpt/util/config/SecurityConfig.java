@@ -28,6 +28,10 @@ public class SecurityConfig {
 
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin")
+                        .hasAnyRole("MANAGER", "OPERATOR", "COLLECTOR", "CHECKER")
+                        .requestMatchers("/add")
+                        .hasAnyRole("MANAGER", "OPERATOR", "COLLECTOR", "CHECKER")
                         .requestMatchers("/**")
                         .permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD)

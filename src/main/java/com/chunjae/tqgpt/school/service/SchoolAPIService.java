@@ -28,12 +28,14 @@ public class SchoolAPIService {
                 .collectList()
                 .onErrorReturn(Collections.emptyList());
         List<MiddleReqDTO> schoolInfoList = MiddleReqDTO.block();
+
+
         schoolInfoList.forEach(res -> {
             middleSchoolInfo.add(SchoolDTO.SchoolInfoDTO
                     .builder()
                     .schoolName(res.getScName())
                     .schoolKind("중학교")
-                    .streetAddr(res.getRnDetailAddress())
+                    .streetAddr(res.getRnAddress())
                     .localEduOrg(res.getOfoesCode())
                     .build());
         });
