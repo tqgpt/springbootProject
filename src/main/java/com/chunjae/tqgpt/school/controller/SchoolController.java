@@ -1,10 +1,10 @@
 package com.chunjae.tqgpt.school.controller;
 
-import com.chunjae.tqgpt.api.WeatherAPI;
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
+import com.chunjae.tqgpt.school.service.WeatherService;
 import com.chunjae.tqgpt.user.entity.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.ByteArrayOutputStream;
 import java.util.*;
 
@@ -27,6 +28,7 @@ import java.util.*;
 @RequestMapping("/high/school")
 public class SchoolController {
     private final SchoolService schoolService;
+    private final WeatherService weatherService;
 
     /*학교정보 추가 페이지
      * GET
@@ -105,9 +107,9 @@ public class SchoolController {
     @GetMapping("/info/{id}")    // 해당 경로에 요청이 오면 이 메서드 실행
     public String showSchoolManageInfoPage(@PathVariable Long id, Model model) { // Model 객체로 파라미터 받음  모델로 받아야 뷰에 뿌릴 수 있음
         School school = schoolService.getSchoolById(id);
-        if(school.getStreetAddr() != null) {
-            WeatherAPI.weather(school.getStreetAddr());
-        }
+
+        weatherService.weather(school.getStreetAddr());
+
         model.addAttribute("school", school); // 서비스의// 해당 메서드의 반환값을 모델에 추가함
         model.addAttribute("schoolDetail", schoolService.getSchoolDetailById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
         return "views/schoolManage/infoSchool"; // 뷰 템플릿 반환

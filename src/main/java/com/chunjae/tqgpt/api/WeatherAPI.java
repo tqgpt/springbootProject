@@ -1,3 +1,4 @@
+/*
 package com.chunjae.tqgpt.api;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,20 +28,18 @@ public class WeatherAPI {
         LocalTime oneHourAgo = currentTime.minusHours(1);
         DateTimeFormatter Timeformatter = DateTimeFormatter.ofPattern("HHmm");
         String formattedTime = oneHourAgo.format(Timeformatter);
-        /* 기상청 실황API는 발표자료가 매 시 30분에 생성, 40분에 API가 제공되며 그것도 시간이 조금 지체되기에 1시간 전을 호출하여야 한다. */
-        
+        */
+/* 기상청 실황API는 발표자료가 매 시 30분에 생성, 40분에 API가 제공되며 그것도 시간이 조금 지체되기에 1시간 전을 호출하여야 한다. *//*
+
+
         try {
             String apiUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
             String apiKey = "bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D";
             String pageNo = "1";
             String numOfRows = "1000";
             String dataType = "JSON";
-            // String base_date = formattedDate; // 날짜
-            // String base_time = formattedTime; // 시간... 근데 이제 -1시간을 곁들인
-            // X =MapAPI.위도경도가져오는함수();
-            // Y =MapAPI.위도경도가져오는함수();
 
-            JSONObject latlong = MapNaver.Latlong(streetAddr);
+            JSONObject latlong = MapNaver.latLong(streetAddr);
 
             Map<String, Double> rs = MapConvert.convertToCoordinates(latlong.get("x").toString(), latlong.get("y").toString());
 
@@ -78,4 +77,4 @@ public class WeatherAPI {
             e.printStackTrace();
         }
     }
-}
+}*/

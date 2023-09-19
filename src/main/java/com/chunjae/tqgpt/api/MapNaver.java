@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -15,31 +17,29 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class MapNaver {
 
-//    @Value("${client-id}")
-//    private static String clientId;
-//
-//    @Value("${client-secret}")
-//    private static String clientSecret;
+    // API 키 설정
+    @Value("${weather.api.clientId}")
+    private String clientId;
+    @Value("${weather-api-clientPw}")
+    private String clientSecret;
+    private String accept = "application/json";  //  필수는 아니지만 JSON으로 받을거라...
 
     @SneakyThrows
-    public static JSONObject Latlong(String address) {
-        String addr = URLEncoder.encode(address, StandardCharsets.UTF_8);
+    public JSONObject latLong(String address) {
+        System.out.println(clientId);
 
+        String addr = URLEncoder.encode(address, StandardCharsets.UTF_8);
         // Geocoding 개요에 나와있는 API URL 입력.
         String apiURL = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addr;    // JSON
-
-        // API 키 설정
-        String clientId = "mo4ez0j3y6";
-        String clientSecret = "eL4E7y91BcNq0Aq5WsCb9AkN28PByh5IpaJtA1Gz";
-        String Accept = "application/json";  //  필수는 아니지만 JSON으로 받을거라...
+        System.out.println(apiURL);
 
         // HTTP 연결 설정
         URL url = new URL(apiURL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
-        connection.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
-        connection.setRequestProperty("Accept", Accept);  //  필수는 아니지만 JSON으로 받을거라...
+        connection.setRequestProperty("X-NCP-APIGW-API-KEY-ID:", clientId);
+        connection.setRequestProperty("X-NCP-APIGW-API-KEY:", clientSecret);
+        connection.setRequestProperty("Accept", accept);  //  필수는 아니지만 JSON으로 받을거라...
 
         // 요청 결과 확인. 정상 호출인 경우 200
         int responseCode = connection.getResponseCode();
