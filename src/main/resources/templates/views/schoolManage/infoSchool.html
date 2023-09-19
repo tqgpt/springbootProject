@@ -54,8 +54,8 @@
                 </tr>
                 <tr>
                     <td th:text="${school.cityName}"></td>
+                    <td id="streetAddr"></td>
                     <td th:text="${school.streetAddr}"></td>
-                    <td id="address"></td>
                     <td th:text="${schoolDetail.postNum}"></td>
                     <td th:text="${schoolDetail.telNum}"></td>
                     <td th:text="${schoolDetail.hmpgAddr}"></td>
@@ -87,44 +87,18 @@
 
     <!-- API_START  -->
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
-    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>
+    <!--    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>-->
     <!-- API_END  -->
-
-    <script th:src="@{/js/map_infoSchool.js}"></script>
-    <script th:src="@{/js/weather_infoSchool.js}"></script>
     <script>
-        const schoolName = "[[${school.schoolName}]]";
-        const streetAddress = "[[${school.streetAddr}]]";
+        const strAddr = '[[${school.streetAddr}]]';
+        const strAddress = document.getElementById("streetAddr");
 
-        const mapSection = searchAddressToCoordinate(streetAddress, schoolName);
-
-        window.onload = function(){
-            if(mapSection !== null) {
-                searchWeatherLocate(streetAddress);
-            }
-        }
-
-
-        <!-- AddressCut_START  -->
-        // DB에서 가져온 주소 데이터
-        var addressData = "${school.streetAddr}";
-
-        // '도'가 앞에 있는지 확인
-        if (addressData.startsWith('도')) {
-            // '도'가 앞에 있을 경우, 시와 군 또는 시와 구를 분리
-            var parts = addressData.split(' ');
-            var city = parts[0]; // 시
-            var rest = parts.slice(1).join(' '); // 군 또는 구
-
-            // 주소를 원하는 형식으로 표시
-            document.getElementById('address').textContent = city + ' ' + rest;
+        const addrParts = strAddr.split(' ');
+        if (addrParts.length >= 2) {
+            strAddress.innerText = addrParts[1];
         } else {
-            // '도'가 앞에 없을 경우, 주소 그대로 표시
-            document.getElementById('address').textContent = addressData;
+            strAddress.innerText = strAddr;
         }
-        <!-- AddressCut_END  -->
     </script>
-
-
 </main>
 </html>
