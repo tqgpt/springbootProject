@@ -1,4 +1,5 @@
 const addressInput = document.getElementById("addressInput");
+const addressInputElementary = document.getElementById("addressInput_elementary");
 const searchButton = document.getElementById("button-addon");
 const searchResultDiv = document.getElementById("search_result");
 const inputResult = document.getElementById("input_result");
@@ -281,7 +282,75 @@ const clearSearchRelate = () => {
         inputResult.innerHTML = "";
     }
 };
+//초등학교 검색 시작
+addressInputElementary.addEventListener('keyup',(event) => {
+    debouncedSearchRelate();
+    if(event.key === 'Enter') {
+        ElemHandleSearch();
+        clearSearchRelate();
+    }
+});
 
+const ElemHandleSearch = async () => {
+    const keyword = addressInputElementary.value;
+    if (!keyword || isFetching) {
+        return;
+    }
+    isFetching = true;
+    searchButton.disabled = true;
+    clearMarker();
+    try {
+        await findElemSchoolInfo(keyword);
+        // searchRelate(addressInput);
+    } catch (error) {
+        console.error("데이터 가져오기 오류:", error);
+    } finally {
+        isFetching = false;
+        searchButton.disabled = false;
+    }
+};
+
+//초등학교 검색
+const findElemSchoolInfo = async (keyword) => {
+    const response = await fetch(`/high/school/search-elemental/`+keyword, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+        const dataArray = await response.json();
+        initElemSchools(dataArray);
+    } else {
+        console.log("일치하는 학교 없음", response.status, response.statusText);
+    }
+};
+// 초등학교 데이터 넣기
+const initElemSchools = (dataArray) => {
+    clearMarker();
+    searchResultDiv.innerHTML = '';
+
+    const htmlElements = dataArray.map((data) => {
+        const schoolItem = document.createElement('div');
+        schoolItem.classList.add('list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start', 'my-1', 'rounded', 'bg-secondary-subtle');
+        schoolItem.setAttribute('id', 'searchCard');
+        schoolItem.onclick = () => {
+            searchAddressToCoordinateMarker(data.roadAddress, 18);
+            recordCookie(data);
+        };
+        searchAddressToCoordinateMarker(data.roadAddress, 12);
+        schoolItem.innerHTML = `
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${data.name}</h5>
+            <small>초등학교</small>
+          </div>
+          <p class="mb-1">${data.roadAddress}</p>
+          <small></small>
+        `;
+
+        return schoolItem;
+    });
+
+    searchResultDiv.append(...htmlElements);
+}
 
 addressInput.addEventListener("focus", () => {
     searchRelate();

@@ -5,6 +5,7 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import com.chunjae.tqgpt.user.entity.User;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -144,16 +145,12 @@ public class SchoolController {
         }
     }
 
-
-    /*@SneakyThrows
     @ResponseBody
-    @GetMapping("/xlsx-download")
-    public void ExcelDownloader(HttpServletResponse res, @RequestParam String cityName, @RequestParam String streetAddr,
-                                @RequestParam String searchOption, @RequestParam String searchValue) {
-        SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
-        schoolService.xlsxDownloadService(res, requestDto);
-        log.info("성공");
-    }*/
+    @PostMapping("/search-elemental/{keyword}")
+    public ResponseEntity<JsonNode> elemSchoolInfo(@PathVariable String keyword) {
+        return schoolService.elemSchoolByKeyword(keyword);
+    }
+
     @SneakyThrows
     @ResponseBody
     @GetMapping("/xlsx-download")
