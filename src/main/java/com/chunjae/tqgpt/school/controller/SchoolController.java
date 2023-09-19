@@ -138,7 +138,6 @@ public class SchoolController {
             }
         }
 
-        System.out.println(schools);
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
