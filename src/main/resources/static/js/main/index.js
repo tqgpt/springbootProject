@@ -175,7 +175,6 @@ const searchRelate = async () => {
 };
 
 let debouncedSearchRelateTimeoutId;
-let debouncedSearchRelate;
 
 // 디바운스 함수
 function debounce(func, delay) {
@@ -191,7 +190,7 @@ function debounce(func, delay) {
     };
 }
 
-debouncedSearchRelate = debounce(searchRelate, 100);
+let debouncedSearchRelate = debounce(searchRelate, 100);
 
 
 searchButton.addEventListener("click", handleSearch);

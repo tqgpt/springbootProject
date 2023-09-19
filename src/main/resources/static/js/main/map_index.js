@@ -1,11 +1,11 @@
 // 현재 위치로 이동 이미지
-var curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
+const curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
 
 // 현재 위치 위도, 경도 좌표 객체를 담을 변수
-var curtLoca = "";
+let curtLoca = "";
 
 // Map 초기화
-var map = new naver.maps.Map('map', {
+const map = new naver.maps.Map('map', {
     scaleControl: true,      // 우측 하단 scale 표시
     mapDataControl: false,    // 좌측 하단 @ NAVER Corp 표시
     zoom: 17,                  // 지도 줌 레벨
@@ -59,7 +59,7 @@ naver.maps.Event.once(map, 'init_stylemap', function() {
 });
 
 // getCurrentPosition 성공 콜백 함수
-var onSuccessGeolocation = function (position) {
+const onSuccessGeolocation = function (position) {
     // 현재위치
     curtLoca = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
@@ -73,11 +73,14 @@ var onSuccessGeolocation = function (position) {
         map: map,
     });
     markers.push(newMarker);
+
+    // 주변 도로명 주소 찾기
+    // findNearbyAddresses(position.coords.latitude, position.coords.longitude);
 }
 
 
 // getCurrentPosition 에러 콜백 함수
-var onErrorGeolocation = function () {
+const onErrorGeolocation = function () {
 
     var agent = navigator.userAgent.toLowerCase(), name = navigator.appName;
 
@@ -139,7 +142,7 @@ const searchAddressToCoordinateMarker = (address, zoom) => {
 }
 
 // 위/경도 => 주소 조회
-function searchCoordinateToAddress(latlng) {
+const searchCoordinateToAddress = (latlng) => {
     naver.maps.Service.reverseGeocode({
         coords: latlng,
         orders: [
@@ -148,7 +151,8 @@ function searchCoordinateToAddress(latlng) {
         ].join(',')
     }, function(status, response) {
         if (status === naver.maps.Service.Status.ERROR) {
-            return alert('Something Wrong!');
+            console.error('주소를 변환하는 중 오류가 발생했습니다.');
+            return;
         }
 
         var items = response.v2.results,
@@ -161,13 +165,11 @@ function searchCoordinateToAddress(latlng) {
             addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
 
             htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
-
-            console.log(address)
         }
     });
 }
 
-function makeAddress(item) {
+const makeAddress = (item) => {
     if (!item) {
         return;
     }
@@ -225,18 +227,119 @@ function makeAddress(item) {
     return [sido, sigugun, dongmyun, ri, rest].join(' ');
 }
 
-function hasArea(area) {
+const hasArea = (area) => {
     return !!(area && area.name && area.name !== '');
 }
 
-function hasData(data) {
+const hasData = (data) => {
     return !!(data && data !== '');
 }
 
-function checkLastString (word, lastString) {
+const checkLastString = (word, lastString) => {
     return new RegExp(lastString + '$').test(word);
 }
 
-function hasAddition (addition) {
+const hasAddition = (addition) => {
     return !!(addition && addition.value);
 }
+
+
+/* ============주변 학교 검색============ */
+const disableButtonAndExecute = () => {
+    const button = document.getElementById("currentSchool");
+    button.disabled = true; // 버튼 비활성화
+    setTimeout(function() {
+        button.disabled = false; // 버튼 활성화
+    }, 10000);
+}
+
+document.getElementById("currentSchool").addEventListener('click', () => {
+    const center = map.getCenter();
+    findNearbyAddresses(center.lat(), center.lng());
+});
+
+// 현재 위치의 주변 학교 검색
+const findNearbyAddresses = async (currentLat, currentLng) => {
+    const searchRadius = 3; // 검색 반경 (3KM)
+    const searchStep = 0.5; // 검색 간격 (1KM)
+    const nearbyAddressesSet = new Set();
+
+    for (let latOffset = -searchRadius; latOffset <= searchRadius; latOffset += searchStep) {
+        for (let lngOffset = -searchRadius; lngOffset <= searchRadius; lngOffset += searchStep) {
+            const targetLat = currentLat + (latOffset / 100);
+            const targetLng = currentLng + (lngOffset / 100);
+            const addresses = await searchCurrentCoordinateToAddress(new naver.maps.LatLng(targetLat, targetLng));
+            addresses.forEach(address => nearbyAddressesSet.add(address));
+        }
+    }
+
+    const nearbyAddresses = Array.from(nearbyAddressesSet);
+    const nearbyAddressesJSON = JSON.stringify(nearbyAddresses);
+    findCurrentLocateSchool(nearbyAddressesJSON);
+};
+
+
+const searchCurrentCoordinateToAddress = (latlng) => {
+    return new Promise((resolve) => {
+        const nearbyAddresses = [];
+
+        naver.maps.Service.reverseGeocode({
+            coords: latlng,
+            orders: [
+                naver.maps.Service.OrderType.ADDR,
+                naver.maps.Service.OrderType.ROAD_ADDR
+            ].join(',')
+        }, function(status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                console.error('주소를 변환하는 중 오류가 발생했습니다.');
+                resolve([]);
+                return;
+            }
+            const items = response.v2.results;
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const address = makeAddress(item) || '';
+                const cleanedAddress = address.replace(/\d.*/, '').trim();
+
+                if (cleanedAddress) {
+                    const words = cleanedAddress.split(' ');
+                    const firstThreeWords = words.slice(0, 3).join(' ');
+
+                    if (!nearbyAddresses.includes(firstThreeWords)) {
+                        nearbyAddresses.push(firstThreeWords);
+                    }
+                }
+            }
+
+            resolve(nearbyAddresses); // 주소 검색 결과를 반환
+        });
+    });
+};
+
+const findCurrentLocateSchool = (nearbyAddresses) => {
+    try {
+        fetch('/high/school/search/address', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: nearbyAddresses,
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('서버 응답 오류');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                clearMarker();
+                initSchools(data);
+            })
+            .catch((error) => {
+                console.error('오류 발생:', error);
+            });
+    } catch (error) {
+        console.error('오류 발생:', error);
+    }
+};

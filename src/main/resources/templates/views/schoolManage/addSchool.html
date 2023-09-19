@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/layout}">
+<main layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/addSchool.css}">
+    <script>
+        $(document).ready(function () {
+            $('input[name=schoolCode]').focus();
+            $('input[type="text"]').keydown(function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        function form_ok() {
+            var schoolCode = $('input[name=schoolCode]');
+            var cityEduOrg = $('input[name=cityEduOrg]');
+            var foundationName = $('input[name=foundationName]');
+            var schoolKind = $('input[name=schoolKind]');
+            var cityName = $('input[name=cityName]');
+            var streetAddr = $('input[name=streetAddr]');
+            var telNum = $('input[name=telNum]');
+            var faxNum = $('input[name=faxNum]');
+
+            var schoolName = $('input[name=schoolName]');
+            var localEduOrg = $('input[name=localEduOrg]');
+            var dayNightName = $('input[name=dayNightName]');
+            var streetDetailAddr = $('input[name=streetDetailAddr]');
+            var postNum = $('input[name=postNum]');
+            var hmpgAddr = $('input[name=hmpgAddr]');
+            var coedu = $('input[name=coedu]');
+
+            if (schoolCode.val() === '') {
+                alert('학교코드를 입력해주세요');
+                schoolCode.focus();
+                return false;
+            }
+            if (cityEduOrg.val() === '') {
+                alert('해당 시도교육청은 필수입니다');
+                cityEduOrg.focus();
+                return false;
+            }
+            if (streetAddr.val() === '') {
+                alert('도로명주소는 필수입니다');
+                streetAddr.focus();
+                return false;
+            }
+            if (schoolName.val() === '') {
+                alert('학교이름은 필수입니다');
+                schoolName.focus();
+                return false;
+            }
+            if (localEduOrg.val() === '') {
+                alert('해당 지역교육청은 필수입니다');
+                localEduOrg.focus();
+                return false;
+            }
+            if (confirm('학교정보를 추가합니다'))
+                $('#schoolForm').submit();
+
+        }
+    </script>
+    <section class="container w-75 mtb-10 acenter">
+        <div class="d-flex justify-content-between">
+            <h2 class="aleft mb-4">학교 추가</h2>
+            <a class="btn btn-success mb-3 acenter" href="/high/school/search">학교관리화면으로</a>
+        </div>
+        <form action="/high/school/add" method="post" id="schoolForm">
+            <div class="row mb-3" id="sc-info">
+
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-text">학교코드</div>
+                        <input type="text" class="form-control" name="schoolCode">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시도교육청</div>
+                        <input type="text" class="form-control" name="cityEduOrg">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">설립구분</div>
+                        <input type="text" class="form-control" name="foundationName">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">학교급</div>
+                        <input type="text" class="form-control" name="schoolKind">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시도명</div>
+                        <input type="text" class="form-control" name="cityName">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">도로명 주소</div>
+                        <input type="text" class="form-control" name="streetAddr">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">팩스번호</div>
+                        <input type="text" class="form-control" name="faxNum">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">전화번호</div>
+                        <input type="text" class="form-control" name="telNum">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-text">학교명</div>
+                        <input type="text" class="form-control" name="schoolName">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">지역교육청</div>
+                        <input type="text" class="form-control" name="localEduOrg">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">주야구분</div>
+                        <input type="text" class="form-control" name="dayNightName">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">시군구명</div>
+                        <input type="text" class="form-control" name="streetDetailAddr">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">우편번호</div>
+                        <input type="text" class="form-control" name="postNum">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-text">홈페이지주소</div>
+                        <input type="text" class="form-control" name="hmpgAddr">
+                    </div>
+                    <div  class="input-group">
+                        <div class="input-group-text">남여공학 구분</div>
+                        <input type="text" class="form-control" name="coedu">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" onclick="form_ok(this)" class="btn btn-success">추가하기</button>
+            </div>
+        </form>
+    </section>
+</main>
+</html>

@@ -4,6 +4,7 @@ import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
+import com.chunjae.tqgpt.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,15 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,15 +32,17 @@ public class SchoolController {
      * */
     @GetMapping("/add")
     public String addSchool() {
-        return "addSchool";
+        return "views/schoolManage/addSchool";
     }
 
     /*학교 정보 추가 페이지
      * POST
      */
     @PostMapping("/add")
-    public String addSchool(SchoolDTO.SchoolAddDto schoolDto) {
-        SchoolDetail schoolDetail = schoolService.addSchool(schoolDto);
+    public String addSchool(SchoolDTO.SchoolAddDto schoolDto, @AuthenticationPrincipal User user) {
+        if(user == null)
+            return "redirect:/login";
+        SchoolDetail schoolDetail = schoolService.addSchool(schoolDto, user.getName());
 
         return "redirect:/high/school/search";
     }
@@ -59,19 +60,24 @@ public class SchoolController {
 
         model.addAttribute("info", getSchool.get());
 
-        return "modifySchool";
+        return "views/schoolManage/modifySchool";
     }
 
     @PostMapping("/api/modify")
-    public @ResponseBody ResponseEntity<SchoolDetail> modifyOk(@RequestBody SchoolDTO.SchoolModifyDto schoolModifyDto) {
+    public @ResponseBody ResponseEntity<SchoolDetail> modifyOk(@RequestBody SchoolDTO.SchoolModifyDto schoolModifyDto, @AuthenticationPrincipal User user) {
+        if(user == null)
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        return schoolService.modifySchool(schoolModifyDto, user.getName());
+    }
 
-        return schoolService.modifySchool(schoolModifyDto);
+    @ResponseBody
+    @PostMapping("/remove/{school-idx}")
+    public ResponseEntity<String> removeSchool(@PathVariable("school-idx") Long idx) {
+        return schoolService.removeSchool(idx);
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
-//        Page<School> allList = schoolService.getAllList();
-//        model.addAttribute("searchList", allList);
+    public String search() {
         return "views/schoolManage/manageHome";
     }
 
@@ -81,7 +87,6 @@ public class SchoolController {
     @ResponseBody
     @PostMapping("/search-list")
     public ResponseEntity<Map<String, Object>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
-        System.out.println("!!!");
         Page<School> contents = schoolService.search(requestDto);
         if (!contents.isEmpty()) {
             String count = String.valueOf(contents.getTotalElements());
@@ -120,6 +125,25 @@ public class SchoolController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/search/address")
+    public ResponseEntity<List<School>> searchSchoolInfoByAddresses(@RequestBody List<String> addresses) {
+        List<School> schools = new ArrayList<>();
+        for (String address : addresses) {
+            List<School> school = schoolService.findSchoolsByAddress(address);
+            if(!school.isEmpty()) {
+                schools.addAll(school);
+            }
+        }
+
+        System.out.println(schools);
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     /*@SneakyThrows
     @ResponseBody

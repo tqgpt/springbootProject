@@ -38,4 +38,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
     List<School> findAllBySchoolNameContaining(@Param("keyword") String keyword);
 
     School findSchoolBySchoolName(@Param("keyword") String schoolName);
+
+
+    @Query("SELECT s FROM t_school s WHERE s.streetAddr LIKE %:address%")
+    List<School> findSchoolsByStreetAddress(@Param("address") String address);
 }
