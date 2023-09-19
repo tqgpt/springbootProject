@@ -69,22 +69,41 @@
 
     <section class="container my-3">
         <div class="row d-flex justify-content-between">
-            <div id="mapContent" class="col-md-7  border border-dark rounded-3 me-1">
+            <div id="mapContent" class="col-md-7  border border-dark rounded-3">
                 <div id="mapArea" class="p-1 bg-body-tertiary">
                     <figure id="map" class="w-100 h-100"></figure>
                 </div>
             </div>
-            <div id="weatherContent" class="border border-dark rounded-3">
-                <div class="h-100 p-1 bg-body-tertiary">
-                    <td th:text="${weatherData.pty}"></td>
-                    <td th:text="${weatherData.reh}"></td>
-                    <td th:text="${weatherData.rn1}"></td>
-                    <td th:text="${weatherData.t1h}"></td>
-                    <td th:text="${weatherData.uuu}"></td>
-                    <td th:text="${weatherData.vec}"></td>
-                    <td th:text="${weatherData.vvv}"></td>
-                    <td th:text="${weatherData.wsd}"></td>
-                </div>
+            <div id="weatherContent" class="col-md-5  border border-dark rounded-3">
+                <a href="https://www.weather.go.kr/w/index.do">
+                    <img id=weatherKrBanner src="/images/weather_kor_banner.png" alt="기상청 홈페이지로">
+                </a>
+                <table class="infoTable table">
+                    <tbody>
+                    <tr>
+                        <th>비소식 (코드값)</th>
+                        <th>기온 (℃)</th>
+                        <th>습도 (%)</th>
+                        <th>1시간 강수량 (mm)</th>
+                        <th>풍속 (m/s)</th>
+                        <th>풍향 (deg)</th>
+                        <th>남북바람성분 (m/s)</th>
+                        <th>동서바람성분 (m/s)</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${weatherData.pty}"></td>
+                        <td th:text="${weatherData.t1h}"></td>
+                        <td th:text="${weatherData.reh}"></td>
+                        <td th:text="${weatherData.rn1}"></td>
+                        <td th:text="${weatherData.wsd}"></td>
+                        <td th:text="${weatherData.vec}"></td>
+                        <td th:text="${weatherData.vvv}"></td>
+                        <td th:text="${weatherData.uuu}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="pTextCenter">날씨 코드값: 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7)</p>
+                <p class="pTextCenter">동서바람성분: 동(+표기), 서(-표기) &nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp; 남북바람성분: 북(+표기), 남(-표기)</p>
             </div>
         </div>
     </section>
@@ -99,7 +118,7 @@
     <script>
         const schoolName = "[[${school.schoolName}]]";
         const streetAddress = "[[${school.streetAddr}]]";
-// ..
+        // ..
         const mapSection = searchAddressToCoordinate(streetAddress, schoolName);
 
         window.onload = function(){
@@ -107,7 +126,7 @@
                 searchWeatherLocate(streetAddress);
             }
         }
-// ..
+        // ..
     </script>
     <!-- MAP_API_END  -->
 

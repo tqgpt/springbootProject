@@ -1,9 +1,9 @@
 package com.chunjae.tqgpt.school.service;
 
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ import java.util.Map;
 @Service
 public class WeatherService {
 
-    @Value("${weather.api.clientId}")
+    @Value("${weather-api-clientId}")
     String clientId;
 
     @Value("${weather-api-clientPw}")
