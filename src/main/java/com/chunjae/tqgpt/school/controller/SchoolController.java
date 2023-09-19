@@ -147,7 +147,7 @@ public class SchoolController {
 
     @ResponseBody
     @PostMapping("/search-elemental/{keyword}")
-    public ResponseEntity<JsonNode> elemSchoolInfo(@PathVariable String keyword) {
+    public ResponseEntity<List<SchoolDTO.SchoolInfoDTO>> elemSchoolInfo(@PathVariable String keyword) {
         return schoolService.elemSchoolByKeyword(keyword);
     }
 
