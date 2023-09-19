@@ -8,7 +8,7 @@ public class MainController {
 
     @GetMapping("/admin")
     public String admin(){
-        return "redirect:/high/school/search";
+        return "redirect:/search";
     }
 
     @GetMapping("/")

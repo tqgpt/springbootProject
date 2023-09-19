@@ -5,8 +5,6 @@ import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
 
-import java.io.Serializable;
-
 public class SchoolDTO {
 
     @Getter

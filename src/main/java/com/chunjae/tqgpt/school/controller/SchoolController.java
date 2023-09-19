@@ -24,7 +24,6 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/high/school")
 public class SchoolController {
     private final SchoolService schoolService;
 
@@ -45,7 +44,7 @@ public class SchoolController {
             return "redirect:/login";
         SchoolDetail schoolDetail = schoolService.addSchool(schoolDto, user.getName());
 
-        return "redirect:/high/school/search";
+        return "redirect:/search";
     }
 
     @GetMapping("/modify/{school-idx}")
@@ -114,7 +113,7 @@ public class SchoolController {
     public String initOfficialData() {
         //유저 객체 받아서 이름 받아넣기
         schoolService.upsertSchoolData("user1");
-        return "redirect:/high/school/search";
+        return "redirect:/search";
     }
     @ResponseBody
     @GetMapping("/search/{keyword}")

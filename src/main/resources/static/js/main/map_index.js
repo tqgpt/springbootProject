@@ -319,7 +319,7 @@ const searchCurrentCoordinateToAddress = (latlng) => {
 
 const findCurrentLocateSchool = (nearbyAddresses) => {
     try {
-        fetch('/high/school/search/address', {
+        fetch('/search/address', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
