@@ -250,7 +250,7 @@ const disableButtonAndExecute = () => {
     button.disabled = true; // 버튼 비활성화
     setTimeout(function() {
         button.disabled = false; // 버튼 활성화
-    }, 1000);
+    }, 10000);
 }
 
 document.getElementById("currentSchool").addEventListener('click', () => {
@@ -259,12 +259,12 @@ document.getElementById("currentSchool").addEventListener('click', () => {
 });
 
 // 현재 위치의 주변 학교 검색
+// 현재 위치의 주변 학교 검색
 const findNearbyAddresses = async (currentLat, currentLng) => {
     const searchRadius = 3; // 검색 반경 (3KM)
-    const searchStep = 0.25; // 검색 간격 (1KM)
-    const nearbyAddresses = [];
+    const searchStep = 0.5; // 검색 간격 (1KM)
+    const nearbyAddressesSet = new Set();
 
-    // 비동기적으로 반경 3KM 내에서 검색
     for (let latOffset = -searchRadius; latOffset <= searchRadius; latOffset += searchStep) {
         for (let lngOffset = -searchRadius; lngOffset <= searchRadius; lngOffset += searchStep) {
             const targetLat = currentLat + (latOffset / 100);
@@ -272,14 +272,17 @@ const findNearbyAddresses = async (currentLat, currentLng) => {
 
             // 비동기적으로 주소를 검색하여 도로명 주소로 변환
             const addresses = await searchCurrentCoordinateToAddress(new naver.maps.LatLng(targetLat, targetLng));
-            nearbyAddresses.push(...addresses); // 검색된 주소를 배열에 추가
+
+            // Set에 주소를 추가하면 중복된 주소는 자동으로 제거됨
+            addresses.forEach(address => nearbyAddressesSet.add(address));
         }
     }
 
+    const nearbyAddresses = Array.from(nearbyAddressesSet);
     const nearbyAddressesJSON = JSON.stringify(nearbyAddresses);
-
     findCurrentLocateSchool(nearbyAddressesJSON);
 };
+
 
 const searchCurrentCoordinateToAddress = (latlng) => {
     return new Promise((resolve) => {
@@ -294,7 +297,7 @@ const searchCurrentCoordinateToAddress = (latlng) => {
         }, function(status, response) {
             if (status === naver.maps.Service.Status.ERROR) {
                 console.error('주소를 변환하는 중 오류가 발생했습니다.');
-                resolve([]);
+                resolve([]); // 오류 발생 시 빈 배열 반환
                 return;
             }
             const items = response.v2.results;
@@ -321,18 +324,29 @@ const searchCurrentCoordinateToAddress = (latlng) => {
 
 const findCurrentLocateSchool = (nearbyAddresses) => {
     try {
-        const response = fetch('/high/school/search/address', {
+        fetch('/high/school/search/address', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: nearbyAddresses,
-        });
-
-        if (response.ok) {
-            const data = response.json();
-            console.log(data);
-        }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('서버 응답 오류');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                clearMarker()
+                initSchools(data)
+                // data.forEach((school) => {
+                //     console.log(school);
+                // });
+            })
+            .catch((error) => {
+                console.error('오류 발생:', error);
+            });
     } catch (error) {
         console.error('오류 발생:', error);
     }

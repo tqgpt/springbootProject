@@ -130,10 +130,13 @@ public class SchoolController {
     public ResponseEntity<List<School>> searchSchoolInfoByAddresses(@RequestBody List<String> addresses) {
         List<School> schools = new ArrayList<>();
         for (String address : addresses) {
-            List<School> schoolsByAddress = schoolService.findSchoolsByAddress(address);
-            schools.addAll(schoolsByAddress);
+            List<School> school = schoolService.findSchoolsByAddress(address);
+            if(!school.isEmpty()) {
+                schools.addAll(school);
+            }
         }
 
+        System.out.println(schools);
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
