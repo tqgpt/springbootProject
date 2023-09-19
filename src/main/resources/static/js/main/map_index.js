@@ -1,11 +1,11 @@
 // 현재 위치로 이동 이미지
-var curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
+const curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
 
 // 현재 위치 위도, 경도 좌표 객체를 담을 변수
-var curtLoca = "";
+const curtLoca = "";
 
 // Map 초기화
-var map = new naver.maps.Map('map', {
+const map = new naver.maps.Map('map', {
     scaleControl: true,      // 우측 하단 scale 표시
     mapDataControl: false,    // 좌측 하단 @ NAVER Corp 표시
     zoom: 17,                  // 지도 줌 레벨
@@ -59,7 +59,7 @@ naver.maps.Event.once(map, 'init_stylemap', function() {
 });
 
 // getCurrentPosition 성공 콜백 함수
-var onSuccessGeolocation = function (position) {
+const onSuccessGeolocation = function (position) {
     // 현재위치
     curtLoca = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
@@ -80,7 +80,7 @@ var onSuccessGeolocation = function (position) {
 
 
 // getCurrentPosition 에러 콜백 함수
-var onErrorGeolocation = function () {
+const onErrorGeolocation = function () {
 
     var agent = navigator.userAgent.toLowerCase(), name = navigator.appName;
 
@@ -142,7 +142,7 @@ const searchAddressToCoordinateMarker = (address, zoom) => {
 }
 
 // 위/경도 => 주소 조회
-function searchCoordinateToAddress(latlng) {
+const searchCoordinateToAddress = (latlng) => {
     naver.maps.Service.reverseGeocode({
         coords: latlng,
         orders: [
@@ -169,7 +169,7 @@ function searchCoordinateToAddress(latlng) {
     });
 }
 
-function makeAddress(item) {
+const makeAddress = (item) => {
     if (!item) {
         return;
     }
@@ -227,19 +227,19 @@ function makeAddress(item) {
     return [sido, sigugun, dongmyun, ri, rest].join(' ');
 }
 
-function hasArea(area) {
+const hasArea = (area) => {
     return !!(area && area.name && area.name !== '');
 }
 
-function hasData(data) {
+const hasData = (data) => {
     return !!(data && data !== '');
 }
 
-function checkLastString (word, lastString) {
+const checkLastString = (word, lastString) => {
     return new RegExp(lastString + '$').test(word);
 }
 
-function hasAddition (addition) {
+const hasAddition = (addition) => {
     return !!(addition && addition.value);
 }
 
@@ -259,7 +259,6 @@ document.getElementById("currentSchool").addEventListener('click', () => {
 });
 
 // 현재 위치의 주변 학교 검색
-// 현재 위치의 주변 학교 검색
 const findNearbyAddresses = async (currentLat, currentLng) => {
     const searchRadius = 3; // 검색 반경 (3KM)
     const searchStep = 0.5; // 검색 간격 (1KM)
@@ -269,11 +268,7 @@ const findNearbyAddresses = async (currentLat, currentLng) => {
         for (let lngOffset = -searchRadius; lngOffset <= searchRadius; lngOffset += searchStep) {
             const targetLat = currentLat + (latOffset / 100);
             const targetLng = currentLng + (lngOffset / 100);
-
-            // 비동기적으로 주소를 검색하여 도로명 주소로 변환
             const addresses = await searchCurrentCoordinateToAddress(new naver.maps.LatLng(targetLat, targetLng));
-
-            // Set에 주소를 추가하면 중복된 주소는 자동으로 제거됨
             addresses.forEach(address => nearbyAddressesSet.add(address));
         }
     }
@@ -297,7 +292,7 @@ const searchCurrentCoordinateToAddress = (latlng) => {
         }, function(status, response) {
             if (status === naver.maps.Service.Status.ERROR) {
                 console.error('주소를 변환하는 중 오류가 발생했습니다.');
-                resolve([]); // 오류 발생 시 빈 배열 반환
+                resolve([]);
                 return;
             }
             const items = response.v2.results;
@@ -338,11 +333,8 @@ const findCurrentLocateSchool = (nearbyAddresses) => {
                 return response.json();
             })
             .then((data) => {
-                clearMarker()
-                initSchools(data)
-                // data.forEach((school) => {
-                //     console.log(school);
-                // });
+                clearMarker();
+                initSchools(data);
             })
             .catch((error) => {
                 console.error('오류 발생:', error);
