@@ -89,7 +89,7 @@ const findSchoolInfo = async (keyword) => {
         method: "GET",
         headers: {"Content-Type": "application/json"},
     });
-    if (response.ok) {
+    if (response.status === 200) {
         const dataArray = await response.json();
         initSchools(dataArray);
     } else {
@@ -138,7 +138,7 @@ const handleSearch = async () => {
         await findSchoolInfo(keyword);
         clearSearchRelate();
     } catch (error) {
-        console.error("데이터 가져오기 오류:", error);
+        console.log("학교를 불러올수 없음 ", error.status, error.statusText);
     } finally {
         isFetching = false;
         searchButton.disabled = false;
@@ -160,7 +160,7 @@ const searchRelate = async () => {
         headers: {"Content-Type": "application/json"},
     });
 
-    if (response.ok) {
+    if (response.status === 200) {
         const dataArray = await response.json();
 
         inputResult.innerHTML = "";
@@ -233,14 +233,14 @@ const fetchDataForRelatedKeyword = async (keyword) => {
             headers: {"Content-Type": "application/json"},
         });
 
-        if (response.ok) {
+        if (response.status === 200) {
             const dataArray = await response.json();
             initSchools(dataArray);
         } else {
-            console.error("서버 응답 오류:", response.status, response.statusText);
+            console.log("학교를 불러올수 없음 ", response.status, response.statusText);
         }
     } catch (error) {
-        console.error("데이터 가져오기 오류:", error);
+        console.log("일치하는 학교 없음", error.status, error.statusText);
     }
 };
 

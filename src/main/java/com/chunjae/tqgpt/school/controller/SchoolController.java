@@ -97,7 +97,7 @@ public class SchoolController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -122,7 +122,7 @@ public class SchoolController {
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -182,7 +182,7 @@ public class SchoolController {
         if (!schoolList.isEmpty()) {
             return new ResponseEntity<>(schoolList.stream().map(School::getSchoolName).toList(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -193,7 +193,7 @@ public class SchoolController {
         if (school != null) {
             return new ResponseEntity<>(school, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
