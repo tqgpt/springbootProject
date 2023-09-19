@@ -123,4 +123,5 @@ public class SchoolDTO {
 
         private String page;
     }
+
 }

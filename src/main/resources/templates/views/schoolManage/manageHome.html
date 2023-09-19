@@ -20,7 +20,7 @@
             </li>
         </ul>
         <div class="p-5 bg-body-tertiary rounded-bottom-3 border-start border-end border-end border-bottom border-1">
-            <form action="/high/school/search-list" method="GET">
+            <form action="/search-list" method="GET">
                 <div class="row">
                     <div class="col-md-6 py-2">
                         <h4>지역</h4>
@@ -64,9 +64,9 @@
         <div class="py-2 d-flex justify-content-between">
             <span class="d-flex align-items-center" name="total"></span>
             <label>
-                <button type="button" class="btn btn-outline-danger mx-1" onclick="location.href='/high/school/init-official-data'">api 초기화</button>
+                <button type="button" class="btn btn-outline-danger mx-1" onclick="location.href='/init-official-data'">api 초기화</button>
                 <button type="button" class="btn btn-success mx-1" id="liveToastBtn" onclick="ExcelDownloader()">Excel 다운로드 <i class="bi bi-download"></i></button>
-                <button type="button" class="btn btn-secondary mx-1" onclick="location.href='/high/school/add'">학교등록</button>
+                <button type="button" class="btn btn-secondary mx-1" onclick="location.href='/add'">학교등록</button>
             </label>
            <div class="toast-container position-fixed bottom-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
