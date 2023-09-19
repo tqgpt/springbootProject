@@ -3,10 +3,7 @@ package com.chunjae.tqgpt.school.dto;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 public class SchoolDTO {
 
@@ -113,6 +110,7 @@ public class SchoolDTO {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class searchRequestDto {
         //시
         private String cityName;

@@ -1,5 +1,6 @@
 package com.chunjae.tqgpt.school.controller;
 
+import com.chunjae.tqgpt.api.WeatherAPI;
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
@@ -108,7 +109,11 @@ public class SchoolController {
 
     @GetMapping("/info/{id}")    // 해당 경로에 요청이 오면 이 메서드 실행
     public String showSchoolManageInfoPage(@PathVariable Long id, Model model) { // Model 객체로 파라미터 받음  모델로 받아야 뷰에 뿌릴 수 있음
-        model.addAttribute("school", schoolService.getSchoolById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
+        School school = schoolService.getSchoolById(id);
+        if(school.getStreetAddr() != null) {
+            WeatherAPI.weather(school.getStreetAddr());
+        }
+        model.addAttribute("school", school); // 서비스의// 해당 메서드의 반환값을 모델에 추가함
         model.addAttribute("schoolDetail", schoolService.getSchoolDetailById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
         return "views/schoolManage/infoSchool"; // 뷰 템플릿 반환
     }

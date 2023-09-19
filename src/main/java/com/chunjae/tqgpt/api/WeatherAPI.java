@@ -1,6 +1,7 @@
 package com.chunjae.tqgpt.api;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
 import java.io.BufferedReader;
@@ -10,11 +11,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 @Controller
 @Slf4j
 public class WeatherAPI {
-    public static void main(String[] args) {
+    public static void weather(String streetAddr) {
 
         LocalDate currentDay = LocalDate.now();
         DateTimeFormatter Dateformatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -35,12 +37,17 @@ public class WeatherAPI {
             String dataType = "JSON";
             // String base_date = formattedDate; // 날짜
             // String base_time = formattedTime; // 시간... 근데 이제 -1시간을 곁들인
-//            X =MapAPI.위도경도가져오는함수();
-//            Y =MapAPI.위도경도가져오는함수();
-            String nx = "38"; // X 좌표
-            String ny = "127"; // Y 좌표
+            // X =MapAPI.위도경도가져오는함수();
+            // Y =MapAPI.위도경도가져오는함수();
 
-            // API 요청 URL 생성
+            JSONObject latlong = MapNaver.Latlong(streetAddr);
+
+            Map<String, Double> rs = MapConvert.convertToCoordinates(latlong.get("x").toString(), latlong.get("y").toString());
+
+            double nx = rs.get('x'); // X 좌표
+            double ny = rs.get('y'); // Y 좌표
+
+
             String requestUrl = apiUrl + "?serviceKey=" + apiKey + "&pageNo=" + pageNo +
                 "&numOfRows=" + numOfRows + "&dataType=" + dataType + "&base_date=" +
                 formattedDate + "&base_time=" + formattedTime + "&nx=" + nx + "&ny=" + ny;

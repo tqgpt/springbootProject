@@ -58,6 +58,8 @@ const searchWeatherLocate = (address) => {
 
         //  복잡한 계산식
         var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+
+
         ra = re * sf / Math.pow(ra, sn);
         var theta = v2 * DEGRAD - olong;
         if (theta > Math.PI) theta -= 2.0 * Math.PI;
