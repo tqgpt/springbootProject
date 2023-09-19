@@ -43,7 +43,7 @@ public class User extends BaseEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roleList = new ArrayList<>();
         for (Role role : roles) {
-            String auth = role.getRole().toString();
+            String auth = "ROLE_" + role.getRole().toString();
             roleList.add(new SimpleGrantedAuthority(auth));
         }
         return roleList;
