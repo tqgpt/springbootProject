@@ -2,7 +2,7 @@
 const curtBtn = '<button class="btn btn-success m-2 border-0"><i class="bi bi-compass fs-4"></i></button>';
 
 // 현재 위치 위도, 경도 좌표 객체를 담을 변수
-const curtLoca = "";
+let curtLoca = "";
 
 // Map 초기화
 const map = new naver.maps.Map('map', {
