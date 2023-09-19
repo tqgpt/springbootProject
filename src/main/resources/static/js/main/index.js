@@ -3,6 +3,8 @@ const addressInputElementary = document.getElementById("addressInput_elementary"
 const searchButton = document.getElementById("button-addon");
 const searchResultDiv = document.getElementById("search_result");
 const inputResult = document.getElementById("input_result");
+const middleInput = document.getElementById("addressInput_middle");
+const middleSearchButton = document.getElementById("button-addon_middle");
 
 let isFetching = false;
 document.addEventListener("DOMContentLoaded", () => {
@@ -375,3 +377,43 @@ addressInput.addEventListener("keydown", async (event) => {
 
 
 
+const handleMiddleSearch = async () => {
+    const keyword = middleInput.value;
+    if (!keyword || isFetching) {
+        return;
+    }
+    isFetching = true;
+    middleSearchButton.disabled = true;
+    clearMarker();
+    try {
+        await searchMiddle();
+    } catch (error) {
+        console.error("데이터 가져오기 오류:", error);
+    } finally {
+        isFetching = false;
+        middleSearchButton.disabled = false;
+    }
+};
+
+const searchMiddle = async () => {
+    const keyword = middleInput.value;
+
+    const response = await fetch(`/search-middle?keyword=${keyword}`, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+    });
+    if (response.status === 200) {
+        const dataArray = await response.json();
+        initSchools(dataArray);
+    } else {
+        console.log("일치하는 학교 없음", response.status, response.statusText);
+    }
+};
+
+middleSearchButton.addEventListener("click", handleMiddleSearch);
+middleInput.addEventListener("keyup", (event) =>{
+
+    if (event.key === "Enter"){
+        handleMiddleSearch();
+    }
+})
