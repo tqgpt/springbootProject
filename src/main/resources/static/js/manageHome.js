@@ -148,7 +148,7 @@ const searchSchool = async (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    const response = await fetch('/high/school/search-list', {
+    const response = await fetch('/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
             'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ const searchSchool = async (pageNumber) => {
                 sessionStorage.setItem('search_option', ex_search_option);
                 sessionStorage.setItem('search_value', ex_search_value);
                 sessionStorage.setItem('pageNumber', pageNumber);
-                location.href = `/high/school/info/${school.idx}`;
+                location.href = `/info/${school.idx}`;
             };
 
             const dateObj = new Date(school.createdAt);
@@ -322,7 +322,7 @@ const ExcelDownloader = async () => {
         searchValue,
     });
 
-    const url = '/high/school/xlsx-download?' + params.toString();
+    const url = '/xlsx-download?' + params.toString();
 
     const response = await fetch(url, {
         method: 'GET', // 메서드를 GET으로 설정

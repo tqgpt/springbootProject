@@ -86,7 +86,7 @@ const showCookies = () => {
 
 
 const findSchoolInfo = async (keyword) => {
-    const response = await fetch(`/high/school/search/${keyword}`, {
+    const response = await fetch(`/search/${keyword}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
     });
@@ -156,7 +156,7 @@ const searchRelate = async () => {
         return false;
     }
 
-    const response = await fetch(`/high/school/search-relate?keyword=${keyword}`, {
+    const response = await fetch(`/search-relate?keyword=${keyword}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
     });
@@ -229,7 +229,7 @@ labels.forEach((label) => {
 
 const fetchDataForRelatedKeyword = async (keyword) => {
     try {
-        const response = await fetch(`/high/school/search/${keyword}`, {
+        const response = await fetch(`/search/${keyword}`, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
         });
@@ -283,9 +283,8 @@ const clearSearchRelate = () => {
     }
 };
 //초등학교 검색 시작
-addressInputElementary.addEventListener('keyup',(event) => {
-    debouncedSearchRelate();
-    if(event.key === 'Enter') {
+addressInputElementary.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
         ElemHandleSearch();
         clearSearchRelate();
     }
@@ -301,7 +300,6 @@ const ElemHandleSearch = async () => {
     clearMarker();
     try {
         await findElemSchoolInfo(keyword);
-        // searchRelate(addressInput);
     } catch (error) {
         console.error("데이터 가져오기 오류:", error);
     } finally {
@@ -312,7 +310,7 @@ const ElemHandleSearch = async () => {
 
 //초등학교 검색
 const findElemSchoolInfo = async (keyword) => {
-    const response = await fetch(`/high/school/search-elemental/`+keyword, {
+    const response = await fetch(`/search-elemental/${keyword}`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
     });
@@ -333,10 +331,10 @@ const initElemSchools = (dataArray) => {
         schoolItem.classList.add('list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start', 'my-1', 'rounded', 'bg-secondary-subtle');
         schoolItem.setAttribute('id', 'searchCard');
         schoolItem.onclick = () => {
-            searchAddressToCoordinateMarker(data.roadAddress, 18);
+            searchAddressToCoordinateMarker(data.road_address, 18);
             recordCookie(data);
         };
-        searchAddressToCoordinateMarker(data.roadAddress, 12);
+        searchAddressToCoordinateMarker(data.road_address, 12);
         schoolItem.innerHTML = `
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">${data.name}</h5>

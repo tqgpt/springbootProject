@@ -4,7 +4,7 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
-import java.io.Serializable;
+
 
 public class SchoolDTO {
 
@@ -128,14 +128,18 @@ public class SchoolDTO {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class elementalSchoolDto implements Serializable {
-        private String idx;
-        private String name;
-        private String roadAddress;
-        private String roadZipCode;
-        private String latitude;
-        private String longitude;
-        private String levelCode;
-        private String schoolCode;
+    @NoArgsConstructor
+    public static class weatherResponseDto {
+        private String pty;
+        private String reh;
+        private String rn1;
+        private String t1h;
+        private String uuu;
+        private String vec;
+        private String vvv;
+        private String wsd;
     }
+
+
+
 }

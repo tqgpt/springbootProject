@@ -6,7 +6,7 @@
     <section class="container w-75 mtb-10 acenter">
         <div class="d-flex justify-content-between">
             <h2 class="aleft mb-4">학교 수정</h2>
-            <a class="btn btn-success mb-3 acenter" href="/high/school/search">학교관리화면으로</a>
+            <a class="btn btn-success mb-3 acenter" href="/search">학교관리화면으로</a>
         </div>
         <form action="" method="post">
             <div class="row mb-3" id="sc-info">
@@ -140,7 +140,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/high/school/api/modify",
+                url: "/api/modify",
                 data: jsonStr,
                 contentType: "application/json; charset=utf-8",
                 error: function () {
@@ -159,13 +159,13 @@
 
             $.ajax({
                 type: "POST",
-                url: "/high/school/remove/"+idx,
+                url: "/remove/"+idx,
                 error: function (data) {
                     alert(data);
                 },
                 success: function (data) {
                     alert(data);
-                    location.replace("/high/school/search");
+                    location.replace("/search");
                 }
             });
         }

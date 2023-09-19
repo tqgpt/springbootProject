@@ -1,5 +1,9 @@
 package com.chunjae.tqgpt.school.service;
 
+import com.chunjae.tqgpt.school.dto.SchoolDTO;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,76 +32,9 @@ public class WeatherService {
     @Value("${weather-api-clientPw}")
     String clientSecret;
 
-    public void weather(String streetAddr) {
-
-        LocalDate currentDay = LocalDate.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formattedDate = currentDay.format(dateFormatter);
-
-
-        /* 기상청 실황 API는 발표자료가 매 시 30분에 생성, 40분에 API가 제공되며 그것도 시간이 조금 지체되기에 1시간 전을 호출하여야 한다. */
-        LocalTime currentTime = LocalTime.now();
-        LocalTime oneHourAgo = currentTime.minusHours(1);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
-        String formattedTime = oneHourAgo.format(timeFormatter);
-
-        try {
-            String apiUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
-            String apiKey = "bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D";
-            String pageNo = "1";
-            String numOfRows = "1000";
-            String dataType = "JSON";
-
-            JSONObject latlong = latLong(streetAddr);
-
-            Map<String, Double> rs = convertToCoordinates(latlong.getDouble("y"), latlong.getDouble("x"));
-
-            double nx = rs.get("x"); // X 좌표
-            double ny = rs.get("y"); // Y 좌표
-
-            System.out.println("Time: " + formattedTime);
-            System.out.println("x: " + nx);
-            System.out.println("y: " + ny);
-            System.out.println("Date: " + formattedDate);
-
-            String requestUrl = apiUrl + "?serviceKey=" + apiKey + "&pageNo=" + pageNo +
-                    "&numOfRows=" + numOfRows + "&dataType=" + dataType + "&base_date=" +
-                    formattedDate + "&base_time=" + formattedTime + "&nx=" + (int) nx + "&ny=" + (int) ny;
-
-            // HTTP GET 요청 보내기
-            URL url = new URL(requestUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            log.info(String.valueOf(url));
-
-            // 응답 읽기
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                StringBuffer response = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-
-                // 응답 데이터 출력
-                log.info(response.toString());
-            } else {
-                log.error("응답 데이터 에러:" + responseCode);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
     //도로명 -> 위도/경도
     private JSONObject latLong(String address) {
         String addr = URLEncoder.encode(address, StandardCharsets.UTF_8);
-        // Geocoding 개요에 나와있는 API URL 입력.
         String apiURL = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addr;    // JSON
 
         // HTTP 연결 설정
@@ -137,10 +74,6 @@ public class WeatherService {
             JSONObject temp = null;
             for (int i = 0; i < arr.length(); i++) {
                 temp = (JSONObject) arr.get(i);
-                System.out.println("address : " + temp.get("roadAddress"));
-                System.out.println("jibunAddress : " + temp.get("jibunAddress"));
-                System.out.println("위도 : " + temp.get("y"));
-                System.out.println("경도 : " + temp.get("x"));
             }
             return temp;
 
@@ -199,5 +132,95 @@ public class WeatherService {
             rs.put("y", yCoordinate);
         }
         return rs;
+    }
+
+    //기상청 좌표계 포함 데이터 요청
+    public SchoolDTO.weatherResponseDto weather(String streetAddr) {
+
+        LocalDate currentDay = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String formattedDate = currentDay.format(dateFormatter);
+
+
+        /* 기상청 실황 API는 발표자료가 매 시 30분에 생성, 40분에 API가 제공되며 그것도 시간이 조금 지체되기에 1시간 전을 호출하여야 한다. */
+        LocalTime currentTime = LocalTime.now();
+        LocalTime oneHourAgo = currentTime.minusHours(1);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+        String formattedTime = oneHourAgo.format(timeFormatter);
+
+        try {
+            String apiUrl = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+            String apiKey = "bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D";
+            String pageNo = "1";
+            String numOfRows = "1000";
+            String dataType = "JSON";
+
+            JSONObject latlong = latLong(streetAddr);
+
+            Map<String, Double> rs = convertToCoordinates(latlong.getDouble("y"), latlong.getDouble("x"));
+
+            double nx = rs.get("x"); // X 좌표
+            double ny = rs.get("y"); // Y 좌표
+
+            String requestUrl = apiUrl + "?serviceKey=" + apiKey + "&pageNo=" + pageNo +
+                "&numOfRows=" + numOfRows + "&dataType=" + dataType + "&base_date=" +
+                formattedDate + "&base_time=" + formattedTime + "&nx=" + (int) nx + "&ny=" + (int) ny;
+
+            // HTTP GET 요청 보내기
+            URL url = new URL(requestUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            // 응답 읽기
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                StringBuffer response = new StringBuffer();
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                System.out.println(response);
+
+                // 응답 데이터 출력
+                JsonParser jsonParser = new JsonParser();
+                JsonObject jsonObject = jsonParser.parse(String.valueOf(response)).getAsJsonObject();
+
+                // JSON 경로를 따라 이동하여 obsrValue 값을 추출
+                JsonObject itemsObject = jsonObject
+                    .getAsJsonObject("response")
+                    .getAsJsonObject("body")
+                    .getAsJsonObject("items");
+
+                JsonArray itemArray = itemsObject.getAsJsonArray("item");
+
+                SchoolDTO.weatherResponseDto responseDto = new SchoolDTO.weatherResponseDto();
+
+                for (int i = 0; i < itemArray.size(); i++) {
+                    JsonObject item = itemArray.get(i).getAsJsonObject();
+                    String obsrValue = item.get("obsrValue").getAsString();
+                    String category = item.get("category").getAsString();
+                    switch (category) {
+                        case "PTY" -> responseDto.setPty(obsrValue);
+                        case "REH" -> responseDto.setReh(obsrValue);
+                        case "RN1" -> responseDto.setRn1(obsrValue);
+                        case "T1H" -> responseDto.setT1h(obsrValue);
+                        case "UUU" -> responseDto.setUuu(obsrValue);
+                        case "VEC" -> responseDto.setVec(obsrValue);
+                        case "VVV" -> responseDto.setVvv(obsrValue);
+                        case "WSD" -> responseDto.setWsd(obsrValue);
+                        // 필요한 다른 카테고리에 대한 처리를 추가할 수 있습니다.
+                    }
+                }
+                return responseDto;
+            } else {
+                log.error("응답 데이터 에러:" + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -3,6 +3,7 @@
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/infoSchool.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <section id="pageMap" class="container my-3">
         <div class="d-flex justify-content-between">
@@ -75,20 +76,42 @@
             </div>
             <div id="weatherContent" class="border border-dark rounded-3">
                 <div class="h-100 p-1 bg-body-tertiary">
-                    <h2> 날씨 앱을 넣을 부분 </h2>
-                    <p>맑음</p>
-                    <p>흐림</p>
-                    <p>강우</p>
-                    <p>강풍</p>
+                    <td th:text="${weatherData.pty}"></td>
+                    <td th:text="${weatherData.reh}"></td>
+                    <td th:text="${weatherData.rn1}"></td>
+                    <td th:text="${weatherData.t1h}"></td>
+                    <td th:text="${weatherData.uuu}"></td>
+                    <td th:text="${weatherData.vec}"></td>
+                    <td th:text="${weatherData.vvv}"></td>
+                    <td th:text="${weatherData.wsd}"></td>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- API_START  -->
+    <!-- API_SRC_START  -->
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
-    <!--    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>-->
-    <!-- API_END  -->
+    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>
+    <!-- API_SRC_END  -->
+
+    <!-- MAP_API_START  -->
+    <script th:src="@{/js/map_infoSchool.js}"></script>
+    <script>
+        const schoolName = "[[${school.schoolName}]]";
+        const streetAddress = "[[${school.streetAddr}]]";
+// ..
+        const mapSection = searchAddressToCoordinate(streetAddress, schoolName);
+
+        window.onload = function(){
+            if(mapSection !== null) {
+                searchWeatherLocate(streetAddress);
+            }
+        }
+// ..
+    </script>
+    <!-- MAP_API_END  -->
+
+    <!-- CUT_STREET_ADDRESS_START  -->
     <script>
         const strAddr = '[[${school.streetAddr}]]';
         const strAddress = document.getElementById("streetAddr");
@@ -100,5 +123,6 @@
             strAddress.innerText = strAddr;
         }
     </script>
+    <!-- CUT_STREET_ADDRESS_END  -->
 </main>
 </html>

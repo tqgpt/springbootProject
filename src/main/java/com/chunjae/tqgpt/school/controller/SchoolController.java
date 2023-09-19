@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,6 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/high/school")
 public class SchoolController {
     private final SchoolService schoolService;
     private final WeatherService weatherService;
@@ -47,7 +47,7 @@ public class SchoolController {
             return "redirect:/login";
         SchoolDetail schoolDetail = schoolService.addSchool(schoolDto, user.getName());
 
-        return "redirect:/high/school/search";
+        return "redirect:/search";
     }
 
     @GetMapping("/modify/{school-idx}")
@@ -106,12 +106,11 @@ public class SchoolController {
 
     @GetMapping("/info/{id}")    // 해당 경로에 요청이 오면 이 메서드 실행
     public String showSchoolManageInfoPage(@PathVariable Long id, Model model) { // Model 객체로 파라미터 받음  모델로 받아야 뷰에 뿌릴 수 있음
+
         School school = schoolService.getSchoolById(id);
-
-        weatherService.weather(school.getStreetAddr());
-
         model.addAttribute("school", school); // 서비스의// 해당 메서드의 반환값을 모델에 추가함
         model.addAttribute("schoolDetail", schoolService.getSchoolDetailById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
+        model.addAttribute("weatherData", weatherService.weather(school.getStreetAddr()));
         return "views/schoolManage/infoSchool"; // 뷰 템플릿 반환
     }
 
@@ -119,7 +118,7 @@ public class SchoolController {
     public String initOfficialData() {
         //유저 객체 받아서 이름 받아넣기
         schoolService.upsertSchoolData("user1");
-        return "redirect:/high/school/search";
+        return "redirect:/search";
     }
     @ResponseBody
     @GetMapping("/search/{keyword}")
