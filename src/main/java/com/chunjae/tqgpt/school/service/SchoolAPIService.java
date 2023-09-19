@@ -18,7 +18,7 @@ public class SchoolAPIService {
     public List<SchoolDTO.SchoolInfoDTO> getMiddleList(String keyword) {
         List<SchoolDTO.SchoolInfoDTO> middleSchoolInfo = new ArrayList<>();
 
-        String url = "http://10.41.1.94:8080/middle/search?keyword=" + keyword;
+        String url = "https://midd.genia-academy.net/middle/search?keyword=" + keyword;
         Mono<List<MiddleReqDTO>> MiddleReqDTO = WebClientUtil
                 .getBaseUrl(url)
                 .get()

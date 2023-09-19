@@ -487,7 +487,7 @@ public class SchoolService {
         return schools;
     }
     public ResponseEntity<JsonNode> elemSchoolByKeyword(String keyword) {
-        String elemUrl = "http://10.41.0.43:8080/elem/search";
+        String elemUrl = "https://elem.genia-academy.net/elem/search";
         // 빌드전 수정
         ObjectNode jsonNodes = JsonNodeFactory.instance.objectNode();
         jsonNodes.put("keyword",keyword);
