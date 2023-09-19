@@ -54,8 +54,8 @@
                 </tr>
                 <tr>
                     <td th:text="${school.cityName}"></td>
+                    <td id="streetAddr"></td>
                     <td th:text="${school.streetAddr}"></td>
-                    <td id="address"></td>
                     <td th:text="${schoolDetail.postNum}"></td>
                     <td th:text="${schoolDetail.telNum}"></td>
                     <td th:text="${schoolDetail.hmpgAddr}"></td>
@@ -103,28 +103,17 @@
                 searchWeatherLocate(streetAddress);
             }
         }
-
-
-        <!-- AddressCut_START  -->
-        // DB에서 가져온 주소 데이터
-        var addressData = "${school.streetAddr}";
-
-        // '도'가 앞에 있는지 확인
-        if (addressData.startsWith('도')) {
-            // '도'가 앞에 있을 경우, 시와 군 또는 시와 구를 분리
-            var parts = addressData.split(' ');
-            var city = parts[0]; // 시
-            var rest = parts.slice(1).join(' '); // 군 또는 구
-
-            // 주소를 원하는 형식으로 표시
-            document.getElementById('address').textContent = city + ' ' + rest;
-        } else {
-            // '도'가 앞에 없을 경우, 주소 그대로 표시
-            document.getElementById('address').textContent = addressData;
-        }
-        <!-- AddressCut_END  -->
     </script>
+    <script>
+        const strAddr = '[[${school.streetAddr}]]';
+        const strAddress = document.getElementById("streetAddr");
 
-
+        const addrParts = strAddr.split(' ');
+        if (addrParts.length >= 2) {
+            strAddress.innerText = addrParts[1];
+        } else {
+            strAddress.innerText = strAddr;
+        }
+    </script>
 </main>
 </html>
