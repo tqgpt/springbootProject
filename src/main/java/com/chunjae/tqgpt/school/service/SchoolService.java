@@ -392,8 +392,10 @@ public class SchoolService {
         List<School> schools = schoolRepository.findSchoolsByStreetAddress(address);
         return schools;
     }
-    public ResponseEntity<JsonNode> elemSchoolByKeyword(String keyword) {
-        String elemUrl = "http://10.41.0.43:8080/elem/search";
+
+    public ResponseEntity<List<SchoolDTO.SchoolInfoDTO>> elemSchoolByKeyword(String keyword) {
+        String elemUrl = "http://elem.genia-academy.net/elem/search";
+
         // 빌드전 수정
         ObjectNode jsonNodes = JsonNodeFactory.instance.objectNode();
         jsonNodes.put("keyword",keyword);
@@ -403,10 +405,21 @@ public class SchoolService {
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
 
         ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(elemUrl,jsonNodes,JsonNode.class);
+
+        List<SchoolDTO.SchoolInfoDTO> elemInfoDto = new ArrayList<>();
         if(responseEntity.getBody().get(0) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(responseEntity.getBody(),HttpStatus.OK);
+        responseEntity.getBody().forEach(res -> {
+            elemInfoDto.add(SchoolDTO.SchoolInfoDTO
+                    .builder()
+                    .schoolName(res.get("name").toString().substring(1, res.get("name").toString().lastIndexOf('"')))
+                    .schoolKind("초등학교")
+                    .streetAddr(res.get("road_address").toString().substring(1, res.get("road_address").toString().lastIndexOf('"')))
+                    .build());
+        });
+
+        return new ResponseEntity<>(elemInfoDto,HttpStatus.OK);
     }
 }
 

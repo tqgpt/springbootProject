@@ -24,10 +24,10 @@
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
 </head>
 <body>
-  <th:block th:include="~{fragments/theme}"></th:block>
+  <th:block th:insert="~{fragments/theme}"></th:block>
 
   <main class="d-flex">
-    <th:block th:include="fragments/main/nav"></th:block>
+    <th:block th:insert="~{fragments/main/nav}"></th:block>
     <section class="w-100">
       <div id="mapContent" class="d-flex">
         <div class="offcanvas offcanvas-start h-100" data-bs-scroll="false" data-bs-backdrop="true" tabindex="-1" id="offcanvas" aria-labelledby="offcanvas">

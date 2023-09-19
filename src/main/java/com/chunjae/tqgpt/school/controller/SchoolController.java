@@ -3,6 +3,7 @@ package com.chunjae.tqgpt.school.controller;
 import com.chunjae.tqgpt.school.dto.SchoolDTO;
 import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
+import com.chunjae.tqgpt.school.service.SchoolAPIService;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import com.chunjae.tqgpt.school.service.WeatherService;
 import com.chunjae.tqgpt.user.entity.User;
@@ -28,6 +29,7 @@ import java.util.*;
 public class SchoolController {
     private final SchoolService schoolService;
     private final WeatherService weatherService;
+    private final SchoolAPIService schoolAPIService;
 
     /*학교정보 추가 페이지
      * GET
@@ -140,7 +142,6 @@ public class SchoolController {
             }
         }
 
-        System.out.println(schools);
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
@@ -149,7 +150,7 @@ public class SchoolController {
     }
 
     @PostMapping("/search-elemental/{keyword}")
-    public ResponseEntity<JsonNode> elemSchoolInfo(@PathVariable String keyword) {
+    public ResponseEntity<List<SchoolDTO.SchoolInfoDTO>> elemSchoolInfo(@PathVariable String keyword) {
         return schoolService.elemSchoolByKeyword(keyword);
     }
 
@@ -196,4 +197,16 @@ public class SchoolController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/search-middle")
+    public  ResponseEntity<List<SchoolDTO.SchoolInfoDTO>> searchGetMiddleSchool2(@RequestParam String keyword){
+        log.info("keyword: {}", keyword);
+        List<SchoolDTO.SchoolInfoDTO> middleList = schoolAPIService.getMiddleList(keyword);
+        if (middleList != null){
+            return new ResponseEntity<>(middleList, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+    }
 }
