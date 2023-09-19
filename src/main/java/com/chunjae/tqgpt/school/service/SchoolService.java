@@ -488,9 +488,10 @@ public class SchoolService {
         return schools;
     }
     public ResponseEntity<JsonNode> elemSchoolByKeyword(String keyword) {
-        String elemUrl = "http://10.41.0.43:8080/elem/search?keyword="+keyword;
+        String elemUrl = "http://10.41.0.43:8080/elem/search";
         // 빌드전 수정
         ObjectNode jsonNodes = JsonNodeFactory.instance.objectNode();
+        jsonNodes.put("keyword",keyword);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));

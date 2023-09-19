@@ -342,7 +342,7 @@ const initElemSchools = (dataArray) => {
             <h5 class="mb-1">${data.name}</h5>
             <small>초등학교</small>
           </div>
-          <p class="mb-1">${data.roadAddress}</p>
+          <p class="mb-1">${data.road_address}</p>
           <small></small>
         `;
 
