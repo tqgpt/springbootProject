@@ -90,14 +90,14 @@
     <!--    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>-->
     <!-- API_END  -->
     <script>
-        const streetAddr = `[[${school.streetAddr}]]`
-        const streetAddress = document.getElementById("streetAddr");
+        const strAddr = '[[${school.streetAddr}]]';
+        const strAddress = document.getElementById("streetAddr");
 
-        const addrParts = streetAddr.split(' ');
+        const addrParts = strAddr.split(' ');
         if (addrParts.length >= 2) {
-            streetAddress.innerText = addrParts[1];
+            strAddress.innerText = addrParts[1];
         } else {
-            streetAddress.innerText = streetAddr;
+            strAddress.innerText = strAddr;
         }
     </script>
 </main>
