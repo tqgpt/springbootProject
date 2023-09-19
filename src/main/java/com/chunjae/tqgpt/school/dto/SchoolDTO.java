@@ -126,17 +126,4 @@ public class SchoolDTO {
         private String page;
     }
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class elementalSchoolDto implements Serializable {
-        private String idx;
-        private String name;
-        private String roadAddress;
-        private String roadZipCode;
-        private String latitude;
-        private String longitude;
-        private String levelCode;
-        private String schoolCode;
-    }
 }
