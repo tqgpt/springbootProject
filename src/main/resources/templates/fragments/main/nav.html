@@ -16,7 +16,7 @@
                 <i class="bi bi-clipboard-data fs-3"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li th:if="${userInfo}" class="nav-item">
             <a href="/admin" class="nav-link py-3 border-bottom rounded-0 text-success" title="Dashboard" data-bs-toggle="tooltip"
                 data-tooltip-toggle="tooltip" data-bs-placement="right" data-bs-title="학교 관리">
                 <i class="bi bi-bar-chart-line fs-3"></i>
@@ -27,11 +27,14 @@
         <a href="#" class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-hash fs-4"></i>
         </a>
-        <ul class="dropdown-menu text-small shadow">
+        <ul th:unless="${userInfo}" class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="/login">Sign in</a></li>
+        </ul>
+        <ul th:if="${userInfo}" class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="#">TQGPT...!</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <li><a class="dropdown-item" href="/logout">Sign out</a></li>
         </ul>
     </div>
 </nav>

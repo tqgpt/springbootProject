@@ -144,38 +144,39 @@ let totalCount = 0;
 const pageCount = 5;
 const showCount = 10;
 
-const searchSchool = (pageNumber) => {
+const searchSchool = async (pageNumber) => {
     const tableBody = document.getElementById('tableBody');
     const searchParams = getParams(pageNumber);
 
-    fetch('/high/school/search-list', {
+    const response = await fetch('/high/school/search-list', {
         method: 'POST', // POST 요청 사용
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(searchParams)
-    }).then(response => response.json())
-        .then(data => {
-            const schoolList = data.contents.content;
-            totalCount = data.count;
-            const newTBody = document.createElement('tbody');
-            newTBody.id = 'tableBody';
+    })
+    if (response.status === 200) {
+        const data = await response.json();
+        const schoolList = data.contents.content;
+        totalCount = data.count;
+        const newTBody = document.createElement('tbody');
+        newTBody.id = 'tableBody';
 
-            schoolList.forEach((school) => {
-                const row = document.createElement('tr');
-                row.onclick = () => {
-                    sessionStorage.setItem('cityName', ex_cityName);
-                    sessionStorage.setItem('streetAddr', ex_streetAddr);
-                    sessionStorage.setItem('search_option', ex_search_option);
-                    sessionStorage.setItem('search_value', ex_search_value);
-                    sessionStorage.setItem('pageNumber', pageNumber);
-                    location.href=`/high/school/info/${school.idx}`;
-                };
+        schoolList.forEach((school) => {
+            const row = document.createElement('tr');
+            row.onclick = () => {
+                sessionStorage.setItem('cityName', ex_cityName);
+                sessionStorage.setItem('streetAddr', ex_streetAddr);
+                sessionStorage.setItem('search_option', ex_search_option);
+                sessionStorage.setItem('search_value', ex_search_value);
+                sessionStorage.setItem('pageNumber', pageNumber);
+                location.href = `/high/school/info/${school.idx}`;
+            };
 
-                const dateObj = new Date(school.createdAt);
-                const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+            const dateObj = new Date(school.createdAt);
+            const formattedDate = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
 
-                row.innerHTML = `
+            row.innerHTML = `
                     <th id="t_idx">${school.idx}</th>
                     <td id="t_cityName">${school.cityName}</td>
                     <td id="t_streetAddr" class="text-start">${school.streetAddr}</td>
@@ -186,21 +187,20 @@ const searchSchool = (pageNumber) => {
                     <td id="t_userName">${school.userName}</td>
                     <td id="t_createdAt">${formattedDate}</td>
                 `;
-                newTBody.appendChild(row);
-            });
-            document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
-            tableBody.parentNode.replaceChild(newTBody, tableBody);
-            generatePagination(Number(pageNumber)); // 페이지네이션 생성
-        })
-        .catch(error => {
-            const newTBody = document.createElement('tbody');
-            newTBody.id = 'tableBody';
-            const row = document.createElement('tr');
-            row.innerHTML = `<th colspan="9" class="text-center">학교를 찾을 수 없어요</th>`;
             newTBody.appendChild(row);
-            tableBody.parentNode.replaceChild(newTBody, tableBody);
-            generatePagination(0)
-        });
+        })
+        document.querySelector("span[name='total']").textContent = "총 " + totalCount + "개";
+        tableBody.parentNode.replaceChild(newTBody, tableBody);
+        generatePagination(Number(pageNumber)); // 페이지네이션 생성
+    } else {
+        const newTBody = document.createElement('tbody');
+        newTBody.id = 'tableBody';
+        const row = document.createElement('tr');
+        row.innerHTML = `<th colspan="9" class="text-center">학교를 찾을 수 없어요</th>`;
+        newTBody.appendChild(row);
+        tableBody.parentNode.replaceChild(newTBody, tableBody);
+        generatePagination(0)
+    }
 }
 
 // 페이징 처리
@@ -294,7 +294,7 @@ const goFirst = () => {
 
 const goLast = () => {
     const currentPage = Math.ceil(totalCount / showCount);
-    generatePagination(Math.ceil(totalCount / showCount),true);
+    generatePagination(Math.ceil(totalCount / showCount), true);
     searchSchool(currentPage);
 
     document.querySelectorAll('.page-item').forEach(pageItem => {

@@ -24,7 +24,7 @@
   <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
 </head>
 <body>
-  <th:block th:include="fragments/theme"></th:block>
+  <th:block th:include="~{fragments/theme}"></th:block>
 
   <main class="d-flex">
     <th:block th:include="fragments/main/nav"></th:block>
@@ -62,6 +62,9 @@
             </div>
           </div>
         </div>
+        <button id="currentSchool" class="btn btn-secondary m-2 border-0 position-absolute" onclick="disableButtonAndExecute()">
+          <i class="bi bi-binoculars fs-4"></i>
+        </button>
 
         <!-- Map-Start  -->
         <figure id="map" class="w-100 h-100"></figure>

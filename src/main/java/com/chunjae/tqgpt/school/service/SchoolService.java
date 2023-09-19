@@ -5,6 +5,9 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.repository.SchoolDetailRepository;
 import com.chunjae.tqgpt.school.repository.SchoolRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,16 +24,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +50,7 @@ import java.util.stream.Collectors;
 public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final SchoolDetailRepository schoolDetailRepository;
+    private final RestTemplate restTemplate;
 
     @Value("${nice-admin-key}")
     private String apiKey;
@@ -472,6 +482,26 @@ public class SchoolService {
 
     public School searchSchoolOne(String schoolName) {
         return schoolRepository.findSchoolBySchoolName(schoolName);
+    }
+
+    public List<School> findSchoolsByAddress(String address) {
+        List<School> schools = schoolRepository.findSchoolsByStreetAddress(address);
+        return schools;
+    }
+    public ResponseEntity<JsonNode> elemSchoolByKeyword(String keyword) {
+        String elemUrl = "http://10.41.0.43:8080/elem/search?keyword="+keyword;
+        // 빌드전 수정
+        ObjectNode jsonNodes = JsonNodeFactory.instance.objectNode();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+
+        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(elemUrl,jsonNodes,JsonNode.class);
+        if(responseEntity.getBody().get(0) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(responseEntity.getBody(),HttpStatus.OK);
     }
 }
 

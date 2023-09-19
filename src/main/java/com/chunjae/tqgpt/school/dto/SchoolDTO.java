@@ -4,6 +4,7 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
+import java.io.Serializable;
 
 public class SchoolDTO {
 
@@ -122,5 +123,19 @@ public class SchoolDTO {
         private String searchValue;
 
         private String page;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class elementalSchoolDto implements Serializable {
+        private String idx;
+        private String name;
+        private String roadAddress;
+        private String roadZipCode;
+        private String latitude;
+        private String longitude;
+        private String levelCode;
+        private String schoolCode;
     }
 }

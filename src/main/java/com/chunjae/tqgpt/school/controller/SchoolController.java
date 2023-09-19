@@ -6,6 +6,7 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import com.chunjae.tqgpt.user.entity.User;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -80,9 +78,7 @@ public class SchoolController {
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
-//        Page<School> allList = schoolService.getAllList();
-//        model.addAttribute("searchList", allList);
+    public String search() {
         return "views/schoolManage/manageHome";
     }
 
@@ -92,7 +88,6 @@ public class SchoolController {
     @ResponseBody
     @PostMapping("/search-list")
     public ResponseEntity<Map<String, Object>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
-        System.out.println("!!!");
         Page<School> contents = schoolService.search(requestDto);
         if (!contents.isEmpty()) {
             String count = String.valueOf(contents.getTotalElements());
@@ -103,7 +98,7 @@ public class SchoolController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -124,10 +119,28 @@ public class SchoolController {
         schoolService.upsertSchoolData("user1");
         return "redirect:/high/school/search";
     }
-
+    @ResponseBody
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
         List<School> schools = schoolService.findSchoolsByKeyword(keyword);
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PostMapping("/search/address")
+    public ResponseEntity<List<School>> searchSchoolInfoByAddresses(@RequestBody List<String> addresses) {
+        List<School> schools = new ArrayList<>();
+        for (String address : addresses) {
+            List<School> school = schoolService.findSchoolsByAddress(address);
+            if(!school.isEmpty()) {
+                schools.addAll(school);
+            }
+        }
+
+        System.out.println(schools);
         if (!schools.isEmpty()) {
             return new ResponseEntity<>(schools, HttpStatus.OK);
         } else {
@@ -135,15 +148,10 @@ public class SchoolController {
         }
     }
 
-    /*@SneakyThrows
-    @ResponseBody
-    @GetMapping("/xlsx-download")
-    public void ExcelDownloader(HttpServletResponse res, @RequestParam String cityName, @RequestParam String streetAddr,
-                                @RequestParam String searchOption, @RequestParam String searchValue) {
-        SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
-        schoolService.xlsxDownloadService(res, requestDto);
-        log.info("성공");
-    }*/
+    @PostMapping("/search-elemental/{keyword}")
+    public ResponseEntity<JsonNode> elemSchoolInfo(@PathVariable String keyword) {
+        return schoolService.elemSchoolByKeyword(keyword);
+    }
 
     @SneakyThrows
     @ResponseBody
@@ -173,7 +181,7 @@ public class SchoolController {
         if (!schoolList.isEmpty()) {
             return new ResponseEntity<>(schoolList.stream().map(School::getSchoolName).toList(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -184,7 +192,7 @@ public class SchoolController {
         if (school != null) {
             return new ResponseEntity<>(school, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
