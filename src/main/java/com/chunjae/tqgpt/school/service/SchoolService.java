@@ -472,5 +472,10 @@ public class SchoolService {
     public School searchSchoolOne(String schoolName) {
         return schoolRepository.findSchoolBySchoolName(schoolName);
     }
+
+    public List<School> findSchoolsByAddress(String address) {
+        List<School> schools = schoolRepository.findSchoolsByStreetAddress(address);
+        return schools;
+    }
 }
 

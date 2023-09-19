@@ -18,10 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -80,9 +77,7 @@ public class SchoolController {
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
-//        Page<School> allList = schoolService.getAllList();
-//        model.addAttribute("searchList", allList);
+    public String search() {
         return "views/schoolManage/manageHome";
     }
 
@@ -92,7 +87,6 @@ public class SchoolController {
     @ResponseBody
     @PostMapping("/search-list")
     public ResponseEntity<Map<String, Object>> search(@RequestBody SchoolDTO.searchRequestDto requestDto) {
-        System.out.println("!!!");
         Page<School> contents = schoolService.search(requestDto);
         if (!contents.isEmpty()) {
             String count = String.valueOf(contents.getTotalElements());
@@ -131,6 +125,22 @@ public class SchoolController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/search/address")
+    public ResponseEntity<List<School>> searchSchoolInfoByAddresses(@RequestBody List<String> addresses) {
+        List<School> schools = new ArrayList<>();
+        for (String address : addresses) {
+            List<School> schoolsByAddress = schoolService.findSchoolsByAddress(address);
+            schools.addAll(schoolsByAddress);
+        }
+
+        if (!schools.isEmpty()) {
+            return new ResponseEntity<>(schools, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     /*@SneakyThrows
     @ResponseBody

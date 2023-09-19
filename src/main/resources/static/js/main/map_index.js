@@ -75,7 +75,7 @@ var onSuccessGeolocation = function (position) {
     markers.push(newMarker);
 
     // 주변 도로명 주소 찾기
-    findNearbyAddresses(position.coords.latitude, position.coords.longitude);
+    // findNearbyAddresses(position.coords.latitude, position.coords.longitude);
 }
 
 
@@ -151,7 +151,8 @@ function searchCoordinateToAddress(latlng) {
         ].join(',')
     }, function(status, response) {
         if (status === naver.maps.Service.Status.ERROR) {
-            return alert('Something Wrong!');
+            console.error('주소를 변환하는 중 오류가 발생했습니다.');
+            return;
         }
 
         var items = response.v2.results,
@@ -164,8 +165,6 @@ function searchCoordinateToAddress(latlng) {
             addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
 
             htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
-
-            console.log(address)
         }
     });
 }
@@ -245,49 +244,96 @@ function hasAddition (addition) {
 }
 
 
-const findNearbyAddresses = (currentLat, currentLng) => {
+/* ============주변 학교 검색============ */
+const disableButtonAndExecute = () => {
+    const button = document.getElementById("currentSchool");
+    button.disabled = true; // 버튼 비활성화
+    setTimeout(function() {
+        button.disabled = false; // 버튼 활성화
+    }, 1000);
+}
+
+document.getElementById("currentSchool").addEventListener('click', () => {
+    const center = map.getCenter();
+    findNearbyAddresses(center.lat(), center.lng());
+});
+
+// 현재 위치의 주변 학교 검색
+const findNearbyAddresses = async (currentLat, currentLng) => {
     const searchRadius = 3; // 검색 반경 (3KM)
+    const searchStep = 0.25; // 검색 간격 (1KM)
     const nearbyAddresses = [];
 
-    // 3KM 범위 내에 있는 주소를 검색합니다.
-    naver.maps.Service.reverseGeocode({
-        coords: new naver.maps.LatLng(currentLat, currentLng),
-        orders: [
-            naver.maps.Service.OrderType.ADDR,
-            naver.maps.Service.OrderType.ROAD_ADDR
-        ].join(',')
-    }, function(status, response) {
-        if (status === naver.maps.Service.Status.ERROR) {
-            console.error('주소 검색 중 오류가 발생했습니다.');
-            return;
+    // 비동기적으로 반경 3KM 내에서 검색
+    for (let latOffset = -searchRadius; latOffset <= searchRadius; latOffset += searchStep) {
+        for (let lngOffset = -searchRadius; lngOffset <= searchRadius; lngOffset += searchStep) {
+            const targetLat = currentLat + (latOffset / 100);
+            const targetLng = currentLng + (lngOffset / 100);
+
+            // 비동기적으로 주소를 검색하여 도로명 주소로 변환
+            const addresses = await searchCurrentCoordinateToAddress(new naver.maps.LatLng(targetLat, targetLng));
+            nearbyAddresses.push(...addresses); // 검색된 주소를 배열에 추가
         }
+    }
 
-        // 검색 결과에서 주소 정보를 추출합니다.
-        const items = response.v2.results;
+    const nearbyAddressesJSON = JSON.stringify(nearbyAddresses);
 
-        // 검색 결과를 확인하기 위해 콘솔에 출력합니다.
-        console.log(items);
+    findCurrentLocateSchool(nearbyAddressesJSON);
+};
 
-        // 주소 정보를 가져와서 처리합니다.
-        for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            const address = item.address; // 주소 정보 가져오기
+const searchCurrentCoordinateToAddress = (latlng) => {
+    return new Promise((resolve) => {
+        const nearbyAddresses = [];
 
-            // 현재 위치와 주소의 좌표 사이의 거리를 계산합니다.
-            const lat = item.point.y;
-            const lng = item.point.x;
-            const distance = calculateDistance(currentLat, currentLng, lat, lng);
-
-            // 3KM 이내의 주소만 선택합니다.
-            if (distance <= searchRadius) {
-                nearbyAddresses.push(address);
+        naver.maps.Service.reverseGeocode({
+            coords: latlng,
+            orders: [
+                naver.maps.Service.OrderType.ADDR,
+                naver.maps.Service.OrderType.ROAD_ADDR
+            ].join(',')
+        }, function(status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                console.error('주소를 변환하는 중 오류가 발생했습니다.');
+                resolve([]);
+                return;
             }
-        }
+            const items = response.v2.results;
 
-        // 콘솔에 주변 도로명 주소 목록을 출력합니다.
-        console.log("주변 도로명 주소 목록:");
-        nearbyAddresses.forEach(address => {
-            console.log(address);
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const address = makeAddress(item) || '';
+                const cleanedAddress = address.replace(/\d.*/, '').trim();
+
+                if (cleanedAddress) {
+                    const words = cleanedAddress.split(' ');
+                    const firstThreeWords = words.slice(0, 3).join(' ');
+
+                    if (!nearbyAddresses.includes(firstThreeWords)) {
+                        nearbyAddresses.push(firstThreeWords);
+                    }
+                }
+            }
+
+            resolve(nearbyAddresses); // 주소 검색 결과를 반환
         });
     });
-}
+};
+
+const findCurrentLocateSchool = (nearbyAddresses) => {
+    try {
+        const response = fetch('/high/school/search/address', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: nearbyAddresses,
+        });
+
+        if (response.ok) {
+            const data = response.json();
+            console.log(data);
+        }
+    } catch (error) {
+        console.error('오류 발생:', error);
+    }
+};
