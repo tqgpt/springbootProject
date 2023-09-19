@@ -116,7 +116,7 @@ public class SchoolController {
         schoolService.upsertSchoolData("user1");
         return "redirect:/high/school/search";
     }
-
+    @ResponseBody
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<School>> searchSchoolInfo(@PathVariable String keyword) {
         List<School> schools = schoolService.findSchoolsByKeyword(keyword);
