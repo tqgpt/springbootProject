@@ -5,7 +5,6 @@ import com.chunjae.tqgpt.school.entity.School;
 import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolAPIService;
 import com.chunjae.tqgpt.school.service.SchoolService;
-import com.chunjae.tqgpt.school.service.WeatherService;
 import com.chunjae.tqgpt.user.entity.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import java.util.*;
 @Slf4j
 public class SchoolController {
     private final SchoolService schoolService;
-    private final WeatherService weatherService;
     private final SchoolAPIService schoolAPIService;
 
     /*학교정보 추가 페이지
@@ -107,11 +105,9 @@ public class SchoolController {
 
     @GetMapping("/info/{id}")    // 해당 경로에 요청이 오면 이 메서드 실행
     public String showSchoolManageInfoPage(@PathVariable Long id, Model model) { // Model 객체로 파라미터 받음  모델로 받아야 뷰에 뿌릴 수 있음
-
-        School school = schoolService.getSchoolById(id);
-        model.addAttribute("school", school); // 서비스의// 해당 메서드의 반환값을 모델에 추가함
+        model.addAttribute("school", schoolService.getSchoolById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
         model.addAttribute("schoolDetail", schoolService.getSchoolDetailById(id)); // 서비스의 해당 메서드의 반환값을 모델에 추가함
-        model.addAttribute("weatherData", weatherService.weather(school.getStreetAddr()));
+
         return "views/schoolManage/infoSchool"; // 뷰 템플릿 반환
     }
 
@@ -149,6 +145,7 @@ public class SchoolController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/search-elemental/{keyword}")
     public ResponseEntity<List<SchoolDTO.SchoolInfoDTO>> elemSchoolInfo(@PathVariable String keyword) {
         return schoolService.elemSchoolByKeyword(keyword);
@@ -158,7 +155,7 @@ public class SchoolController {
     @ResponseBody
     @GetMapping("/xlsx-download")
     public ResponseEntity<byte[]> ExcelDownloader(@RequestParam String cityName, @RequestParam String streetAddr,
-                                                  @RequestParam String searchOption, @RequestParam String searchValue) {
+                                @RequestParam String searchOption, @RequestParam String searchValue) {
 
         SchoolDTO.searchRequestDto requestDto = new SchoolDTO.searchRequestDto(cityName, streetAddr, searchOption, searchValue, "1");
 
@@ -170,8 +167,8 @@ public class SchoolController {
         log.info("성공");
 
         return ResponseEntity.ok()
-            .headers(headers)
-            .body(bos.toByteArray());
+                .headers(headers)
+                .body(bos.toByteArray());
     }
 
     @ResponseBody

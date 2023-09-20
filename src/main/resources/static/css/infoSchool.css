@@ -62,8 +62,6 @@
 #mapArea {
     width: 100%;
     height: 50rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
 
 /* 천재 초록색 실행단추 */
@@ -86,16 +84,9 @@
 }
 
 
-#weatherContent {
-    align-items: center;
-}
-
-
-#weatherKrBanner {
-    width: 100%;
-    margin-top: 5px;
-}
-
-.pTextCenter {
-    text-align: center;
+@media (min-width: 768px) {
+    #weatherContent {
+        flex: 0 0 auto;
+        width: 40%;
+    }
 }

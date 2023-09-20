@@ -5,7 +5,6 @@ import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.user.entity.User;
 import lombok.*;
 
-
 public class SchoolDTO {
 
     @Getter
@@ -124,22 +123,5 @@ public class SchoolDTO {
 
         private String page;
     }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class weatherResponseDto {
-        private String pty;
-        private String reh;
-        private String rn1;
-        private String t1h;
-        private String uuu;
-        private String vec;
-        private String vvv;
-        private String wsd;
-    }
-
-
 
 }
