@@ -6,7 +6,6 @@ import com.chunjae.tqgpt.school.entity.SchoolDetail;
 import com.chunjae.tqgpt.school.service.SchoolAPIService;
 import com.chunjae.tqgpt.school.service.SchoolService;
 import com.chunjae.tqgpt.user.entity.User;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class SchoolController {
     public String addSchool() {
         return "views/schoolManage/addSchool";
     }
-
+ 
     /*학교 정보 추가 페이지
      * POST
      */
