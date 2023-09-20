@@ -3,9 +3,17 @@
       layout:decorate="~{layout/layout}">
 <main layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/infoSchool.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <section id="pageMap" class="container my-3">
-        <button onclick="redirectToPage()" class="apiButtonGreen btn btn-primary">학교관리 화면으로</button>
+        <div class="d-flex justify-content-between">
+            <div>
+                <button onclick="location.href='/high/school/search'" class="apiButtonGreen btn btn-primary">학교관리 화면가기</button>
+            </div>
+            <div>
+                <button th:onclick="|location.href='/high/school/modify/'+${school.idx}|" class="apiButtonGreen btn btn-primary">학교 수정하기</button>
+            </div>
+        </div>
     </section>
 
     <section class="container my-3 justify-content-md-center flex-container" id="infoSection">
@@ -47,7 +55,7 @@
                 </tr>
                 <tr>
                     <td th:text="${school.cityName}"></td>
-                    <td th:text="${school.streetAddr}"></td>
+                    <td id="streetAddr"></td>
                     <td th:text="${school.streetAddr}"></td>
                     <td th:text="${schoolDetail.postNum}"></td>
                     <td th:text="${schoolDetail.telNum}"></td>
@@ -61,32 +69,79 @@
 
     <section class="container my-3">
         <div class="row d-flex justify-content-between">
-            <div id="mapContent" class="col-md-7  border border-dark rounded-3 me-1">
+            <div id="mapContent" class="col-md-7  border border-dark rounded-3">
                 <div id="mapArea" class="p-1 bg-body-tertiary">
                     <figure id="map" class="w-100 h-100"></figure>
                 </div>
             </div>
-            <div id="weatherContent" class="border border-dark rounded-3">
-                <div class="h-100 p-1 bg-body-tertiary">
-                    <h2> 날씨 앱을 넣을 부분 </h2>
-                    <p>기상청 단기예보 날씨 API를 넣을 예정</p>
-                </div>
+            <div id="weatherContent" class="col-md-5  border border-dark rounded-3">
+                <a href="https://www.weather.go.kr/w/index.do">
+                    <img id=weatherKrBanner src="/images/weather_kor_banner.png" alt="기상청 홈페이지로">
+                </a>
+                <table class="infoTable table">
+                    <tbody>
+                    <tr>
+                        <th>비소식 (코드값)</th>
+                        <th>기온 (℃)</th>
+                        <th>습도 (%)</th>
+                        <th>1시간 강수량 (mm)</th>
+                        <th>풍속 (m/s)</th>
+                        <th>풍향 (deg)</th>
+                        <th>남북바람성분 (m/s)</th>
+                        <th>동서바람성분 (m/s)</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${weatherData.pty}"></td>
+                        <td th:text="${weatherData.t1h}"></td>
+                        <td th:text="${weatherData.reh}"></td>
+                        <td th:text="${weatherData.rn1}"></td>
+                        <td th:text="${weatherData.wsd}"></td>
+                        <td th:text="${weatherData.vec}"></td>
+                        <td th:text="${weatherData.vvv}"></td>
+                        <td th:text="${weatherData.uuu}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="pTextCenter">날씨 코드값: 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7)</p>
+                <p class="pTextCenter">동서바람성분: 동(+표기), 서(-표기) &nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp; 남북바람성분: 북(+표기), 남(-표기)</p>
             </div>
         </div>
     </section>
-    <!-- Naver Map API -->
+
+    <!-- API_SRC_START  -->
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mo4ez0j3y6&submodules=geocoder"></script>
+    <script type="text/javascript" src="https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=bjzcjXp5BZXRA5vnoLptqnIRMijNPrHGZAwXuxDO1XkJ5j8V5zSpfRVB4OedKWbyiVdgfUGga8zoxwTnQnO00w%3D%3D"></script>
+    <!-- API_SRC_END  -->
+
+    <!-- MAP_API_START  -->
     <script th:src="@{/js/map_infoSchool.js}"></script>
     <script>
         const schoolName = "[[${school.schoolName}]]";
-        const streetDetailAddress = "[[${school.streetAddr}]]";
+        const streetAddress = "[[${school.streetAddr}]]";
+        // ..
+        const mapSection = searchAddressToCoordinate(streetAddress, schoolName);
 
-        searchAddressToCoordinate(streetDetailAddress, schoolName);
+        window.onload = function(){
+            if(mapSection !== null) {
+                searchWeatherLocate(streetAddress);
+            }
+        }
+        // ..
     </script>
-    <script type="text/javascript">
-        function redirectToPage() {
-            window.location.href = "/search"
+    <!-- MAP_API_END  -->
+
+    <!-- CUT_STREET_ADDRESS_START  -->
+    <script>
+        const strAddr = '[[${school.streetAddr}]]';
+        const strAddress = document.getElementById("streetAddr");
+
+        const addrParts = strAddr.split(' ');
+        if (addrParts.length >= 2) {
+            strAddress.innerText = addrParts[1];
+        } else {
+            strAddress.innerText = strAddr;
         }
     </script>
+    <!-- CUT_STREET_ADDRESS_END  -->
 </main>
 </html>

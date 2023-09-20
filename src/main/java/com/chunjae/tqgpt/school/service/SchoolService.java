@@ -124,6 +124,7 @@ public class SchoolService {
         return schoolDetailRepository.getReferenceById(id);
     }
 
+
     @Transactional
     public void upsertSchoolData(String userName) {
         deleteExistingData(userName);
@@ -291,101 +292,6 @@ public class SchoolService {
     public List<School> findSchoolsByKeyword(String keyword) {
         return schoolRepository.findSchoolsByKeyword(keyword);
     }
-
-    /*public void xlsxDownloadService(HttpServletResponse res, SchoolDTO.searchRequestDto requestDto) throws IOException {
-        //excel sheet 생성
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("학교_정보");    //파일명
-        sheet.setDefaultColumnWidth(28);    //디폴트 너비
-
-        //엑셀 폰트
-        XSSFFont headerXSSFFont = (XSSFFont) workbook.createFont();
-        headerXSSFFont.setColor(new XSSFColor((new byte[]{(byte) 255, (byte) 255, (byte) 255})));
-
-        //엘셀 쉘
-        XSSFCellStyle headerXssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
-
-        //테두리
-        headerXssfCellStyle.setBorderLeft(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderRight(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderTop(BorderStyle.THIN);
-        headerXssfCellStyle.setBorderBottom(BorderStyle.THIN);
-
-        //배경
-        headerXssfCellStyle.setFillForegroundColor(new XSSFColor(new byte[]{(byte) 34, (byte) 37, (byte) 41}));
-        headerXssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerXssfCellStyle.setFont(headerXSSFFont);
-
-        //바디
-        XSSFCellStyle bodyXssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
-
-        // 테두리 설정
-        bodyXssfCellStyle.setBorderLeft(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderRight(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderTop(BorderStyle.THIN);
-        bodyXssfCellStyle.setBorderBottom(BorderStyle.THIN);
-
-        int rowCount = 0;
-        String headerNames[] = new String[]{"No", "시도명", "시군구명", "학교급", "학교명", "시도교육청명", "지역교육청명", "등록자", "등록일"};
-
-        Row headerRow = null;
-        Cell headerCell = null;
-
-        headerRow = sheet.createRow(rowCount++);
-        for (int i = 0; i < headerNames.length; i++) {
-            headerCell = headerRow.createCell(i);
-            headerCell.setCellValue(headerNames[i]);    //데이터 추가
-            headerCell.setCellStyle(headerXssfCellStyle);   //디자인 적용
-        }
-
-        List<School> allSchoolData = new ArrayList<>();
-        int pageNumber = 0;
-        Page<School> schoolPages;
-
-        do {
-            requestDto.setPage(String.valueOf(pageNumber + 1));
-            schoolPages = search(requestDto);
-            List<School> schools = schoolPages.getContent();
-            allSchoolData.addAll(schools);
-            pageNumber++;
-        } while (schoolPages.hasNext());
-
-        Row bodyRow = null;
-        Cell bodyCell = null;
-
-        for (School school : allSchoolData) {
-            bodyRow = sheet.createRow(rowCount++);
-            String[] bodyDatas = new String[]{
-                    String.valueOf(school.getIdx()),  // 가정: getIdx()는 정수 ID를 반환
-                    school.getCityName(),
-                    school.getStreetAddr(),
-                    school.getSchoolKind(),
-                    school.getSchoolName(),
-                    school.getCityEduOrg(),
-                    school.getLocalEduOrg(),
-                    school.getUserName(),
-                    school.getCreatedAt().toString()  // 가정: getCreatedAt()는 java.util.Date 또는 java.time.LocalDateTime 등을 반환
-            };
-
-            for (int i = 0; i < bodyDatas.length; i++) {
-                bodyCell = bodyRow.createCell(i);
-                bodyCell.setCellValue(bodyDatas[i]);  // 데이터 추가
-                bodyCell.setCellStyle(bodyXssfCellStyle);  // 스타일 추가, 필요하다면
-            }
-        }
-
-        String fileName = "school_information";
-
-        res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-
-        ServletOutputStream servletOutputStream = res.getOutputStream();
-
-        workbook.write(servletOutputStream);
-        workbook.close();
-        servletOutputStream.flush();
-        servletOutputStream.close();
-    }*/
 
     public void xlsxDownloadService(ByteArrayOutputStream bos, SchoolDTO.searchRequestDto requestDto) throws IOException {
         //excel sheet 생성
